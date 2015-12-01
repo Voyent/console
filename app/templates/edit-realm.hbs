@@ -1,0 +1,186 @@
+<div class='basic-realm-info'>
+  <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
+  <div class='form-group'>
+    <label class='control-label'>Realm Name</label>
+    {{focus-input id='name' placeholder='New Realm Name' value=model.name
+        class='form-control' autocomplete='off'}}
+  </div>
+  <div class='form-group'>
+    <label class='control-label'>Description</label>
+    {{input id='description' placeholder='Realm description' value=model.description
+        class='form-control' autocomplete='off'}}
+  </div>
+  <div class="checkbox">
+    <label>
+      {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
+      Disabled
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      {{input type='checkbox' id='createTestUsers' checked=createTestUsers autocomplete='off'}}
+      Create Test Users
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      {{input type='checkbox' id='admin' checked=model.quick_user}}
+      Allow public user registrations
+    </label>
+  </div>
+</div>
+
+<div class='services'>
+  <h4><i class='fa fa-rocket'></i>Services</h4>
+  <div class='panel services'>
+    <div class="panel-heading">
+      Select from the following services for the new realm
+      <i class='fa fa-rocket'></i>
+    </div>
+    <ul class='list-group'>
+      {{#each model.availableServiceWrappers key="@identity" as |service|}}
+        <li class='list-group-item service'>
+          <label>
+            {{input type='checkbox' checked=service.selected autocomplete='off'}}
+            <i class="fa {{service.icon}}"></i>
+            {{service.label}}
+          </label>
+          <small class='pull-right'>{{service.description}}</small>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+
+<div class='roles'>
+  <h4>
+    <i class='fa fa-lock'></i>Realm Roles
+  </h4>
+  <div class="panel">
+    <ul class='list-group'>
+      {{#each roles key="@identity" as |role|}}
+        <li class='list-group-item'>
+          <strong>{{role.name}}</strong>
+          <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
+            <i class="fa fa-times"></i>
+          </a>
+          <a {{action 'editRole' role}} class="pull-right">
+            <i class="fa fa-edit"></i>
+          </a>
+          <ul>
+            {{#each role.permissions key="@identity" as |permission|}}
+              <li>{{permission}}</li>
+            {{/each}}
+          </ul>
+        </li>
+      {{/each}}
+      <li class='list-group-item origin-controls'>
+        <a {{action 'addNewRole'}}>
+          <i class="fa fa-plus-square"></i> Add New Role
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class='origins'>
+  <h4><i class='fa fa-globe'></i>Origins</h4>
+  <div class='panel origins'>
+    <div class="panel-heading">You may also add one or more origin URLs to the realm</div>
+    <ul class='list-group'>
+      {{#each model.originWrappers key="@identity" as |o|}}
+        <li class='list-group-item'>
+          {{input placeholder='URL' value=o.url class='form-control'}}
+          <a {{action 'removeOriginField' o.url}}><i class="fa fa-minus-square"></i></a>
+        </li>
+      {{/each}}
+      <li class='list-group-item origin-controls'>
+        <a {{action 'addNewOriginField'}}><i class="fa fa-plus-square"></i></a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class='optional-info'>
+  <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
+  <p>
+    You may enter optional custom information for the realm as a JSON document.
+  </p>
+  <div class='form-group clearfix'>
+    {{textarea value=customText cols="80" rows="6"
+      placeholder='Enter JSON Content' class='form-control'}}
+  </div>
+  <div class='form-group'>
+    <label class='control-label'>JSON Valid:</label>
+    {{#if customDocumentValid}}
+      <i class='fa fa-check success'></i>
+    {{else}}
+      <i class='fa fa-times danger'></i>
+    {{/if}}
+    {{customDocumentValidMsg}}
+  </div>
+</div>
+
+<div class="modal fade" id='editRoleModal'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>{{#if editedRole.isNew}}Add New{{else}}Edit{{/if}} Role</div>
+      <div class='modal-body'>
+        <div class="row">
+      <div class="col-xs-12">
+        <form {{action 'saveRole' on='submit'}} id="editRoleForm" role='form' autocomplete='off'>
+          <div class="form-group">
+            <label class='control-label'>Role Name</label>
+            {{#if editedRole.isNew}}
+              {{input placeholder='Role Name' value=editedRoleName class='form-control'}}
+            {{else}}
+              <span>{{editedRoleName}}</span>
+            {{/if}}
+          </div>
+          {{#each editedRolePermissionGroups as |permissionGroup|}}
+            <div class="panel panel-default collapsible">
+              <div class="panel-heading" role="tab">
+                <a data-toggle="collapse" data-parent="#bridgeitPermissions" class='toggle'
+                  onclick="$(this).closest('.panel').find('.collapse').collapse('toggle');$(this).find('i').toggleClass('hidden');">
+                  <strong class="panel-title">
+                    <i class='fa fa-caret-right hidden'></i>
+                    <i class='fa fa-caret-down'></i>
+                    {{permissionGroup.service}} Permissions
+                  </strong>
+                </a>
+                <div class='btn-bar'>
+                  <a {{action 'selectAllServicePermissionsForRole' permissionGroup.service}}
+                    class='btn btn-sm btn-default'>Select All</a>
+                  <a {{action 'deselectAllServicePermissionsForRole' permissionGroup.service}}
+                    class='btn btn-sm btn-default'>Deselect All</a>
+                </div>
+              </div>
+              <div class='panel-collapse collapse in' role="tabpanel" >
+                <ul class='list-group'>
+                  {{#each permissionGroup.permissions as |p|}}
+                    <li class='list-group-item clearfix'>
+                      <span class='checkbox'>
+                        <label>
+                          {{input type='checkbox' checked=p.selected}}
+                          {{p.label}}
+                        </label>
+                      </span>
+                    </li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          {{/each}}
+        </form>
+      </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <div class='btn-bar page-controls pull-right'>
+          <a class="btn btn-lg btn-default login-btn" {{action 'cancelEditedRole'}}>Cancel</a>
+          <a class="btn btn-lg btn-primary login-btn" {{action 'saveEditedRole'}}>Save</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

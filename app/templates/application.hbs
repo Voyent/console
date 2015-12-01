@@ -1,0 +1,61 @@
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      {{#link-to 'index' class="navbar-brand"}}
+        <i class="fa fa-cloud"></i>Cloud Admin Console
+      {{/link-to}}
+      {{#if currentUser}}
+        <small class="current-user">Welcome {{currentUser.username}}</small>
+      {{/if}}
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+
+      <ul class="nav navbar-nav">
+        {{#if isLoggedIn}}
+          <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
+          <li>{{#link-to 'secure.administrators'}}Administrators{{/link-to}}</li>
+        {{else}}
+          <li>{{#link-to 'login'}}Login{{/link-to}}</li>
+          <li>{{#link-to 'register'}}Register{{/link-to}}</li>
+        {{/if}}
+      </ul>
+
+      {{#if isLoggedIn}}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action 'logout'}} href="#">Logout</a></li>
+        </ul>
+      {{/if}}
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="loading throbber-wrapper">
+    <div class="throbber-loader">...</div>
+</div>
+
+<div class="container" role="main">
+{{outlet}}
+</div> <!-- /container -->
+
+<div class="modal fade danger" id='errorModal'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>{{if errorTitle errorTitle 'Error'}}</div>
+      <div class='modal-body'>
+        <p>{{errorMessage}}</p>
+      </div>
+      <div class="modal-footer">
+        <div class='btn-bar page-controls pull-right'>
+          <a class="btn btn-lg btn-default" {{action 'closeErrorModal'}}>Ok</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
