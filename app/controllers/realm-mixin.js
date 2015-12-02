@@ -1,6 +1,7 @@
 import Ember from 'ember';
-import Role from 'admin/models/role';
-import Selectable from 'admin/models/selectable';
+import Role from 'console/models/role';
+import Selectable from 'console/models/selectable';
+import PermissionGroup from 'console/models/permission-group';
 
 export default Ember.Mixin.create({
 

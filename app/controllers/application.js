@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import BaseController from 'admin/controllers/base-controller';
-import utils from 'admin/helpers/utils';
-import Account from 'admin/models/account';
-import User from 'admin/models/user';
+import BaseController from 'console/controllers/base-controller';
+import utils from 'console/helpers/utils';
+import Account from 'console/models/account';
+import User from 'console/models/user';
 
 export default BaseController.extend({
 

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import BaseRoute from 'admin/routes/base-route';
+import BaseRoute from 'console/routes/base-route';
 
 export default BaseRoute.extend({
 

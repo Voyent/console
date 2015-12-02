@@ -1,4 +1,4 @@
-import errors from 'admin/helpers/bridgeit-errors';
+import errors from 'console/helpers/bridgeit-errors';
 
 var require = function(){
     return {
@@ -10,7 +10,7 @@ var require = function(){
     };
 };
 
-var exports = {};
+var exports = {}; 
 
 /**
  * Shared validation functions for validating various fields.
@@ -28,7 +28,7 @@ var passwordRegex = /^[A-Za-z0-9!@#%^&*_\s]*$/;    // A few more punctuation cha
 var firstLastNameRegex = /^[$!{}]/;
 var spaceAndLimitedPunctuationRegex = /^[A-Za-z0-9\.\s,!#@$%^&*]*$/;
 var serviceNameRegex = /^[A-Za-z0-9\.]*$/;
-var spaceOnlyRegex = /^[A-Za-z0-9\s]*$/;
+var spaceOnlyRegex = /^[A-Za-z0-9\s]*$/; //jshint ignore:line
 var underscoreOnlyRegex = /^[A-Za-z0-9_]*$/;
 var permissionOpRegex = /[and|or|single]/;
 var lowerCaseDotRegex = /^[a-z\.]*$/;
@@ -43,13 +43,13 @@ var RealmMaxLength = 75;
 var RealmMinLength = 2;
 var RolesMaxLength = 75;
 var OriginsMaxLength = 100;
-var RolesMinLength = 75;
+var RolesMinLength = 75; //jshint ignore:line
 var PasswordMinLength = 8;
 var PasswordMaxLength = 48;
 var EmailMaxLength = 50;
 var ServiceMaxLength = 50;
 var PermissionOpMaxLength = 6;
-var serviceTypeMaxLength = 32;
+var serviceTypeMaxLength = 32; //jshint ignore:line
 
 var NameMaxLength = 30;
 var NameMinLength = 1;
@@ -163,7 +163,7 @@ var booleanValidator = function (val) {
         }
         return true;
     } else if (typeof(val)==='string') {
-        if ('true'!= val && 'false' != val){
+        if ('true'!= val && 'false' != val){ //jshint ignore:line
             return false;
         }
         return true;
@@ -196,7 +196,7 @@ var emailValidator = function (val) {
 exports.emailValidator = emailValidator;
 
 
-var queryValidator = function (query) {
+var queryValidator = function (query) { //jshint ignore:line
     // Todo
     return true;
 };
@@ -344,13 +344,13 @@ exports.registrationSectionValidation = registrationSectionValidation;
  *
  */
 var originsArrayFormatValidator = function(val) {
-    if (Array.isArray(val) == false) {
+    if (Array.isArray(val) == false) { //jshint ignore:line
         var logger = require('./loggers').getLogger();
         logger.debug('Origins value is not array');
         return false;
     }
     var pass = true;
-    var originField;
+    var originField; //jshint ignore:line
     for (var i = 0; i < val.length; i++) {
         if (typeof (val[i]) !== 'string' ) {
             return false;
@@ -395,20 +395,20 @@ function validateBatchPermissions(rawPermissions) {
         if (!permStruct.name || !rolenameValidator(permStruct.name)) {
             throw new errors.BadRequestDetailsError('invalidPermissionsFormat', 'Permission entry must have name');
         }
-        if ( ('string' != typeof (permStruct.permission)) && (!Array.isArray(permStruct.permission))) {
+        if ( ('string' != typeof (permStruct.permission)) && (!Array.isArray(permStruct.permission))) { //jshint ignore:line
             throw new errors.BadRequestDetailsError('invalidPermissionsFormat', 'Permissions value must be string or array of string');
         }
         // If perms are array, check that all elements are strings. No nested Arrays for you!
         if (Array.isArray(permStruct.permission) ) {
             for (var v = 0; v < permStruct.permission.length; v++ ) {
-                if ('string' != typeof(permStruct.permission[v])) {
+                if ('string' != typeof(permStruct.permission[v])) { //jshint ignore:line
                     throw new errors.BadRequestDetailsError('invalidPermissionsFormat', 'Nested permissions arrays not allowed');
                 }
             }
         }
         if (!permStruct.op) {
-            if ('string' == typeof (permStruct.permission)) {
-                permStruct.op = 'and';
+            if ('string' == typeof (permStruct.permission)) { //jshint ignore:line
+                permStruct.op = 'and'; 
             }
             if (Array.isArray(permStruct.permission)) {
                 permStruct.op = 'single';
@@ -453,7 +453,7 @@ var validateRightsJSON = function(val) {
     var ownerRights = val.owner;
     // Check that all owner rights are in the list of available rights
     if (ownerRights) {
-        if (!ownerRights instanceof Array) {
+        if (!ownerRights instanceof Array) { //jshint ignore:line
             logger.error('Owner rights value is not array');
             return new errors.BadRequestError('incorrectMetadataStructure');
         }
@@ -472,12 +472,12 @@ var validateRightsJSON = function(val) {
     // Check that all realm rights are in the list of available rights
     var realmRights = val.realm;
     if (realmRights) {
-        if (!realmRights instanceof Array) {
+        if (!realmRights instanceof Array) { //jshint ignore:line
             logger.error('Realm rights value is not array');
             return new errors.BadRequestError('incorrectMetadataStructure');
         }
         // Check that all owner rights are in the list of available rights
-        for (var i = 0; i < realmRights.length; i++) {
+        for (var i = 0; i < realmRights.length; i++) { //jshint ignore:line
             if (typeof realmRights[i] !== 'string') {
                 logger.error('Realm rights not instance of string: ' + typeof(realmRights[i] ));
                 return new errors.BadRequestError('incorrectMetadataStructure');
@@ -498,11 +498,11 @@ var validateRightsJSON = function(val) {
 
         var roleRights  = val.roles[v];
         if (roleRights) {
-            if (!roleRights instanceof Array) {
+            if (!roleRights instanceof Array) { //jshint ignore:line
                 logger.error('Role rights value is not array');
                 return new errors.BadRequestError('incorrectMetadataStructure');
             }
-            for (var i = 0; i < roleRights.length; i++) {
+            for (var i = 0; i < roleRights.length; i++) { //jshint ignore:line
                 if (typeof roleRights[i] !== 'string' ) {
                     logger.error('Role rights not instance of string: ' + typeof(roleRights[i]));
                     return new errors.BadRequestError('incorrectMetadataStructure');

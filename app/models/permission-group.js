@@ -1,3 +1,4 @@
+import Ember from 'ember';
 var PermissionGroup = Ember.Object.extend({
 
     service: null,

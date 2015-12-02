@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import Selectable from 'admin/models/selectable';
+import Selectable from 'console/models/selectable';
 
 var User = Ember.Object.extend({
 

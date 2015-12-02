@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import User from 'admin/models/user';
-import Realm from 'admin/models/realm';
-import Service from 'admin/models/service';
-import serviceCatalog from 'admin/service-catalog';
+import User from 'console/models/user';
+import Realm from 'console/models/realm';
+import Service from 'console/models/service';
+import serviceCatalog from 'console/service-catalog';
 
 var Account = Ember.Object.extend({
 

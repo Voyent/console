@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import config from 'admin/config/environment';
+import config from 'console/config/environment';
 
 
 var AccessManager = Ember.Service.extend({

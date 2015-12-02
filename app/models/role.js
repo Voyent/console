@@ -1,4 +1,4 @@
-import Selectable from 'admin/models/selectable';
+import Selectable from 'console/models/selectable';
 
 var Role = Selectable.extend({
 

@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import Selectable from 'admin/models/selectable';
-import Origin from 'admin/models/origin';
-import PermissionGroup from 'admin/models/permission-group';
+import Selectable from 'console/models/selectable';
+import Origin from 'console/models/origin';
+import PermissionGroup from 'console/models/permission-group';
 
 var Realm = Ember.Object.extend({
 
@@ -48,7 +48,7 @@ var Realm = Ember.Object.extend({
 
 	sortedServices: function(){
 		return this.get('services').sort();
-	}.property('services.@each'),
+	}.property('services.[]'),
 
 	availableServiceWrappers: function(){
 		var account = this.get('account');
@@ -66,7 +66,7 @@ var Realm = Ember.Object.extend({
 				});
 		}
 		return availableServiceWrappers;
-	}.property('services.@each'),
+	}.property('services.[]'),
 
 	selectedServices: function(){
 		return this.get('availableServiceWrappers').filter((w) => w.get('selected')).map((w) => w.get('content.value'));

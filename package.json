@@ -1,7 +1,7 @@
 {
-  "name": "admin",
+  "name": "console",
   "version": "0.0.0",
-  "description": "Small description for admin goes here",
+  "description": "Small description for console goes here",
   "private": true,
   "directories": {
     "doc": "doc",

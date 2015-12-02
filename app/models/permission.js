@@ -1,4 +1,5 @@
-import PermissionRole from 'admin/models/permission-role';
+import Ember from 'ember';
+import PermissionRole from 'console/models/permission-role';
 
 var Permission = Ember.Object.extend({
 

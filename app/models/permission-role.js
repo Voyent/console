@@ -1,3 +1,4 @@
+import Ember from 'ember';
 var PermissionRole = Ember.Object.extend({
 
     role: null,

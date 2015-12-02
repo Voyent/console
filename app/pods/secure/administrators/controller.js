@@ -1,5 +1,5 @@
-import BaseController from 'admin/controllers/base-controller';
-import validation from 'admin/helpers/bridgeit-validation';
+import BaseController from 'console/controllers/base-controller';
+import validation from 'console/helpers/bridgeit-validation';
 import Ember from 'ember';
 
 export default BaseController.extend({
