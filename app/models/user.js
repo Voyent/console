@@ -107,7 +107,20 @@ var User = Ember.Object.extend({
       return [];
     }
     
-  }.property('realm.roles.[]', 'roles.[]')
+  }.property('realm.roles.[]', 'roles.[]'),
+
+  serialize: function(){
+    var ser = this.getProperties(this.get('nonTransientOwnProperties'));
+    if( ser.custom && typeof ser.custom === 'object'){
+      try{
+        ser.custom = JSON.stringify(ser.custom);
+      }
+      catch(e){
+        console.error('Could not parse custom property', e);
+      }
+    }
+    return ser;
+  },
 
 });
 
