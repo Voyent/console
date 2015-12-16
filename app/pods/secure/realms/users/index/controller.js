@@ -42,7 +42,7 @@ export default BaseController.extend({
       }).catch((error) => {
         console.error('deleteUser error: ' + error);
         var errorMessage = utils.extractErrorMessage(err);
-        this.get('toast').error(error);
+        this.get('toast').error(errorMessage);
       });
     },
   }
