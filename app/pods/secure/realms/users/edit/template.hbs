@@ -1,0 +1,101 @@
+<ul class="breadcrumb">
+  <li>{{#link-to 'index'}}Home{{/link-to}}</li>
+  <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.index'}}{{model.realm.id}}{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.users'}}Users{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.users.edit'}}Edit{{/link-to}}</li>
+</ul>
+<h1 class='page-header'>Edit User {{model.username}}</h1>
+<div class="row">
+  <div class="col-lg-12">
+
+    <p>Edit the details for the user.</p>
+
+    <form {{action 'save' on='submit'}} id="editUserForm" role='form' autocomplete='off'>
+      <div class='basic-user-info'>
+        <h4><i class='fa fa-user'></i>Basic User Information</h4>
+        <div class='form-group'>
+          <label class='control-label'>User Name</label>
+          {{#if isNew}}
+            {{focus-input id='username' placeholder='New User Name' value=model.username class='form-control' autocomplete='off'}}
+          {{else}}
+            <span class='form-control' style='background-color: #EEE'>{{model.username}}</span>
+          {{/if}}
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>First Name</label>
+          {{focus-input id='firstname' value=model.firstname class='form-control' autocomplete='off'}}
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>Last Name</label>
+          {{input id='lastname' value=model.lastname class='form-control' autocomplete='off'}}
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>Email</label>
+          {{input id='email' value=model.email class='form-control' autocomplete='off'}}
+          {{#if emailMsg}}
+            <span class="form-control-feedback"><i class='fa fa-times'></i></span>
+            <small id='usernameMsg' class="text-danger">{{emailMsg}}</small>
+          {{/if}}
+        </div>
+        <div class="checkbox">
+          <label>
+            {{input type='checkbox' id='disabled' checked=disabled autocomplete='off'}}
+            Disabled
+          </label>
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>Password</label>
+          {{input id='password' value=password type='password' class='form-control' autocomplete='off'}}
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>Password Confirmation</label>
+          {{input id='password_confirm' value=password_confirm type='password' class='form-control' autocomplete='off'}}
+        </div>
+      </div>
+
+      <div class='roles'>
+        <h4>
+          <i class='fa fa-lock'></i>User Roles
+        </h4>
+        <div class="panel panel-info">
+          <ul class='list-group'>
+            {{#each model.roleWrappers as |role|}}
+              <li class='list-group-item'>
+                <label>
+                  {{input type='checkbox' checked=role.selected autocomplete='off'}}
+                  {{role.content}}
+                </label>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+
+      <div class='optional-info'>
+        <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
+        <p>
+          You may enter optional custom information for the realm as a JSON document.
+        </p>
+        <div class='form-group clearfix'>
+          {{textarea value=customText cols="80" rows="6" placeholder='Enter JSON Content' class='form-control'}}
+        </div>
+        <div class='form-group'>
+          <label class='control-label'>JSON Valid:</label>
+          {{#if customDocumentValid}}
+            <i class='fa fa-check success'></i>
+          {{else}}
+            <i class='fa fa-times danger'></i>
+          {{/if}}
+          {{customDocumentValidMsg}}
+        </div>
+      </div>
+      <div class='btn-bar pull-right page-controls'>
+        <button id="cancel" class="btn btn-lg btn-default" {{action 'cancel'}}>Cancel</button>
+        {{input id='submit' type='submit' value='Save' class='btn btn-lg btn-primary pull-right login-btn'}}
+      </div>
+    </form>
+
+  </div>
+</div>
+
