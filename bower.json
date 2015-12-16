@@ -15,6 +15,7 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "fontawesome#~4.4.0",
     "bridgeit.io.js": "dev",
-    "validator-js": "~4.2.0"
+    "validator-js": "~4.2.0",
+    "toastr": "~2.1.2"
   }
 }
