@@ -2,8 +2,8 @@ import Ember from 'ember';
 
 var Origin = Ember.Object.extend({
 
-    url: null,
-    realm: null,
+  url: null,
+  realm: null,
 
 });
 
