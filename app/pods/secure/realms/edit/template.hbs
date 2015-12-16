@@ -1,0 +1,129 @@
+<h1 class='page-header'>{{model.id}}</h1>
+<form {{action 'editRealm' on='submit'}} role='form' autocomplete='off'>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class='basic-realm-info'>
+				<h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
+				<div class='form-group'>
+					<label class='control-label'>Description</label>
+					{{input id='description' placeholder='Realm description' value=model.description
+							class='form-control' autocomplete='off'}}
+				</div>
+				<div class="checkbox">
+					<label>
+						{{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
+						Disabled
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						{{input type='checkbox' id='admin' checked=model.quick_user}}
+						Allow public user registrations
+					</label>
+				</div>
+			</div>
+
+			<div class='services'>
+				<h4><i class='fa fa-rocket'></i>Services</h4>
+				<div class='panel panel-default services'>
+					<div class="panel-heading">
+						Select from the following services for the new realm
+						<i class='fa fa-rocket'></i>
+					</div>
+					<ul class='list-group'>
+						{{#each model.availableServiceWrappers as |service|}}
+							<li class='list-group-item service'>
+								<label>
+									{{input type='checkbox' checked=service.selected autocomplete='off'}}
+									<i class='fa {{service.icon}}'></i>
+									{{service.label}}
+								</label>
+								<small class='pull-right'>{{service.description}}</small>
+							</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+			<div class='roles'>
+				<h4>
+					<i class='fa fa-lock'></i>Realm Roles
+				</h4>
+				<div class="panel panel-info">
+					<ul class='list-group'>
+						{{#each model.roles as |role|}}
+							<li class='list-group-item'>
+								<strong>{{role.name}}</strong>
+								<a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
+									<i class="fa fa-times"></i>
+								</a>
+								<a {{action 'editRole' role}} class="pull-right">
+									<i class="fa fa-edit"></i>
+								</a>
+								<ul>
+									{{#each role.permissions as |permission|}}
+										<li>{{permission}}</li>
+									{{/each}}
+								</ul>
+							</li>
+						{{/each}}
+						<li class='list-group-item origin-controls'>
+							<a {{action 'addNewRole'}}>
+								<i class="fa fa-plus-square"></i> Add New Role
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class='origins'>
+				<h4><i class='fa fa-globe'></i>Origins</h4>
+				<div class='panel panel-default origins'>
+					<div class="panel-heading">You may also add one or more origin URLs to the realm</div>
+					<ul class='list-group'>
+						{{#each model.originWrappers as |o|}}
+							<li class='list-group-item'>
+								{{input placeholder='URL' value=o.url class='form-control'}}
+								<a {{action 'removeOriginField' o.url}}><i class="fa fa-minus-square"></i></a>
+							</li>
+						{{/each}}
+						<li class='list-group-item origin-controls'>
+							<a {{action 'addNewOriginField'}}><i class="fa fa-plus-square"></i></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class='optional-info'>
+				<h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
+				<p>
+					You may enter optional custom information for the realm as a JSON document.
+				</p>
+				<div class='form-group clearfix'>
+					{{textarea value=model.customText cols="80" rows="6"
+						placeholder='Enter JSON Content' class='form-control'}}
+				</div>
+				<div class='form-group'>
+					<label class='control-label'>JSON Valid:</label>
+					{{#if model.customDocumentValid}}
+						<i class='fa fa-check success'></i>
+					{{else}}
+						<i class='fa fa-times danger'></i>
+					{{/if}}
+					{{model.customDocumentValidMsg}}
+				</div>
+			</div>
+
+			<h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
+			{{#link-to 'secure.realms.users'}}
+				<i class='fa fa-angle-double-right'></i>Click to view users for {{model.id}}
+			{{/link-to}}
+
+			<div class='btn-bar pull-right page-controls'>
+				{{#link-to 'secure.realms.users.index' class='btn btn-info btn-sm'}}List Users{{/link-to}}
+				<button id="cancel" class='btn btn-default btn-sm' {{action 'cancel'}}>Cancel</button>
+				{{input id='submit' type='submit' value='Save' class="btn btn-primary btn-sm"}}
+			</div>
+		</div>
+	</div>
+</form>

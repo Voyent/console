@@ -1,0 +1,45 @@
+<h1 class='page-header'>{{model.id}} Users</h1>
+<div class="row">
+  <div class="col-lg-12">
+
+    <table class="table table-striped">
+      <thead>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Active</th>
+        <th>Roles</th>
+        <th></th>
+      </thead>
+      <tbody>
+        {{#each model.users as |user|}}
+          <tr>
+            <td>
+              <a {{action 'openUserInfoModal' user}}>{{user.username}}</a>
+            </td>
+            <td>{{user.fullname}}</td>
+            <td>{{user.email}}</td>
+            <td class='enabled'>
+              <i class="fa {{if user.disabled 'fa-square-o' 'fa-check-square-o'}}"></i>
+            </td>
+            <td>
+              {{list-join user.roles ', '}}
+            </td>
+            <td class='ops-row'>
+              <a {{action 'openUserInfoModal' user}}>
+                <i class='fa fa-info-circle'></i>
+              </a>
+              {{#link-to 'secure.realms.users.edit' user.id}}
+                <i class='fa fa-edit'></i>
+              {{/link-to}}
+              <a {{action 'confirmDeleteUser' user}}>
+                <i class='fa fa-times'></i>
+              </a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  </div>
+</div>

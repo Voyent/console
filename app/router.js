@@ -14,6 +14,7 @@ Router.map(function() {
       this.route('edit');
       this.route('users', function() {
         this.route('create');
+        this.route('edit');
       });
     });
     this.route('create-realm');

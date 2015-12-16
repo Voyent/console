@@ -18,6 +18,7 @@ var Realm = Ember.Object.extend({
 	disabled: false,
 	custom: {},
 	customText: '{}',
+	customDocumentValid: true,
 
 	nonTransientOwnProperties: ['name', 'description', 'services', 'origins', 'users', 'quick_user', 'disabled', 'custom', 'roles'],
 
@@ -83,6 +84,18 @@ var Realm = Ember.Object.extend({
 		
 	}.property('origins.[]'),
 
+	editedOrigins: function(){
+		return this.get('originWrappers').map(
+			function(wrapper){
+				return wrapper.get('url');
+			}
+		).filter(
+			function(url){
+				return !!url;
+			}
+		);
+	}.property('originWrappers.@each.url'),
+
 	getAvailablePermissionGroups: function(){
 		var serviceModels = this.get('account.serviceModels').slice(0);
 		var selectedServices = this.get('selectedServices');
@@ -118,7 +131,42 @@ var Realm = Ember.Object.extend({
 			});
 		}));
 		return permissionGroups;
-	}
+	},
+
+	serialize: function(){
+		var ser = this.getProperties('name', 'origins', 'services', 'quick_user', 'disabled', 'custom');
+		if( ser.custom && typeof ser.custom === 'object'){
+			try{
+				ser.custom = JSON.stringify(ser.custom);
+			}
+			catch(e){
+				console.error('Could not parse custom property', e);
+			}
+		}
+		return ser;
+	},
+
+	onCustomInfoEntry: function(){
+		var customInfoInput = this.get('customText');
+		var customDocumentValidMsg = '';
+		var valid = false;
+		if( customInfoInput ){
+			try{
+				JSON.parse(customInfoInput);
+				valid = true;
+			}
+			catch(e){
+				valid = false;
+				customDocumentValidMsg = e;
+			}
+		}
+		else{
+			valid = true;
+		}
+		this.set('customDocumentValid', valid);
+		this.set('customDocumentValidMsg', customDocumentValidMsg);
+		
+	}.observes('customText'),
 
 	
 });
