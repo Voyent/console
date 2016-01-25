@@ -198,7 +198,10 @@ export default BaseController.extend({
                 password: form.password
             }).then(() => {
                 this.send('stopLongRunningAction');
+                appController.set('isLoggedIn', true);
                 appController.showInfoMessage('Thank you, your account was successfully created.');
+                return appController.updateAccountInfo();
+            }).then(() => {
                 this.transitionToRoute('secure.index');
             }).catch((error) => {
                 console.log('failed: ' + error);
