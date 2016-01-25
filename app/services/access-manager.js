@@ -21,7 +21,7 @@ var AccessManager = Ember.Service.extend({
         reject(err);
       }
       else{
-        console.log('AccessManager.logging in to judging'  );
+        //console.log('AccessManager.logging in to judging'  );
         bridgeit.io.startTransaction();
         var bridgeitParams = {
           host: config.host,
@@ -40,7 +40,7 @@ var AccessManager = Ember.Service.extend({
   },
 
   logout: function(){
-    console.log('AccessManager.logout()');
+    //console.log('AccessManager.logout()');
     bridgeit.io.auth.disconnect();
     bridgeit.io.endTransaction();
     
@@ -51,9 +51,7 @@ var AccessManager = Ember.Service.extend({
   },
 
   loadAccountInfo: function(){
-    return bridgeit.io.admin.getAccount().catch(function(error){
-      console.log('error fetching user', error);
-    });
+    return bridgeit.io.admin.getAccount();
   },
 
 
