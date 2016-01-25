@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import PermissionRole from 'console/models/permission-role';
+import BaseModel from './base-model';
 
-var Permission = Ember.Object.extend({
+export default BaseModel.extend({
 
   label: null,
   value: null,
@@ -31,5 +32,3 @@ var Permission = Ember.Object.extend({
   }.property('value', 'parent.roles.@each.content')
 
 });
-
-export default Permission;

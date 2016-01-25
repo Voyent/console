@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import BaseModel from './base-model';
 
-var Service = Ember.Object.extend({
+export default BaseModel.extend({
 
   realm: null,
 
@@ -44,7 +45,7 @@ var Service = Ember.Object.extend({
   }.observes('serviceCatalog'),
 
   selectedChanged: function(){
-    //console.log('Service.selectedChanged');
+    this.debug('Service.selectedChanged');
     var realm = this.get('realm');
     if( realm ){
       if( this.get('selected') ){
@@ -57,5 +58,3 @@ var Service = Ember.Object.extend({
   }.observes('selected'),
 
 });
-
-export default Service;

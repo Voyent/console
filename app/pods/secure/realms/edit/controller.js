@@ -25,7 +25,7 @@ export default BaseController.extend({
         }
       }
       catch(e){
-        console.error('error parsing custom text', e);
+        this.warn('error parsing custom text', e);
         this.get('toast').error('Error parsing custom text: ' + e.message, 'Error');
         return;
       }

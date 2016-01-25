@@ -18,8 +18,6 @@ export default BaseController.extend({
     }.observes(Form._datafields),
 
     _validateUsername: function(){
-        console.log('validating username');
-
         if( !validation.usernameValidator(this.get('username'))){
             this.set('usernameMsg', validation.usernameMsg);
             Ember.$('#username').focus();
@@ -30,8 +28,6 @@ export default BaseController.extend({
         }
     },
     _validateAccount: function(){
-        console.log('validating accountName');
-
         if( !validation.accountNameValidator(this.get('account'))){
             this.set('accountMsg', validation.accountNameMsg);
         }
@@ -172,7 +168,7 @@ export default BaseController.extend({
             if( this.get('usernameMsg') || this.get('accountMsg') || this.get('emailMsg') ||
                 this.get('firstnameMsg') || this.get('lastnameMsg') || this.get('passwordMsg') ||
                 this.get('passwordconfirmMsg')){
-                console.log('invalid register form, exiting');
+                this.warn('invalid register form, exiting');
                 return;
             }
 
@@ -204,7 +200,7 @@ export default BaseController.extend({
             }).then(() => {
                 this.transitionToRoute('secure.index');
             }).catch((error) => {
-                console.log('failed: ' + error);
+                this.warn('register failed', error);
                 appController.showErrorMessage(error, 'Account Registration Failed');
                 this.send('stopLongRunningAction');
             });

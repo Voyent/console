@@ -76,8 +76,6 @@ export default BaseController.extend({
       }
   },
   validateUsername: function(){
-      console.log('validating username');
-
       if( !validation.usernameValidator(this.get('selectedAdmin.username'))){
           this.set('usernameMsg', validation.usernameMsg);
       }
@@ -142,7 +140,7 @@ export default BaseController.extend({
           this.get('lastnameMsg') ||
           this.get('passwordMsg') ||
           this.get('passwordconfirmMsg')){
-          console.log('invalid create new admin form, exiting');
+          this.warn('invalid create new admin form, exiting');
           return;
       }
 
@@ -211,7 +209,7 @@ export default BaseController.extend({
           this.get('lastnameMsg') ||
           this.get('passwordMsg') ||
           this.get('passwordconfirmMsg')){
-          console.log('invalid edit admin form, exiting');
+          this.warn('invalid edit admin form, exiting');
           return;
       }
 

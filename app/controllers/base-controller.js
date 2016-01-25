@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from './config/environment';
 
 export default Ember.Controller.extend({
 
@@ -11,12 +12,34 @@ export default Ember.Controller.extend({
   },
 
   startLongRunningAction: function(){
-    //console.log('startLongRunningAction()');
     Ember.$('.loading').addClass('active');
   },
   stopLongRunningAction: function(){
-    //console.log('stopLongRunningAction()');
     Ember.$('.loading').removeClass('active');
+  },
+
+  debug: function(msg, obj){
+    if( 'console' in window && config.isDev ){
+      console.log(msg, obj);
+    }
+  },
+
+  info: function(msg, obj){
+    if( 'console' in window ){
+      console.info(msg, obj);
+    }
+  },
+
+  warn: function(msg, obj){
+    if( 'console' in window ){
+      console.warn(msg, obj);
+    }
+  },
+
+  error: function(msg, obj){
+    if( 'console' in window ){
+      console.error(msg, obj);
+    }
   },
 
   actions: {
@@ -35,9 +58,8 @@ export default Ember.Controller.extend({
       this.logout();
     },
     gotoLogin: function(){
-      //console.log('gotoLogin()');
+      this.debug('gotoLogin()');
       setTimeout( function(){
-        //console.log('focussing on username');
         Ember.$('#username').focus();
       }, 500);
       this.transitionToRoute('login');

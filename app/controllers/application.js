@@ -22,7 +22,7 @@ export default BaseController.extend({
     }).then( (services) => {
       this.get('account').loadServiceModels(services);
     }).catch((error) => {
-      console.log('could not load account info');
+      this.error('could not load account info');
       this.showErrorMessage(error, 'Could not load Account Info');
     });
   },

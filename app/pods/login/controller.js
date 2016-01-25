@@ -12,7 +12,7 @@ export default BaseController.extend({
       });
     },
     login: function() {
-      //console.log('loginController.login()');
+      this.debug('loginController#login()');
       function validateUsername(){
         if( !this.get('username')){
           this.set('usernameMsg', 'Please enter your username.');
@@ -63,7 +63,7 @@ export default BaseController.extend({
       var accessManager = this.get('accessManager');
       return accessManager.login(this.get('account'), this.get('username'), this.get('password')).then( () => {
         application.set('isLoggedIn', true);
-        //console.log('loginController: successfully logged in');
+        this.debug('loginController: successfully logged in');
         return application.updateAccountInfo();
       }).then(() => {
         this.send('stopLongRunningAction');
@@ -76,7 +76,7 @@ export default BaseController.extend({
         else{
           msg = reason.responseText || reason.message || reason;
         }
-        //console.log('failed login: ' + msg);
+        this.warn('failed login: ' + msg);
         this.get('toast').error(msg);
         this.send('stopLongRunningAction');
       });

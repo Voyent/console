@@ -1,10 +1,10 @@
 import Ember from 'ember';
-var PermissionGroup = Ember.Object.extend({
+import BaseModel from './base-model';
+
+export default BaseModel.extend({
 
   service: null,
   collapsed: true,
   permissions: []
 
 });
-
-export default PermissionGroup;

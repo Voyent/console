@@ -1,6 +1,5 @@
 import BaseController from 'console/controllers/base-controller';
-//import Ember from 'ember';
-import User from 'console/models/user';
+import Ember from 'ember';
 import bridgeitValidation from 'console/helpers/bridgeit-validation';
 import utils from 'console/helpers/utils';
 
@@ -16,7 +15,6 @@ export default BaseController.extend({
   realmsController: Ember.inject.controller('secure.realms'),
 
   onCustomInfoEntry: function(){
-    console.log('onCustomInfoEntry');
     var customInfoInput = this.get('customText');
     var customDocumentValidMsg = '';
     var valid = false;
@@ -36,7 +34,7 @@ export default BaseController.extend({
     this.set('customDocumentValid', valid);
     this.set('customDocumentValidMsg', customDocumentValidMsg);
     
-  }.observes('model.customText'),
+  }.observes('customText'),
 
   validateRequiredFields: function(){
     var valid = true;
@@ -79,7 +77,7 @@ export default BaseController.extend({
       EditUserForm._msgfields.forEach( function(f){ self.set(f,'');});
     },
     save: function(){
-      console.log('save user');
+      this.debug('save user');
 
       if( !this.validateRequiredFields() ){
         return;
@@ -99,12 +97,11 @@ export default BaseController.extend({
         this.get('passwordMsg') ||
         this.get('passwordconfirmMsg') ||
         this.get('permissionsMsg')){
-        console.log('invalid create new admin form, exiting');
+        this.warn('invalid create new admin form, exiting');
         return;
       }
 
       var user = this.get('model');
-      var password = this.get('password');
       
       //set edited properties
       try{
@@ -145,10 +142,8 @@ export default BaseController.extend({
       
     },
     validateUsername: function(){
-      console.log('validating username');
-
-      if( !validation.usernameValidator(this.get('model.username'))){
-        this.set('usernameMsg', validation.usernameMsg);
+      if( !bridgeitValidation.usernameValidator(this.get('model.username'))){
+        this.set('usernameMsg', bridgeitValidation.usernameMsg);
         return;
       }
       else{
@@ -156,8 +151,9 @@ export default BaseController.extend({
       }
     },
     validateUsernameOnBlur: function(){
-      if( this.get('model.username'))
+      if( this.get('model.username')){
         this.send('validateUsername');
+      }
     },
     validateEmail: function(){
       var email = this.get('model.email');
@@ -169,8 +165,9 @@ export default BaseController.extend({
       }
     },
     validateEmailOnBlur: function(){
-      if( this.get('model.email'))
+      if( this.get('model.email')){
         this.send('validateEmail');
+      }
     },
     validateFirstname: function(){
       if( this.get('model.firstname') && this.get('model.firstname').length > 2 ){
@@ -190,16 +187,17 @@ export default BaseController.extend({
     },
     validatePassword: function(){
       var password = this.get('password');
-      if( password && !validation.passwordValidator(password)){
-        this.set('passwordMsg', validation.passwordMsg);
+      if( password && !bridgeitValidation.passwordValidator(password)){
+        this.set('passwordMsg', bridgeitValidation.passwordMsg);
       }
       else{
         this.set('passwordMsg', '');
       }
     },
     validatePasswordOnBlur: function(){
-      if( this.get('password'))
+      if( this.get('password')){
         this.send('validatePassword');
+      }
     },
     validatePasswordConfirm: function(){
       var password = this.get('password'),
@@ -212,8 +210,9 @@ export default BaseController.extend({
       }
     },
     validatePasswordConfirmOnBlur: function(){
-      if( this.get('password_confirm'))
+      if( this.get('password_confirm')){
         this.send('validatePasswordConfirm');
+      }
     },
     validatePermissions: function(){
     },

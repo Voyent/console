@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
   actions: {
 
     addNewOriginField: function(){
-      console.log('addNewOriginField()');
+      this.debug('#addNewOriginField()');
       this.get('model.origins').pushObject('');
     },
 
@@ -50,7 +50,7 @@ export default Ember.Mixin.create({
     },
 
     addNewRole: function(){
-      console.log('addNewRole()');
+      this.debug('#addNewRole()');
       var realm = this.get('model');
       this.set('editedRole', Role.create({isNew: true}));
       this.set('editedRoleName', '');

@@ -1,5 +1,7 @@
 import Ember from 'ember';
-var PermissionRole = Ember.Object.extend({
+import BaseModel from './base-model';
+
+export default BaseModel.extend({
 
   role: null,
   permission: null,
@@ -17,5 +19,3 @@ var PermissionRole = Ember.Object.extend({
   }.observes('selected'),
 
 });
-
-export default PermissionRole;

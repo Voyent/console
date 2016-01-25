@@ -1,10 +1,9 @@
 import Ember from 'ember';
+import BaseModel from './base-model';
 
-var Origin = Ember.Object.extend({
+export default BaseModel.extend({
 
   url: null,
   realm: null,
 
 });
-
-export default Origin;

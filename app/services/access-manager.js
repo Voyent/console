@@ -17,11 +17,10 @@ var AccessManager = Ember.Service.extend({
     return new Ember.RSVP.Promise( (resolve, reject) => {
       if( !username || !password || !account){
         var err = 'AccessManager.login() username and password and account not supplied, exiting';
-        console.debug(err);
+        this.warn(err);
         reject(err);
       }
       else{
-        //console.log('AccessManager.logging in to judging'  );
         bridgeit.io.startTransaction();
         var bridgeitParams = {
           host: config.host,
@@ -40,7 +39,6 @@ var AccessManager = Ember.Service.extend({
   },
 
   logout: function(){
-    //console.log('AccessManager.logout()');
     bridgeit.io.auth.disconnect();
     bridgeit.io.endTransaction();
     

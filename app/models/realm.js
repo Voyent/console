@@ -2,8 +2,9 @@ import Ember from 'ember';
 import Selectable from 'console/models/selectable';
 import Origin from 'console/models/origin';
 import PermissionGroup from 'console/models/permission-group';
+import BaseModel from './base-model';
 
-var Realm = Ember.Object.extend({
+export default BaseModel.extend({
 
   id: function(){
     return this.get('name');
@@ -31,7 +32,7 @@ var Realm = Ember.Object.extend({
           this.set('custom', JSON.parse(custom));
         }
         catch(e){
-          console.log('WARNING: realm model could not parse custom json: ' + custom);
+          this.warn('WARNING: realm model could not parse custom json', custom);
         }
       }
     }
@@ -140,7 +141,7 @@ var Realm = Ember.Object.extend({
         ser.custom = JSON.stringify(ser.custom);
       }
       catch(e){
-        console.error('Could not parse custom property', e);
+        this.warn('Could not parse custom property', e);
       }
     }
     return ser;
@@ -170,5 +171,3 @@ var Realm = Ember.Object.extend({
 
   
 });
-
-export default Realm;

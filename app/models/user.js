@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import Selectable from 'console/models/selectable';
+import BaseModel from './base-model';
 
-var User = Ember.Object.extend({
+export default BaseModel.extend({
 
   realm: null,
   currentUser: false,
@@ -31,7 +32,7 @@ var User = Ember.Object.extend({
           this.set('custom', JSON.parse(custom));
         }
         catch(e){
-          console.log('WARNING: user model could not parse custom json: ' + custom);
+          this.warn('WARNING: user model could not parse custom json: ' + custom);
         }
       }
     }
@@ -116,12 +117,10 @@ var User = Ember.Object.extend({
         ser.custom = JSON.stringify(ser.custom);
       }
       catch(e){
-        console.error('Could not parse custom property', e);
+        this.error('Could not parse custom property', e);
       }
     }
     return ser;
   },
 
 });
-
-export default User;

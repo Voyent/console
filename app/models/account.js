@@ -1,10 +1,11 @@
 import Ember from 'ember';
+import BaseModel from './base-model';
 import User from 'console/models/user';
 import Realm from 'console/models/realm';
 import Service from 'console/models/service';
 import serviceCatalog from 'console/service-catalog';
 
-var Account = Ember.Object.extend({
+var Account = BaseModel.extend({
 
   id: function(){
     return this.get('accountname');

@@ -40,8 +40,8 @@ export default BaseController.extend({
         this.send('closeConfirmDeleteUserPopup');
         this.set('selectedUser',null);
       }).catch((error) => {
-        console.error('deleteUser error: ' + error);
-        var errorMessage = utils.extractErrorMessage(err);
+        this.warn('deleteUser error: ' + error);
+        var errorMessage = utils.extractErrorMessage(error);
         this.get('toast').error(errorMessage);
       });
     },
