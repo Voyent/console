@@ -11,11 +11,11 @@ export default Ember.Controller.extend({
   },
 
   startLongRunningAction: function(){
-    console.log('startLongRunningAction()');
+    //console.log('startLongRunningAction()');
     Ember.$('.loading').addClass('active');
   },
   stopLongRunningAction: function(){
-    console.log('stopLongRunningAction()');
+    //console.log('stopLongRunningAction()');
     Ember.$('.loading').removeClass('active');
   },
 
@@ -35,9 +35,9 @@ export default Ember.Controller.extend({
       this.logout();
     },
     gotoLogin: function(){
-      console.log('gotoLogin()');
+      //console.log('gotoLogin()');
       setTimeout( function(){
-        console.log('focussing on username');
+        //console.log('focussing on username');
         Ember.$('#username').focus();
       }, 500);
       this.transitionToRoute('login');
