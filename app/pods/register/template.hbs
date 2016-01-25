@@ -1,1 +1,110 @@
-{{outlet}}
+<div class='col-md-12'>
+	<div class='panel panel-default register'>
+		<div class='panel-heading'><h1>Register</h1></div>
+		<div class='panel-body'>
+			{{#if loggedIn}}
+				<p>You are already logged in!</p>
+			{{else}}
+			<form {{action 'register' on='submit'}} class='form-horizontal' role='form' autocomplete='off'>
+				<div class="form-group has-feedback {{if usernameMsg 'has-error'}}">
+					<label class='col-sm-2 control-label'>Username</label>
+					<div class="col-sm-10">
+						{{focus-input id='username' type='text' placeholder='Username'
+							value=username focus-out='validateUsernameOnBlur' class='form-control' autocomplete='off'}}
+						{{#if usernameMsg}}
+							<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+							<small id='usernameMsg' class="text-danger">{{usernameMsg}}</small>
+						{{/if}}
+					</div>
+				</div>
+				<div class="form-group has-feedback {{if accountMsg 'has-error'}}">
+					<label class='col-sm-2 control-label'>Account Name</label>
+					<div class="col-sm-10">
+						{{input id='account' type='text' placeholder='Account Name'
+							value=account focus-out='validateAccountOnBlur' class='form-control' autocomplete='off'}}
+						{{#if accountMsg}}
+							<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+							<small id='accountMsg' class="text-danger">{{accountMsg}}</small>
+						{{/if}}
+					</div>
+				</div>
+				<div class='form-group'>
+					<label class='col-sm-2 control-label'>Account Description</label>
+					<div class="col-sm-10">
+						{{input id='accountdescription' type='text' placeholder='Provide a brief description for the account.'
+							value=accountdescription  class='form-control' autocomplete='off'}}
+					</div>
+				</div>
+				<div class="form-group has-feedback {{if emailMsg 'has-error'}}">
+					<label class='col-sm-2 control-label'>Email</label>
+					<div class="col-sm-10">
+						{{input id='email' type='text' placeholder="We don't spam"
+							value=email focus-out='validateEmailOnBlur' class='form-control' autocomplete='off'}}
+						{{#if emailMsg}}
+							<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+							<small id='emailMsg' class="text-danger">{{emailMsg}}</small>
+						{{/if}}
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-lg-6'>
+						<div class="form-group :has-feedback {{if firstnameMsg 'has-error'}}">
+							<label class='col-sm-4 control-label'>First Name</label>
+							<div class="col-sm-8">
+								{{input id='firstname' type='text' placeholder='First Name'
+									value=firstname focus-out='validateFirstNameOnBlur' class='form-control' autocomplete='off'}}
+								{{#if firstnameMsg}}
+									<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+									<small id='firstnameMsg' class="text-danger">{{firstnameMsg}}</small>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+					<div class='col-lg-6'>
+						<div class="form-group has-feedback {{if lastnameMsg 'has-error'}}">
+							<label class='col-sm-4 control-label'>Last Name</label>
+							<div class="col-sm-8">
+								{{input id='lastname' type='text' placeholder='Last Name'
+									value=lastname focus-out='validateLastNameOnBlur' class='form-control' autocomplete='off'}}
+								{{#if lastnameMsg}}
+									<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+									<small id='lastnameMsg' class="text-danger">{{lastnameMsg}}</small>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group has-feedback {{if passwordMsg 'has-error'}}">
+					<label class='col-sm-2 control-label'>Password</label>
+					<div class="col-sm-10">
+						{{input id='password' type='password' placeholder='Password'
+							value=password focus-out='validatePasswordOnBlur' class='form-control' autocomplete='off'}}
+						{{#if passwordMsg}}
+							<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+							<small id='passwordMsg' class="text-danger">{{passwordMsg}}</small>
+						{{/if}}
+					</div>
+				</div>
+				<div class="form-group has-feedback {{if passwordconfirmMsg 'has-error'}}">
+					<label class='col-sm-2 control-label'>Password</label>
+					<div class="col-sm-10">
+						{{input id='passwordconfirm' type='password' placeholder='Confirm Password'
+							value=password_confirm focus-out='validatePasswordConfirmOnBlur' class='form-control' autocomplete='off'}}
+						{{#if passwordconfirmMsg}}
+							<span class="form-control-feedback"><i class='fa fa-times'></i></span>
+							<small id='passwordconfirmMsg' class="text-danger">{{passwordconfirmMsg}}</small>
+						{{/if}}
+					</div>
+				</div>
+
+				<div class='row'>
+					<div class='col-lg-12'>
+						{{input id='register' type='submit' value='Register' class='btn btn-primary btn-lg pull-right login-btn'}}
+						<a {{action 'cancel'}} class='btn btn-default btn-lg pull-right login-btn'>Cancel</a>
+					</div>
+				</div>
+			</form>
+			{{/if}}
+		</div>
+	</div>
+</div>
