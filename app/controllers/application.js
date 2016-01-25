@@ -21,14 +21,15 @@ export default BaseController.extend({
       return bridgeit.io.admin.getServiceDefinitions();
     }).then( (services) => {
       this.get('account').loadServiceModels(services);
+    }).catch((error) => {
+      console.log('could not load account info');
+      this.showErrorMessage(error, 'Could not load Account Info');
     });
   },
 
   showErrorMessage: function(error, title){
     var errorMessage = utils.extractErrorMessage(error);
-    this.set('errorTitle', title);
-    this.set('errorMessage', errorMessage);
-    Ember.$('#errorModal').modal();
+    this.get('toast').error(title, errorMessage);
   },
 
   showInfoMessage: function(msg){
