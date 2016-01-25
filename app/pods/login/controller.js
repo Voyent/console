@@ -1,4 +1,5 @@
 import BaseController from 'console/controllers/base-controller';
+import Ember from 'ember';
 
 export default BaseController.extend({
 
@@ -11,7 +12,7 @@ export default BaseController.extend({
       });
     },
     login: function() {
-      console.log('loginController.login()');
+      //console.log('loginController.login()');
       function validateUsername(){
         if( !this.get('username')){
           this.set('usernameMsg', 'Please enter your username.');
@@ -62,7 +63,7 @@ export default BaseController.extend({
       var accessManager = this.get('accessManager');
       return accessManager.login(this.get('account'), this.get('username'), this.get('password')).then( () => {
         application.set('isLoggedIn', true);
-        console.log('loginController: successfully logged in');
+        //console.log('loginController: successfully logged in');
         return application.updateAccountInfo();
       }).then(() => {
         this.send('stopLongRunningAction');
@@ -75,10 +76,15 @@ export default BaseController.extend({
         else{
           msg = reason.responseText || reason.message || reason;
         }
-        console.log('failed login: ' + msg);
-        this.set('login_error', msg);
+        //console.log('failed login: ' + msg);
+        this.get('toast').error(msg);
         this.send('stopLongRunningAction');
       });
+    },
+    forgotPassword: function(){
+      //if a username has been provided, set it on the forgot password form
+      var username = this.get('username');
+      this.transitionToRoute('/forgotpassword' + (username ? '?username=' + username : ''));
     }
   }
 
