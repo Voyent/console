@@ -9,14 +9,20 @@ export default BaseRoute.extend({
 
     var accessManager = this.get('accessManager');
     var isLoggedIn = accessManager.isLoggedIn();
-    console.log('application.beforeModel() isLoggedIn: ' + isLoggedIn);
+    //console.log('application.beforeModel() isLoggedIn: ' + isLoggedIn);
     if( isLoggedIn) {
-      console.log('setting application.loggedin ' + isLoggedIn);
+      //console.log('setting application.loggedin ' + isLoggedIn);
       var appController = this.controllerFor('application');
       appController.set('isLoggedIn', isLoggedIn);
       return appController.updateAccountInfo();
     }
   },
+
+  actions: {
+    reset: function(){
+      
+    }
+  }
 
 
 });
