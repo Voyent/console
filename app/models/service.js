@@ -44,7 +44,7 @@ var Service = Ember.Object.extend({
   }.observes('serviceCatalog'),
 
   selectedChanged: function(){
-    console.log('Service.selectedChanged');
+    //console.log('Service.selectedChanged');
     var realm = this.get('realm');
     if( realm ){
       if( this.get('selected') ){
