@@ -31,6 +31,10 @@ export default BaseController.extend({
     Ember.$('#errorModal').modal();
   },
 
+  showInfoMessage: function(msg){
+    this.get('toast').info(msg);
+  },
+
   actions: {
     closeErrorModal: function(){
       Ember.$('#errorModal').modal('hide');
