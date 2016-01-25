@@ -19,6 +19,7 @@ Router.map(function() {
     });
     this.route('create-realm');
   });
+  this.route('forgotpassword');
 });
 
 export default Router;
