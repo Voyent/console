@@ -1,6 +1,5 @@
-import Ember from 'ember';
 import Selectable from 'console/models/selectable';
-import Origin from 'console/models/origin';
+import SelectableArray from 'console/models/selectable-array';
 import PermissionGroup from 'console/models/permission-group';
 import BaseModel from './base-model';
 
@@ -10,23 +9,29 @@ export default BaseModel.extend({
     return this.get('name');
   }.property('name'),
 
+  attributeNames: ['name', 'description', 'services', 'origins', 'users', 'quick_user', 'disabled', 'custom', 'roles'],
+
+  //attributes
   name: '',
-  origins: [],
+  origins: ['*'],
   services: [],
   roles: [],
   users: [],
   quick_user: false,
   disabled: false,
   custom: {},
-  customText: '{}',
-  customDocumentValid: true,
+  account: null,
 
-  nonTransientOwnProperties: ['name', 'description', 'services', 'origins', 'users', 'quick_user', 'disabled', 'custom', 'roles'],
+  //edited properties
+  editedCustomTextValid: true,
+  editedCustomTextValidMsg: null,
+  editedCustomText: null,
+  createTestUsers: true,
 
   init: function(){
     var custom = this.get('custom');
     if( custom ){
-      this.set('customText', JSON.stringify(custom)); 
+      this.set('editedCustomText', JSON.stringify(custom)); 
       if( typeof custom === 'string'){
         try{
           this.set('custom', JSON.parse(custom));
@@ -51,51 +56,6 @@ export default BaseModel.extend({
   sortedServices: function(){
     return this.get('services').sort();
   }.property('services.[]'),
-
-  availableServiceWrappers: function(){
-    var account = this.get('account');
-    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'bridgeit.user');
-    var availableServiceWrappers = [];
-    if( accountServiceModels ){
-      availableServiceWrappers = accountServiceModels.filter((w) => w.get('value') !== 'bridgeit.auth')
-        .map( (w) => {
-          var selectable = Selectable.create({content: w});
-          selectable.set('realm', this);
-          if( this.get('services').contains(selectable.get('value')) ){
-            selectable.set('selected', true);
-          }
-          return selectable;
-        });
-    }
-    return availableServiceWrappers;
-  }.property('services.[]'),
-
-  selectedServices: function(){
-    return this.get('availableServiceWrappers').filter((w) => w.get('selected')).map((w) => w.get('content.value'));
-  }.property('availableServiceWrappers.@each.selected'),
-
-  originWrappers: function(){
-    var origins = this.get('origins');
-    if( origins && !!origins.length ){
-      return this.get('origins').map((origin) => Origin.create({url: origin}));
-    }
-    else{
-      return [Origin.create({url: ''})];
-    }
-    
-  }.property('origins.[]'),
-
-  editedOrigins: function(){
-    return this.get('originWrappers').map(
-      function(wrapper){
-        return wrapper.get('url');
-      }
-    ).filter(
-      function(url){
-        return !!url;
-      }
-    );
-  }.property('originWrappers.@each.url'),
 
   getAvailablePermissionGroups: function(){
     var serviceModels = this.get('account.serviceModels').slice(0);
@@ -134,40 +94,123 @@ export default BaseModel.extend({
     return permissionGroups;
   },
 
-  serialize: function(){
-    var ser = this.getProperties('name', 'origins', 'services', 'quick_user', 'disabled', 'custom');
-    if( ser.custom && typeof ser.custom === 'object'){
+  saveEditedProperties: function(){
+    this.set('services', this.get('editedServiceWrappers').get('selectedValues').map((w) => w.get('name')));
+    var origins = this.get('editedOriginWrappers').get('selectedValues');
+    if( origins.length === 0 ){
+      origins = ['*'];
+    }
+    this.set('origins', origins);
+    var editedCustomTextValid = this.get('editedCustomTextValid');
+    var editedCustomText = this.get('editedCustomText');
+    if( editedCustomTextValid ){
       try{
-        ser.custom = JSON.stringify(ser.custom);
+        this.set('custom', JSON.stringify(editedCustomText));
       }
       catch(e){
         this.warn('Could not parse custom property', e);
       }
     }
-    return ser;
+    /*
+    editedCustomTextValid: true,
+    editedCustomText: null,
+    editedOriginWrappers: [],
+    editedServiceWrappers: [],
+    editedRoleWrappers: [],*/
   },
 
-  onCustomInfoEntry: function(){
-    var customInfoInput = this.get('customText');
-    var customDocumentValidMsg = '';
+  serialize: function(){
+    return this.getProperties(this.get('attributeNames'));
+  },
+
+  onEditedCustomTextChanged: function(){
+    var editedCustomText = this.get('editedCustomText');
+    var editedCustomTextValidMsg = '';
     var valid = false;
-    if( customInfoInput ){
+    if( editedCustomText ){
       try{
-        JSON.parse(customInfoInput);
+        JSON.parse(editedCustomText);
         valid = true;
       }
       catch(e){
         valid = false;
-        customDocumentValidMsg = e;
+        editedCustomTextValidMsg = e;
       }
     }
     else{
       valid = true;
     }
-    this.set('customDocumentValid', valid);
-    this.set('customDocumentValidMsg', customDocumentValidMsg);
+    this.set('editedCustomTextValid', valid);
+    this.set('editedCustomTextValidMsg', editedCustomTextValidMsg);
     
-  }.observes('customText'),
+  }.observes('editedCustomText'),
+
+  editedOriginWrappers: function(){
+    var origins = this.get('origins');
+    var editedOriginWrappers = SelectableArray.create({content: []});
+    if( origins && !!origins.length ){
+      editedOriginWrappers.pushObjects(origins.map((origin) => Selectable.create({value: origin, selected: true})));
+    }
+    else{
+      editedOriginWrappers.pushObject(Selectable.create({value: '', selected: true}));
+    }
+    return editedOriginWrappers;
+    
+  }.property('origins.[]'),
+
+  editedServiceWrappers: function(){
+    var account = this.get('account');
+    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'bridgeit.user');
+    var editedServiceWrappers = SelectableArray.create({content: []});
+    if( accountServiceModels ){
+      editedServiceWrappers.pushObjects(accountServiceModels.filter((w) => w.get('value') !== 'bridgeit.auth').map( (w) => {
+        var selectable = Selectable.create({value: w});
+        if( this.get('services').contains(selectable.get('value')) ){
+          selectable.set('selected', true);
+        }
+        return selectable;
+      }));
+    }
+    return editedServiceWrappers;
+  }.property('services.[]'),
+
+  editedRoleWrappers: function(){
+    var roles = this.get('roles');
+    var editedRoleWrappers = SelectableArray.create({content: []});
+    if( roles && !!roles.length ){
+      editedRoleWrappers.pushObjects(roles.map((r) => Selectable.create({value: r, selected: true})));
+    }
+    return editedOriginWrappers;
+  },
+
+  generateTestUsersForServices: function(services){
+    var testUsers = [];
+    var account = this.get('account');
+    this.get('account.serviceModels').forEach((serviceModel) => {
+      var name = serviceModel.name;
+      if( name && services.indexOf(name) > -1 ){
+        if( name === 'bridgeit.push' ){
+          testUsers['bridgeit.push'] = [
+            {username: 'TEST_PUSH_ADMIN', firstname: 'TEST', lastname: 'PUSH_ADMIN',
+              password: 'testtest', permissions: account.getServiceModel('bridgeit.push').get('permissions')},
+            {username: 'TEST_PUSH_USER', firstname: 'TEST', lastname: 'PUSH_USER',
+              password: 'testtest', permissions: ['bridgeit.push.listen']},
+          ];
+        }
+        else{
+          var service = name.replace('bridgeit.','').toUpperCase();
+          testUsers[serviceModel.name] = [{
+            username: 'TEST_' + service + '_USER',
+            firstname: 'TEST',
+            lastname: service + '_USER',
+            password: 'testtest',
+            permissions: serviceModel.get('permissions')
+          }];
+        }
+      }
+    });
+    return testUsers;
+  }
 
   
 });

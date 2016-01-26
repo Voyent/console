@@ -5,7 +5,7 @@
 </ul>
 <h1 class='page-header'>{{model.id}} {{#link-to 'secure.realms.edit'}}<i class="fa fa-edit"></i>{{/link-to}}</h1>
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-sm-6 section">
     <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
     <div class='basic-realm-info clearfix'>
       <div class="row">
@@ -29,7 +29,8 @@
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="col-sm-6 section">
     <h4><i class='fa fa-file-text'></i>Open Registrations</h4>
     <div class='open-registrations'>
       Allow public user registrations:
@@ -39,39 +40,43 @@
         <span style='color:red;font-weight:bold'>Off</span>
       {{/if}}
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6 section">
     <h4><i class='fa fa-rocket'></i>Services</h4>
     <div class='services'>
       {{#if model.services}}
-        <table class="service-list table table-striped">
-          <tbody>
-            {{#each model.services key="@identity" as |service|}}
-              <tr>
-                <td>{{service}}</td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
+        <ul class='list-group list-group-no-border'>
+          {{#each model.services key="@identity" as |service|}}
+            <li class="list-group-item">{{service}}</li>
+          {{/each}}
+        </ul>
       {{else}}
-        <div>There are no services currently configured for <code>{{id}}</code>.</div>
+        <div>There are no services currently configured for <code>{{model.name}}</code>.</div>
       {{/if}}
     </div>
-
+  </div>
+  <div class="col-sm-6 section">
     <h4><i class='fa fa-globe'></i>Origins</h4>
     <div class='origins'>
       {{#if model.origins }}
-        <ul class='list-group'>
+        <ul class='list-group list-group-no-border'>
           {{#each model.origins key="@identity" as |origin|}}
             <li class="list-group-item">{{origin}}</li>
           {{/each}}
         </ul>
       {{else}}
-        <div>There are no origins currently configured for <code>{{id}}</code>.</div>
+        <div>There are no origins currently configured for <code>{{model.name}}</code>.</div>
       {{/if}}
     </div>
-
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6 section">
     <h4><i class='fa fa-lock'></i>Roles</h4>
     <div class='roles'>
-      <ul class='list-group'>
+      <ul class='list-group list-group-no-border'>
         {{#each model.roles key="@identity" as |role|}}
           <li class="list-group-item">
             <label>{{role.name}}</label>
@@ -89,7 +94,7 @@
           </li>
           {{else}}
             <li class="list-group-item">
-              There are no roles currently configured for <code>{{id}}</code>.
+              There are no roles currently configured for <code>{{model.name}}</code>.
             </li>
         {{/each}}
         <li class='list-group-item origin-controls'>
@@ -99,18 +104,21 @@
         </li>
       </ul>
     </div>
-
+  </div>
+  <div class="col-sm-6 section">
     {{#if model.custom}}
       <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
       <div class='optional-info'>
         {{json-highlight json=model.custom}}
       </div>
     {{/if}}
-
-
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6 section">
     <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
     {{#link-to 'secure.realms.users' model.id}}
-      <i class='fa fa-angle-double-right'></i>Click to view users for {{model.id}}
+      <i class='fa fa-angle-double-right'></i>Click to view users for <code>{{model.name}}</code>.
     {{/link-to}}
 
     <div class='btn-bar pull-right page-controls'>

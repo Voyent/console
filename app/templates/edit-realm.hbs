@@ -1,85 +1,93 @@
 <div class='basic-realm-info'>
   <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
-  <div class='form-group'>
-    <label class='control-label'>Realm Name</label>
-    {{focus-input id='name' placeholder='New Realm Name' value=model.name
-        class='form-control' autocomplete='off'}}
-  </div>
-  <div class='form-group'>
-    <label class='control-label'>Description</label>
-    {{input id='description' placeholder='Realm description' value=model.description
-        class='form-control' autocomplete='off'}}
-  </div>
-  <div class="checkbox">
-    <label>
-      {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
-      Disabled
-    </label>
-  </div>
-  <div class="checkbox">
-    <label>
-      {{input type='checkbox' id='createTestUsers' checked=createTestUsers autocomplete='off'}}
-      Create Test Users
-    </label>
-  </div>
-  <div class="checkbox">
-    <label>
-      {{input type='checkbox' id='admin' checked=model.quick_user}}
-      Allow public user registrations
-    </label>
-  </div>
-</div>
-
-<div class='services'>
-  <h4><i class='fa fa-rocket'></i>Services</h4>
-  <div class='panel services'>
-    <div class="panel-heading">
-      Select from the following services for the new realm
-      <i class='fa fa-rocket'></i>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class='form-group'>
+        <label class='control-label'>Realm Name</label>
+        {{focus-input id='name' placeholder='New Realm Name' value=model.name
+            class='form-control' autocomplete='off'}}
+      </div>
     </div>
-    <ul class='list-group'>
-      {{#each model.availableServiceWrappers key="@identity" as |service|}}
-        <li class='list-group-item service'>
-          <label>
-            {{input type='checkbox' checked=service.selected autocomplete='off'}}
-            <i class="fa {{service.icon}}"></i>
-            {{service.label}}
-          </label>
-          <small class='pull-right'>{{service.description}}</small>
-        </li>
-      {{/each}}
-    </ul>
+    <div class="col-sm-6">
+      <div class="checkbox">
+        <label>
+          {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
+          Disabled
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          {{input type='checkbox' id='createTestUsers' checked=model.createTestUsers autocomplete='off'}}
+          Create Test Users
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          {{input type='checkbox' id='admin' checked=model.quick_user}}
+          Allow public user registrations
+        </label>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class='roles'>
-  <h4>
-    <i class='fa fa-lock'></i>Realm Roles
-  </h4>
-  <div class="panel">
-    <ul class='list-group'>
-      {{#each roles key="@identity" as |role|}}
-        <li class='list-group-item'>
-          <strong>{{role.name}}</strong>
-          <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
-            <i class="fa fa-times"></i>
-          </a>
-          <a {{action 'editRole' role}} class="pull-right">
-            <i class="fa fa-edit"></i>
-          </a>
-          <ul>
-            {{#each role.permissions key="@identity" as |permission|}}
-              <li>{{permission}}</li>
-            {{/each}}
-          </ul>
-        </li>
-      {{/each}}
-      <li class='list-group-item origin-controls'>
-        <a {{action 'addNewRole'}}>
-          <i class="fa fa-plus-square"></i> Add New Role
-        </a>
-      </li>
-    </ul>
+<div class="row">
+  <div class="col-sm-6">
+    <div class='services'>
+      <h4><i class='fa fa-rocket'></i>Services</h4>
+      <div class='panel services'>
+        <div class="panel-heading">
+          Select from the following services for the new realm
+        </div>
+        <ul class='list-group'>
+          {{#each model.editedServiceWrappers key="@identity" as |wrapper|}}
+            <li class='list-group-item service'>
+              <label>
+                {{input type='checkbox' checked=wrapper.selected autocomplete='off'}}
+                <i class="fa {{wrapper.value.icon}}"></i>
+                {{wrapper.value.label}}
+              </label>
+              <small class='pull-right'>{{wrapper.value.description}}</small>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class='roles'>
+      <h4>
+        <i class='fa fa-lock'></i>Realm Roles
+      </h4>
+      <div class="panel">
+        <div class="panel-heading">
+          Select from the following roles which will applied to all users in the realm (default roles).
+        </div>
+        <ul class='list-group'>
+          {{#each editedRoleWrappers key="@identity" as |wrapper|}}
+            <li class='list-group-item'>
+              <strong>{{wrapper.value.name}}</strong>
+              <a {{action 'confirmDeleteRole' wrapper.value}} class="pull-right text-danger">
+                <i class="fa fa-times"></i>
+              </a>
+              <a {{action 'editRole' wrapper.value}} class="pull-right">
+                <i class="fa fa-edit"></i>
+              </a>
+              <ul>
+                {{#each wrapper.value.permissions key="@identity" as |permission|}}
+                  <li>{{permission}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          {{/each}}
+          <li class='list-group-item origin-controls'>
+            <a {{action 'addNewRole'}}>
+              <i class="fa fa-plus-square"></i> Add New Role
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -88,10 +96,10 @@
   <div class='panel origins'>
     <div class="panel-heading">You may also add one or more origin URLs to the realm</div>
     <ul class='list-group'>
-      {{#each model.originWrappers key="@identity" as |o|}}
+      {{#each model.editedOriginWrappers key="@identity" as |wrapper|}}
         <li class='list-group-item'>
-          {{input placeholder='URL' value=o.url class='form-control'}}
-          <a {{action 'removeOriginField' o.url}}><i class="fa fa-minus-square"></i></a>
+          {{input placeholder='URL' value=wrapper.value class='form-control'}}
+          <a {{action 'removeOriginField' wrapper.value}}><i class="fa fa-minus-square"></i></a>
         </li>
       {{/each}}
       <li class='list-group-item origin-controls'>
@@ -107,17 +115,17 @@
     You may enter optional custom information for the realm as a JSON document.
   </p>
   <div class='form-group clearfix'>
-    {{textarea value=customText cols="80" rows="6"
+    {{textarea value=model.customText cols="80" rows="6"
       placeholder='Enter JSON Content' class='form-control'}}
   </div>
   <div class='form-group'>
     <label class='control-label'>JSON Valid:</label>
-    {{#if customDocumentValid}}
+    {{#if model.customTextValid}}
       <i class='fa fa-check success'></i>
     {{else}}
       <i class='fa fa-times danger'></i>
     {{/if}}
-    {{customDocumentValidMsg}}
+    {{model.customTextValidMsg}}
   </div>
 </div>
 

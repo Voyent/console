@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import BaseModel from './base-model';
 import User from 'console/models/user';
 import Realm from 'console/models/realm';

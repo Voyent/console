@@ -12,7 +12,9 @@ export default BaseRoute.extend({
     if( isLoggedIn) {
       var appController = this.controllerFor('application');
       appController.set('isLoggedIn', isLoggedIn);
-      return appController.updateAccountInfo();
+      return appController.updateAccountInfo().catch((err) => {
+        this.transitionTo('index');
+      });
     }
   },
 

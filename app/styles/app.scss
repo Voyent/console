@@ -227,15 +227,18 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 }
 
 h4{
-  background-color: #84C576;
+  background-color: #3CB123;
   font-weight: 200;
   color: #FFF;
   padding: 5px;
   margin: 10px 0;
+  line-height: 23px;
 
+  /*
   &:first-child{
     margin-top: 0;
   }
+  */
 
   i {
     margin: 2px 10px 2px 5px;
@@ -277,6 +280,24 @@ h4{
     padding: 2px 10px;
     line-height: 17px;
     display: inline-block;
+}
+
+.service{
+  small{
+    margin-top: 5px;
+  }
+}
+
+.section{
+  .section-list{
+    margin-bottom: 0;
+  }
+}
+
+.list-group-no-border{
+  .list-group-item{
+    border: none;
+  }
 }
 
 
