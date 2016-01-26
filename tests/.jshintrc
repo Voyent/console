@@ -21,7 +21,9 @@
     "andThen",
     "currentURL",
     "currentPath",
-    "currentRouteName"
+    "currentRouteName",
+    "bridgeit",
+    "validator"
   ],
   "node": false,
   "browser": false,
