@@ -3,7 +3,14 @@
   <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
   <li>{{#link-to 'secure.realms.index'}}{{model.id}}{{/link-to}}</li>
 </ul>
-<h1 class='page-header'>{{model.id}} {{#link-to 'secure.realms.edit'}}<i class="fa fa-edit"></i>{{/link-to}}</h1>
+<h1 class='page-header'>{{model.id}} 
+  <div class='btn-bar pull-right page-controls'>
+    {{#link-to 'secure.realms.users.index' model.id class='btn btn-info btn-sm'}}List Users{{/link-to}}
+    {{#link-to 'secure.realms.edit' class='btn btn-default btn-sm'}}Edit Realm{{/link-to}}
+    <a class="btn btn-success btn-sm" {{action 'cloneRealmDialog'}}>Clone Realm</a>
+    <a class="btn btn-danger btn-sm" {{action 'confirmDeleteRealm'}}>Delete Realm</a>
+  </div>
+</h1>
 <div class="row">
   <div class="col-sm-6 section">
     <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
@@ -120,12 +127,5 @@
     {{#link-to 'secure.realms.users' model.id}}
       <i class='fa fa-angle-double-right'></i>Click to view users for <code>{{model.name}}</code>.
     {{/link-to}}
-
-    <div class='btn-bar pull-right page-controls'>
-      {{#link-to 'secure.realms.users.index' model.id class='btn btn-info btn-sm'}}List Users{{/link-to}}
-      {{#link-to 'secure.realms.edit' class='btn btn-default btn-sm'}}Edit Realm{{/link-to}}
-      <a class="btn btn-success btn-sm" {{action 'cloneRealmDialog'}}>Clone Realm</a>
-      <a class="btn btn-danger btn-sm" {{action 'confirmDeleteRealm'}}>Delete Realm</a>
-    </div>
   </div>
 </div>

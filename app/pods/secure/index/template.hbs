@@ -3,7 +3,13 @@
   <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
 </ul>
 
-{{#link-to 'secure.create-realm' class="btn btn-success btn-lg btn-block"}}Create New Realm{{/link-to}}
-{{#each application.account.realms key="@identity" as |realm|}}
-  {{#link-to 'secure.realms' realm.name class="btn btn-primary btn-lg btn-block"}}{{realm.name}}{{/link-to}}
-{{/each}}
+<div class="row">
+	<div class="col-sm-6 col-lg-4">
+		{{#link-to 'secure.create-realm' class="btn btn-success btn-lg btn-block"}}Create New Realm<i class='fa fa-angle-right'></i>{{/link-to}}
+	</div>
+	{{#each application.account.realms key="@identity" as |realm|}}
+		<div class="col-sm-6 col-lg-4">
+			{{#link-to 'secure.realms' realm.name class="btn btn-primary btn-lg btn-block"}}{{realm.name}}<i class='fa fa-angle-right'></i>{{/link-to}}
+		</div>
+	{{/each}}
+</div>

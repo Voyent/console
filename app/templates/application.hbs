@@ -9,10 +9,10 @@
         <span class="icon-bar"></span>
       </button>
       {{#link-to 'index' class="navbar-brand"}}
-        <i class="fa fa-cloud"></i>Cloud Admin Console
+        <i class="fa fa-cloud"></i>Voyent Cloud Admin Console
       {{/link-to}}
       {{#if currentUser}}
-        <small class="current-user">Welcome {{currentUser.username}}</small>
+        <small class="current-user">Welcome {{currentUser.username}} | Account: {{account.accountname}}</small>
       {{/if}}
     </div>
     <div id="navbar" class="navbar-collapse collapse">
