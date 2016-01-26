@@ -26,12 +26,12 @@
         </div>
       </div>
       <div class="row">
-        <label class='col-sm-3 col-md-2 control-label'>Disabled</label>
+        <label class='col-sm-3 col-md-2 control-label'>Enabled</label>
         <div class="col-sm-9 col-md-10">
           {{#if model.disabled}}
-            <span style='color:#0FD50F;font-weight:bold'>True</span>
-          {{else}}
             <span style='color:red;font-weight:bold'>False</span>
+          {{else}}
+            <span style='color:#0FD50F;font-weight:bold'>True</span>
           {{/if}}
         </div>
       </div>
@@ -42,9 +42,9 @@
     <div class='open-registrations'>
       Allow public user registrations:
       {{#if model.quick_user}}
-        <span style='color:#0FD50F;font-weight:bold'>On</span>
+        <span style='color:#0FD50F;font-weight:bold'>True</span>
       {{else}}
-        <span style='color:red;font-weight:bold'>Off</span>
+        <span style='color:red;font-weight:bold'>False</span>
       {{/if}}
     </div>
   </div>
