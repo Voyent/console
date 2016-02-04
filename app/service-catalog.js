@@ -50,11 +50,11 @@ var services = [{
 },{
     name: "bridgeit.action",
     label: "Action Service",
-    icon: 'fa-code-fork'
+    icon: 'fa-paper-plane-o'
 },{
     name: "bridgeit.eventhub",
     label: "Event Hub Service",
-    icon: 'fa-arrows-alt'
+    icon: 'fa-flash'
 },{
     name: "bridgeit.mailbox",
     label: "Mailbox Service",

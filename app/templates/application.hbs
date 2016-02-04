@@ -12,15 +12,25 @@
         <i class="fa fa-cloud"></i>Voyent Cloud Admin Console
       {{/link-to}}
       {{#if currentUser}}
-        <small class="current-user">Welcome {{currentUser.username}} | Account: {{account.accountname}}</small>
+        <small class="current-user">Welcome {{currentUser.username}} | {{account.accountname}}</small>
       {{/if}}
     </div>
     <div id="navbar" class="navbar-collapse collapse">
 
       <ul class="nav navbar-nav">
         {{#if isLoggedIn}}
-          <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
-          <li>{{#link-to 'secure.administrators'}}Administrators{{/link-to}}</li>
+          <li>
+            {{#link-to 'secure.index'}}
+              Realms
+              <i class="fa fa-shield"></i>
+            {{/link-to}}
+          </li>
+          <li>
+            {{#link-to 'secure.administrators'}}
+              Administrators
+              <i class="fa fa-star"></i>
+            {{/link-to}}
+          </li>
         {{else}}
           <li>{{#link-to 'login'}}Login{{/link-to}}</li>
           <li>{{#link-to 'register'}}Register{{/link-to}}</li>
@@ -29,7 +39,12 @@
 
       {{#if isLoggedIn}}
         <ul class="nav navbar-nav navbar-right">
-          <li><a {{action 'logout'}} href="#">Logout</a></li>
+          <li>
+            <a {{action 'logout'}} href="#">
+              Logout
+              <i class="fa fa-power-off"></i>
+            </a>
+          </li>
         </ul>
       {{/if}}
     </div><!--/.nav-collapse -->

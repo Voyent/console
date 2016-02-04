@@ -9,7 +9,7 @@ export default Ember.Route.extend({
     var realm = this.modelFor('secure.realms');
     var userId = params.user_id;
     return bridgeit.io.admin.getRealmUser({username: userId}).then( user => {
-      var userModel = User.create(user).clone();
+      var userModel = User.create(user);
       userModel.set('realm', realm);
       return userModel;
     }).catch((error) => {

@@ -29,7 +29,7 @@ export default BaseController.extend({
 
   showErrorMessage: function(error, title){
     var errorMessage = utils.extractErrorMessage(error);
-    this.get('toast').error(title, errorMessage);
+    this.get('toast').error(errorMessage, title);
   },
 
   showInfoMessage: function(msg){

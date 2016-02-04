@@ -36,17 +36,16 @@ export default Ember.Mixin.create({
 
     addNewOriginField: function(){
       this.debug('#addNewOriginField()');
+      var origins = this.get('model.editedOriginWrappers').get('selectedValues');
+      if( origins.length === 0 ){
+        origins = ['*'];
+      }
+      this.set('model.origins', origins);
       this.get('model.origins').pushObject('');
     },
 
-    removeOriginField: function(o){
-      var origins = this.get('model').get('origins');
-      if( o ){
-        origins.removeObject(o);
-      }
-      else{
-        origins.removeAt(origins.length-1);
-      }
+    removeOriginField: function(wrapper){
+      this.get('model.editedOriginWrappers').removeObject(wrapper);
     },
 
     addNewRole: function(){
@@ -66,6 +65,7 @@ export default Ember.Mixin.create({
     },
 
     saveEditedRole: function(){
+      this.debug('saveEditedRole()');
       var role = this.get('editedRole');
       var selectedPermissions = [];
       role.set('content', this.get('editedRoleName'));
@@ -161,6 +161,30 @@ export default Ember.Mixin.create({
         });
       });
     },
+
+    confirmDeleteRole: function(role){
+      this.set('selectedRole', role);
+      Ember.$('#confirmDeleteRoleModal').modal();
+    },
+
+    deleteRole: function(){
+      var role = this.get('selectedRole.name');
+      Ember.$('#confirmDeleteRoleModal').modal('hide');
+      bridgeit.io.admin.deleteRealmRole({
+        id: role
+      }).then(() => {
+        this.get('application').showInfoMessage('Deleted role ' + role);
+        this.get('model.roles').removeObject(role);
+      }).catch((error) => {
+        this.get('application').showErrorMessage(error, 'Error deleting role');
+        this.error('Error deleting role', error);
+      });
+    },
+
+    cancelDeleteRole: function(){
+      this.set('selectedRole', null);
+      Ember.$('#confirmDeleteRoleModal').modal('hide');
+    }
 
   }
 

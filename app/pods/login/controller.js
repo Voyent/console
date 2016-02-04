@@ -11,6 +11,7 @@ export default BaseController.extend({
         login_error: ''
       });
     },
+
     login: function() {
       this.debug('loginController#login()');
       function validateUsername(){
@@ -81,6 +82,7 @@ export default BaseController.extend({
         this.send('stopLongRunningAction');
       });
     },
+    
     forgotPassword: function(){
       //if a username has been provided, set it on the forgot password form
       var username = this.get('username');

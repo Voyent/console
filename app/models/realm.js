@@ -59,7 +59,7 @@ export default BaseModel.extend({
 
   getAvailablePermissionGroups: function(){
     var serviceModels = this.get('account.serviceModels').slice(0);
-    var selectedServices = this.get('selectedServices');
+    var selectedServices = this.get('services');
     var permissionGroups = [];
     var groupedWrappers = {};
     var availableServiceModels = serviceModels.filter((s) => selectedServices.contains(s.name) || s.name === 'bridgeit.user');
@@ -165,7 +165,7 @@ export default BaseModel.extend({
     if( accountServiceModels ){
       editedServiceWrappers.pushObjects(accountServiceModels.filter((w) => w.get('value') !== 'bridgeit.auth').map( (w) => {
         var selectable = Selectable.create({value: w});
-        if( this.get('services').contains(selectable.get('value')) ){
+        if( this.get('services').contains(selectable.get('value.name')) ){
           selectable.set('selected', true);
         }
         return selectable;
@@ -173,6 +173,17 @@ export default BaseModel.extend({
     }
     return editedServiceWrappers;
   }.property('services.[]'),
+
+  selectedServiceWrappers: function(){
+    var account = this.get('account');
+    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'bridgeit.user');
+    var selectedServiceWrappers = [];
+    var selectedServices = this.get('services');
+    if( accountServiceModels ){
+      selectedServiceWrappers = accountServiceModels.filter((w) => selectedServices.indexOf(w.get('value')) > -1 ); 
+    }
+    return selectedServiceWrappers;
+  }.property('services.[]'),  
 
   editedRoleWrappers: function(){
     var roles = this.get('roles');

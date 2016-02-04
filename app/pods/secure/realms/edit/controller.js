@@ -1,35 +1,16 @@
 import BaseController from 'console/controllers/base-controller';
 import utils from 'console/helpers/utils';
+import RealmMixin from 'console/controllers/realm-mixin';
 //import Ember from 'ember';
 
-export default BaseController.extend({
+export default BaseController.extend( RealmMixin, {
 
   actions: {
-    editRealm: function() {
+    saveRealm: function() {
       var realm = this.get('model');
 
-      //set edited properties
-      realm.set('origins', realm.get('editedOrigins'));
-      realm.set('services', realm.get('availableServiceWrappers').filter(function(wrapper){
-        return wrapper.selected;
-      }).map(function(wrapper){
-        return wrapper.get('name');
-      }));
-
-      try{
-        var customText = realm.get('customText');
-        var customJSON;
-        if( customText ){
-          customJSON = JSON.parse(customText);
-          realm.set('custom', customJSON);
-        }
-      }
-      catch(e){
-        this.warn('error parsing custom text', e);
-        this.get('toast').error('Error parsing custom text: ' + e.message, 'Error');
-        return;
-      }
-
+      realm.saveEditedProperties();
+      
       bridgeit.io.admin.updateRealm({realm: realm.serialize()}).then(() => {
         this.get('toast').info('Successfully updated realm information', 'Realm Updated');
         this.transitionToRoute('secure.realms.index');

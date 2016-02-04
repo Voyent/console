@@ -1,20 +1,37 @@
+<ul class="breadcrumb">
+  <li>{{#link-to 'index'}}Home{{/link-to}}</li>
+  <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.index'}}{{model.id}}{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.edit'}}Edit{{/link-to}}</li>
+</ul>
+
 <h1 class='page-header'>{{model.id}}</h1>
-<form {{action 'editRealm' on='submit'}} role='form' autocomplete='off'>
+<form {{action 'saveRealm' on='submit'}} role='form' autocomplete='off' class="form-horizontal">
+
   <div class="row">
-    <div class="col-lg-12">
+
+    <div class="col-sm-6 section">
       <div class='basic-realm-info'>
         <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
         <div class='form-group'>
-          <label class='control-label'>Description</label>
-          {{input id='description' placeholder='Realm description' value=model.description
+          <label class='col-sm-2 control-label'>Description</label>
+          <div class="col-sm-10">
+            {{focus-input placeholder='Enter a description' value=model.description
               class='form-control' autocomplete='off'}}
+          </div>
         </div>
-        <div class="checkbox">
+         <div class="checkbox">
           <label>
             {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
             Disabled
           </label>
         </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 section">
+      <div class='basic-realm-info'>
+        <h4><i class='fa fa-file-text'></i>Open Registrations</h4>
         <div class="checkbox">
           <label>
             {{input type='checkbox' id='admin' checked=model.quick_user}}
@@ -22,78 +39,83 @@
           </label>
         </div>
       </div>
+    </div>
 
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-6 section">
       <div class='services'>
         <h4><i class='fa fa-rocket'></i>Services</h4>
-        <div class='panel panel-default services'>
-          <div class="panel-heading">
-            Select from the following services for the new realm
-            <i class='fa fa-rocket'></i>
-          </div>
+        <div class='services'>
           <ul class='list-group'>
-            {{#each model.availableServiceWrappers as |service|}}
+            {{#each model.editedServiceWrappers as |wrapper|}}
               <li class='list-group-item service'>
                 <label>
-                  {{input type='checkbox' checked=service.selected autocomplete='off'}}
-                  <i class='fa {{service.icon}}'></i>
-                  {{service.label}}
+                  {{input type='checkbox' checked=wrapper.selected autocomplete='off'}}
+                  <i class='fa {{wrapper.value.icon}}'></i>
+                  {{wrapper.value.label}}
                 </label>
-                <small class='pull-right'>{{service.description}}</small>
+                <small class='pull-right'>{{wrapper.value.description}}</small>
               </li>
             {{/each}}
           </ul>
         </div>
       </div>
+    </div>
 
-      <div class='roles'>
-        <h4>
-          <i class='fa fa-lock'></i>Realm Roles
-        </h4>
-        <div class="panel panel-info">
-          <ul class='list-group'>
-            {{#each model.roles as |role|}}
-              <li class='list-group-item'>
-                <strong>{{role.name}}</strong>
-                <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
-                  <i class="fa fa-times"></i>
-                </a>
-                <a {{action 'editRole' role}} class="pull-right">
-                  <i class="fa fa-edit"></i>
-                </a>
-                <ul>
-                  {{#each role.permissions as |permission|}}
-                    <li>{{permission}}</li>
-                  {{/each}}
-                </ul>
-              </li>
-            {{/each}}
-            <li class='list-group-item origin-controls'>
-              <a {{action 'addNewRole'}}>
-                <i class="fa fa-plus-square"></i> Add New Role
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
+    <div class="col-sm-6 section">
       <div class='origins'>
         <h4><i class='fa fa-globe'></i>Origins</h4>
-        <div class='panel panel-default origins'>
-          <div class="panel-heading">You may also add one or more origin URLs to the realm</div>
-          <ul class='list-group'>
-            {{#each model.originWrappers as |o|}}
-              <li class='list-group-item'>
-                {{input placeholder='URL' value=o.url class='form-control'}}
-                <a {{action 'removeOriginField' o.url}}><i class="fa fa-minus-square"></i></a>
-              </li>
-            {{/each}}
-            <li class='list-group-item origin-controls'>
-              <a {{action 'addNewOriginField'}}><i class="fa fa-plus-square"></i></a>
+        <ul class='list-group'>
+          {{#each model.editedOriginWrappers as |wrapper|}}
+            <li class='list-group-item'>
+              {{input placeholder='URL' value=wrapper.value class='form-control'}}
+              <a {{action 'removeOriginField' wrapper}}><i class="fa fa-minus-square"></i></a>
             </li>
-          </ul>
-        </div>
+          {{/each}}
+          <li class='list-group-item origin-controls'>
+            <a {{action 'addNewOriginField'}}><i class="fa fa-plus-square"></i></a>
+          </li>
+        </ul>
       </div>
+    </div>
 
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-6 section">
+       <div class='roles'>
+        <h4><i class='fa fa-lock'></i>Realm Roles</h4>
+        <ul class='list-group'>
+          {{#each model.roles as |role|}}
+            <li class='list-group-item'>
+              <strong>{{role.name}}</strong>
+              <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
+                <i class="fa fa-times"></i>
+              </a>
+              <a {{action 'editRole' role}} class="pull-right">
+                <i class="fa fa-edit"></i>
+              </a>
+              <ul>
+                {{#each role.permissions as |permission|}}
+                  <li>{{permission}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          {{/each}}
+          <li class='list-group-item origin-controls'>
+            <a {{action 'addNewRole'}}>
+              <i class="fa fa-plus-square"></i> Add New Role
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-sm-6 section">
       <div class='optional-info'>
         <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
         <p>
@@ -113,17 +135,46 @@
           {{model.customDocumentValidMsg}}
         </div>
       </div>
+    </div>
 
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-6 section">
       <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
       {{#link-to 'secure.realms.users'}}
         <i class='fa fa-angle-double-right'></i>Click to view users for {{model.id}}
       {{/link-to}}
+    </div>
 
-      <div class='btn-bar pull-right page-controls'>
-        {{#link-to 'secure.realms.users.index' class='btn btn-info btn-sm'}}List Users{{/link-to}}
-        <button id="cancel" class='btn btn-default btn-sm' {{action 'cancel'}}>Cancel</button>
-        {{input id='submit' type='submit' value='Save' class="btn btn-primary btn-sm"}}
+  </div>
+
+  <div class="row">
+    <div class='btn-bar pull-right page-controls'>
+      {{#link-to 'secure.realms.users.index' class='btn btn-info btn-sm'}}List Users{{/link-to}}
+      <button id="cancel" class='btn btn-default btn-sm' {{action 'cancel'}}>Cancel</button>
+      {{input id='submit' type='submit' value='Save' class="btn btn-primary btn-sm"}}
+    </div>
+  </div>
+
+</form>
+
+{{partial 'edit-role-modal'}}
+
+<div class="modal fade" id="confirmDeleteRoleModal">
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h3>Delete Role</h3>
+      </div>
+      <div class='modal-body'>
+        <p>Are you sure you want to delete the role {{selectedRole.name}}? This action cannot be undone.</p>
+      </div>
+       <div class="modal-footer">
+        <a class="btn btn-danger btn-lg pull-right login-btn" {{action 'deleteRole'}}>Yes, please delete</a>
+        <a class="btn btn-default btn-lg pull-right login-btn" {{action 'cancelDeleteRole'}}>Cancel</a>
       </div>
     </div>
   </div>
-</form>
+</div>

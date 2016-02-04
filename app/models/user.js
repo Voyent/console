@@ -69,7 +69,7 @@ export default BaseModel.extend({
   },
 
   clone: function(){
-    var clonedUser = User.create(
+    var clonedUser = this.create(
       this.getProperties(this.get('nonTransientOwnProperties'))
     );
     clonedUser.set('realm', this.get('realm'));

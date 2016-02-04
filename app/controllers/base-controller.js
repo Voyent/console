@@ -6,11 +6,6 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   accessManager: Ember.inject.service(),
 
-  showErrorMsg: function(msg){
-    this.set('errorMsg', msg);
-    window.openModal('#errorModal');
-  },
-
   startLongRunningAction: function(){
     Ember.$('.loading').addClass('active');
   },
@@ -20,25 +15,45 @@ export default Ember.Controller.extend({
 
   debug: function(msg, obj){
     if( 'console' in window && config.isDev ){
-      console.log(msg, obj);
+      if( obj ){
+        console.log(msg, obj);
+      }
+      else{
+        console.log(msg);
+      }      
     }
   },
 
   info: function(msg, obj){
     if( 'console' in window ){
-      console.info(msg, obj);
+      if( obj ){
+        console.info(msg, obj);
+      }
+      else{
+        console.info(msg);
+      }   
     }
   },
 
   warn: function(msg, obj){
     if( 'console' in window ){
-      console.warn(msg, obj);
+      if( obj ){
+        console.warn(msg, obj);
+      }
+      else{
+        console.warn(msg);
+      }   
     }
   },
 
   error: function(msg, obj){
     if( 'console' in window ){
-      console.error(msg, obj);
+      if( obj ){
+        console.error(msg, obj);
+      }
+      else{
+        console.error(msg);
+      }   
     }
   },
 
