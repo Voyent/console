@@ -8,8 +8,6 @@ export default BaseController.extend( RealmMixin, {
   //TODO add dirty form check before navigating
   //TODO add more user-friendly json editor
 
-  editedOptionalInformation: null,
-
   actions: {
     saveRealm: function() {
       var realm = this.get('model');

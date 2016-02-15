@@ -131,15 +131,18 @@
             </p>
           </div>
           <div class="col-sm-12">
-            {{json-node node=editedOptionalInformation}}
+            <div>
+              {{textarea value=model.editedCustomText cols="80" rows="6"
+                placeholder='Enter JSON Content' class='form-control'}}
+            </div>
             <div>
               <label class='control-label'>JSON Valid:</label>
-              {{#if model.customDocumentValid}}
+              {{#if model.editedCustomTextValid}}
                 <i class='fa fa-check success'></i>
               {{else}}
                 <i class='fa fa-times danger'></i>
               {{/if}}
-              {{model.customDocumentValidMsg}}
+              {{model.editedCustomTextValidMsg}}
             </div>
           </div>
         </div>
@@ -163,10 +166,9 @@
   </div>
 
   <div class="row">
-    <div class='btn-bar pull-right page-controls'>
-      {{#link-to 'secure.realms.users.index' class='btn btn-info btn-sm'}}List Users{{/link-to}}
-      <button id="cancel" class='btn btn-default btn-sm' {{action 'cancel'}}>Cancel</button>
-      {{input id='submit' type='submit' value='Save' class="btn btn-primary btn-sm"}}
+    <div class='btn-bar pull-right'>
+      <button id="cancel" class='btn btn-default' {{action 'cancel'}}>Cancel</button>
+      {{input id='submit' type='submit' value='Save' class="btn btn-primary"}}
     </div>
   </div>
 
