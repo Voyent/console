@@ -159,7 +159,7 @@
       {{#if model.custom}}
         <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
         <div class='optional-info'>
-          {{json-highlight json=model.custom}}
+          {{json-highlight json=model.customJSON}}
         </div>
       {{/if}}
     </div>
@@ -169,11 +169,17 @@
   <div class="col-sm-6">
     <div class="section">
       <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
-      {{#link-to 'secure.realms.users' model.id}}
-        <i class='fa fa-angle-double-right'></i>Click to view users for <code>{{model.name}}</code>.
-      {{/link-to}}
+      <div class="row">
+        <div class="col-sm-12">
+          {{#link-to 'secure.realms.users' model.id}}
+            <i class='fa fa-angle-double-right'></i>Click to view users for <code>{{model.name}}</code>.
+          {{/link-to}}
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 {{partial 'edit-role-modal'}}
+
+{{partial 'delete-role-modal'}}

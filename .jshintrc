@@ -4,7 +4,8 @@
     "window",
     "-Promise",
     "bridgeit",
-    "validator"
+    "validator",
+    "_"
   ],
   "browser": true,
   "boss": true,

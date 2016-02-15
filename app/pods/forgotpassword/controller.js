@@ -7,13 +7,16 @@ export default BaseController.extend({
   username: null,
 
   actions: {
+
     reset: function() {
       this.setProperties({
         username: null,
         account: null
       });
     },
+
     submit: function(){
+      //TODO use inline error messages
       var username = this.get('username');
       var account = this.get('account');
 

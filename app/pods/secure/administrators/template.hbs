@@ -2,9 +2,12 @@
   <li>{{#link-to 'index'}}Home{{/link-to}}</li>
   <li>{{#link-to 'secure.administrators'}}Administrators{{/link-to}}</li>
 </ul>
-<a {{action 'openCreateAdmin'}} class="btn btn-success">Create Administrator</a>
+<h1 class='page-header'>{{application.account.accountname}} Account Administrators 
+  <div class='btn-bar pull-right page-controls'>
+    <a {{action 'openCreateAdmin'}} class="btn btn-success">Create Administrator</a>
+  </div>
+</h1>
 <table class="table">
-  <caption>Administrators</caption>
   <thead>
     <tr>
       <th>Name</th>

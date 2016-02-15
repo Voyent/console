@@ -118,7 +118,7 @@ export default Ember.Mixin.create({
         var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
           .map((p) => Selectable.create({
             content: p, 
-            selected: role.permissions.contains(p),
+            selected: role.permissions ? role.permissions.contains(p) : false,
             groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
             label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
           }));
@@ -168,12 +168,17 @@ export default Ember.Mixin.create({
     },
 
     deleteRole: function(){
-      var role = this.get('selectedRole.name');
+      var roleName = this.get('selectedRole.name');
+      var role = this.get('model').getRole(roleName);
+      if( !role ){
+        this.get('application').showErrorMessage('Could not file role ' + roleName);
+        return;
+      }
       Ember.$('#confirmDeleteRoleModal').modal('hide');
       bridgeit.io.admin.deleteRealmRole({
-        id: role
+        id: roleName
       }).then(() => {
-        this.get('application').showInfoMessage('Deleted role ' + role);
+        this.get('application').showInfoMessage('Deleted role ' + roleName);
         this.get('model.roles').removeObject(role);
       }).catch((error) => {
         this.get('application').showErrorMessage(error, 'Error deleting role');

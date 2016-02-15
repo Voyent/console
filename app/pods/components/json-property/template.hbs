@@ -1,0 +1,14 @@
+<div class="form-group">
+  <div class="row">
+    <div class="col-xs-5">
+      {{input class='form-control' type='text' value=node.key placeholder='Key'}}
+    </div>
+    <div class="col-xs-5">
+      {{input class='form-control' type='text' value=node.value placeholder='Value'}}
+    </div>
+    <div class="col-xs-1">
+      <a class="pull-right" {{action 'remove' node}}><i class="fa fa-minus"></i></a>
+    </div>
+  </div>
+</div>
+

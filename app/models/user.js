@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import Selectable from 'console/models/selectable';
 import BaseModel from './base-model';
 

@@ -1,6 +1,7 @@
 import BaseController from 'console/controllers/base-controller';
 import validation from 'console/helpers/bridgeit-validation';
 import Ember from 'ember';
+import User from 'console/models/user';
 
 export default BaseController.extend({
 
@@ -31,6 +32,7 @@ export default BaseController.extend({
     }
     return valid;
   },
+
   validateRequiredPassword: function(){
     var valid = true;
     if( !this.get('selectedAdmin.password') || this.get('selectedAdmin.password').length === 0 ){
@@ -39,6 +41,7 @@ export default BaseController.extend({
     }
     return valid;
   },
+
   validateEmail: function(){
     if( !validator.isEmail(this.get('selectedAdmin.email'))){
         this.set('emailMsg', 'Please enter a valid email.');
@@ -47,16 +50,19 @@ export default BaseController.extend({
         this.set('emailMsg', '');
     }
   },
+
   validateFirstname: function(){
       if( this.get('selectedAdmin.firstname') && this.get('selectedAdmin.firstname').length > 2 ){
           this.set('firstnameMsg', '');
       }
   },
+
   validateLastname: function(){
       if( this.get('selectedAdmin.lastname') && this.get('selectedAdmin.lastname').length > 2 ){
           this.set('lastnameMsg', '');
       }
   },
+
   validatePassword: function(){
       var password = this.get('selectedAdmin.password');
       if( password && !validation.passwordValidator(password)){
@@ -66,6 +72,7 @@ export default BaseController.extend({
           this.set('passwordMsg', '');
       }
   },
+
   validatePasswordConfirm: function(){
       var password = this.get('selectedAdmin.password');
       if( password && !validator.equals(password, this.get('selectedAdmin.password_confirm'))){
@@ -75,6 +82,7 @@ export default BaseController.extend({
           this.set('passwordconfirmMsg', '');
       }
   },
+
   validateUsername: function(){
       if( !validation.usernameValidator(this.get('selectedAdmin.username'))){
           this.set('usernameMsg', validation.usernameMsg);
@@ -87,21 +95,27 @@ export default BaseController.extend({
   openEditAdminModal: function() {
     Ember.$('#editAdminModal').modal();
   },
+
   closeEditAdminModal: function() {
     Ember.$('#editAdminModal').modal('hide');
   },
+
   openCreateAdminModal: function() {
     Ember.$('#createAdminModal').modal();
   },
+
   closeCreateAdminModal: function(){
     Ember.$('#createAdminModal').modal('hide');
   },
+
   openConfirmDeleteAdminModal: function() {
     Ember.$('#confirmDeleteAdminModal').modal();
   },
+
   closeConfirmDeleteAdminModal: function(){
     Ember.$('#confirmDeleteAdminModal').modal('hide');
   },
+
   resetErrorMessages: function(){
     ['errorMsg', 'emailMsg', 'usernameMsg', 'passwordMsg', 'firstnameMsg', 'lastnameMsg'].forEach( (prop) => {
       this.set(prop, "");
@@ -116,10 +130,12 @@ export default BaseController.extend({
         this.closeCreateAdminModal();
         this.resetErrorMessages();
     },
+
     openCreateAdmin: function(){
         this.set('selectedAdmin', Ember.Object.create());
         this.openCreateAdminModal();
     },
+
     createAdmin: function(){
 
       if( !this.validateRequiredFields() || !this.validateRequiredPassword()){
@@ -162,10 +178,12 @@ export default BaseController.extend({
         this.closeConfirmDeleteAdminModal();
         this.resetErrorMessages();
     },
+
     confirmDeleteAdmin: function(admin){
         this.set('selectedAdmin', admin);
         this.openConfirmDeleteAdminModal();
     },
+
     deleteAdminConfirmed: function(){
       var admin = this.get('selectedAdmin');
       if( admin ){
@@ -181,14 +199,16 @@ export default BaseController.extend({
 
     /* Edit Admin */
     openEditAdmin: function(admin){
-      this.set('selectedAdmin', Ember.copy(admin, true));
+      this.set('selectedAdmin', User.create(admin.serialize()));
       this.openEditAdminModal();
     },
+
     cancelEditAdmin: function(){
         this.set('selectedAdmin', null);
         this.closeEditAdminModal();
         this.resetErrorMessages();
     },
+
     updateAdmin: function(){
       if( !this.validateRequiredFields() ){
           return;

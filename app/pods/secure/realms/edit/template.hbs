@@ -1,7 +1,7 @@
 <ul class="breadcrumb">
   <li>{{#link-to 'index'}}Home{{/link-to}}</li>
   <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
-  <li>{{#link-to 'secure.realms.index'}}{{model.id}}{{/link-to}}</li>
+  <li>{{#link-to 'secure.realms.index'}}{{model.name}}{{/link-to}}</li>
   <li>{{#link-to 'secure.realms.edit'}}Edit{{/link-to}}</li>
 </ul>
 
@@ -9,34 +9,41 @@
 <form {{action 'saveRealm' on='submit'}} role='form' autocomplete='off' class="form-horizontal">
 
   <div class="row">
-
-    <div class="col-sm-6 section">
-      <div class='basic-realm-info'>
+    <div class="col-sm-6">
+      <div class='basic-realm-info section'>
         <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
-        <div class='form-group'>
-          <label class='col-sm-2 control-label'>Description</label>
-          <div class="col-sm-10">
-            {{focus-input placeholder='Enter a description' value=model.description
+        <div class="row">
+          <label class='col-sm-3 control-label'>Description</label>
+          <div class="col-sm-9 form-group">
+            {{textarea placeholder='Enter a description' value=model.description
               class='form-control' autocomplete='off'}}
           </div>
         </div>
-         <div class="checkbox">
-          <label>
-            {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
-            Disabled
-          </label>
+        <div class="row">
+          <div class="col-sm-9 col-sm-offset-3">
+            <div class="checkbox">
+              <label>
+                {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
+                Disabled
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-sm-6 section">
-      <div class='basic-realm-info'>
+    <div class="col-sm-6">
+      <div class='basic-realm-info section'>
         <h4><i class='fa fa-file-text'></i>Open Registrations</h4>
-        <div class="checkbox">
-          <label>
-            {{input type='checkbox' id='admin' checked=model.quick_user}}
-            Allow public user registrations
-          </label>
+        <div class="row">
+          <div class="col-sm-12">
+             <div class="checkbox">
+              <label>
+                {{input type='checkbox' id='admin' checked=model.quick_user}}
+                Allow public user registrations
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -45,8 +52,8 @@
 
   <div class="row">
 
-    <div class="col-sm-6 section">
-      <div class='services'>
+    <div class="col-sm-6">
+      <div class='services section'>
         <h4><i class='fa fa-rocket'></i>Services</h4>
         <div class='services'>
           <ul class='list-group'>
@@ -65,8 +72,8 @@
       </div>
     </div>
 
-    <div class="col-sm-6 section">
-      <div class='origins'>
+    <div class="col-sm-6">
+      <div class='origins section'>
         <h4><i class='fa fa-globe'></i>Origins</h4>
         <ul class='list-group'>
           {{#each model.editedOriginWrappers as |wrapper|}}
@@ -86,8 +93,8 @@
 
   <div class="row">
 
-    <div class="col-sm-6 section">
-       <div class='roles'>
+    <div class="col-sm-6">
+       <div class='roles section'>
         <h4><i class='fa fa-lock'></i>Realm Roles</h4>
         <ul class='list-group'>
           {{#each model.roles as |role|}}
@@ -114,40 +121,45 @@
         </ul>
       </div>
     </div>
-
-    <div class="col-sm-6 section">
-      <div class='optional-info'>
+    <div class="col-sm-6">
+      <div class='optional-info section'>
         <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
-        <p>
-          You may enter optional custom information for the realm as a JSON document.
-        </p>
-        <div class='form-group clearfix'>
-          {{textarea value=model.customText cols="80" rows="6"
-            placeholder='Enter JSON Content' class='form-control'}}
-        </div>
-        <div class='form-group'>
-          <label class='control-label'>JSON Valid:</label>
-          {{#if model.customDocumentValid}}
-            <i class='fa fa-check success'></i>
-          {{else}}
-            <i class='fa fa-times danger'></i>
-          {{/if}}
-          {{model.customDocumentValidMsg}}
+        <div class="row">
+          <div class="col-sm-12">
+            <p>
+              You may enter optional custom information for the realm as a JSON document.
+            </p>
+          </div>
+          <div class="col-sm-12">
+            {{json-node node=editedOptionalInformation}}
+            <div>
+              <label class='control-label'>JSON Valid:</label>
+              {{#if model.customDocumentValid}}
+                <i class='fa fa-check success'></i>
+              {{else}}
+                <i class='fa fa-times danger'></i>
+              {{/if}}
+              {{model.customDocumentValidMsg}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="row">
-
-    <div class="col-sm-6 section">
-      <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
-      {{#link-to 'secure.realms.users'}}
-        <i class='fa fa-angle-double-right'></i>Click to view users for {{model.id}}
-      {{/link-to}}
+    <div class="col-sm-6">
+      <div class="section">
+        <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            {{#link-to 'secure.realms.users'}}
+              <i class='fa fa-angle-double-right'></i>Click to view users for {{model.id}}
+            {{/link-to}}
+          </div>
+        </div>
+      </div>
     </div>
-
   </div>
 
   <div class="row">
@@ -162,19 +174,4 @@
 
 {{partial 'edit-role-modal'}}
 
-<div class="modal fade" id="confirmDeleteRoleModal">
-  <div class='modal-dialog'>
-    <div class='modal-content'>
-      <div class='modal-header'>
-        <h3>Delete Role</h3>
-      </div>
-      <div class='modal-body'>
-        <p>Are you sure you want to delete the role {{selectedRole.name}}? This action cannot be undone.</p>
-      </div>
-       <div class="modal-footer">
-        <a class="btn btn-danger btn-lg pull-right login-btn" {{action 'deleteRole'}}>Yes, please delete</a>
-        <a class="btn btn-default btn-lg pull-right login-btn" {{action 'cancelDeleteRole'}}>Cancel</a>
-      </div>
-    </div>
-  </div>
-</div>
+{{partial 'delete-role-modal'}}

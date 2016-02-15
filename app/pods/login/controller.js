@@ -1,5 +1,4 @@
 import BaseController from 'console/controllers/base-controller';
-import Ember from 'ember';
 
 export default BaseController.extend({
 
@@ -82,7 +81,7 @@ export default BaseController.extend({
         this.send('stopLongRunningAction');
       });
     },
-    
+
     forgotPassword: function(){
       //if a username has been provided, set it on the forgot password form
       var username = this.get('username');

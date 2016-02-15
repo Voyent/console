@@ -1,0 +1,33 @@
+<li>
+  <div class="row group-heading form-inline {{if collapsed 'closed' 'open'}}">
+    <div class="col-sm-12">
+      {{#if node.parent}}
+        <div class="pull-left">
+          <a {{action 'toggleCollapsed'}}><i class="fa fa-caret-down"></i></a>
+          {{input class='form-control' type='text' value=node.key placeholder='Group Name'}}
+        </div>
+      {{/if}}
+      
+      <a {{action 'addChildNode' node}} title="Add a sub group"><i class="fa fa-indent"></i></a>
+      <a {{action 'addChildProperty' node}} title="Add a property"><i class="fa fa-plus"></i></a>
+      {{#if node.parent}}
+        <a {{action 'remove' node}}><i class="fa fa-minus"></i></a>
+      {{/if}}
+    </div>
+  </div>
+  <div class="row group-list {{if collapsed 'closed' 'open'}}">
+    <div class="col-sm-12">
+      <ul>
+        {{#each node.children as |child|}}
+          {{#if child.isProperty}}
+           {{json-property node=child}}
+          {{else}}
+            <li>
+              {{json-node node=child}}
+            </li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</li>

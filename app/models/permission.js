@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import PermissionRole from 'console/models/permission-role';
 import BaseModel from './base-model';
 

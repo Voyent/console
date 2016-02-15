@@ -29,12 +29,8 @@
         <div class='row'>
           <div class='col-lg-12 control-label'>
             {{input id='submit' type='submit' value='Send Password' class='btn btn-primary btn-lg pull-right'}}
+            {{#link-to 'index' class='btn btn-default btn-lg pull-right'}}Cancel{{/link-to}}
             {{#link-to 'register' id='register' class='btn btn-default btn-lg pull-left'}}Register{{/link-to}}
-          </div>
-        </div>
-        <div class='row'>
-          <div class='col-lg-12'>
-            <a id='forgotpassword' class='pull-right forgot-password' {{action 'forgotPassword'}}>Forgot Password</a>
           </div>
         </div>
       </form>

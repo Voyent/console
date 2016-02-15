@@ -13,6 +13,8 @@ export default BaseRoute.extend({
       var appController = this.controllerFor('application');
       appController.set('isLoggedIn', isLoggedIn);
       return appController.updateAccountInfo().catch((err) => {
+        this.error('Error loading account information', err);
+        appController.showErrorMessage('Error loading account information', err);
         this.transitionTo('index');
       });
     }

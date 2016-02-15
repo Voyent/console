@@ -76,6 +76,39 @@ export default BaseController.extend({
         }
     },
 
+    validateRequiredFields: function(form){
+        var valid = true;
+        if( !form.username || form.username.length === 0 ){
+            this.set('usernameMsg', 'Please enter a username.');
+            valid = false;
+        }
+        if( !form.account || form.account.length === 0 ){
+            this.set('accountMsg', 'Please enter an account name.');
+            valid = false;
+        }
+        if( !form.email || form.email.length === 0 ){
+            this.set('emailMsg', 'Please enter an email.');
+            valid = false;
+        }
+        if( !form.firstname || form.firstname.length === 0 ){
+            this.set('firstnameMsg', 'Please enter your first name.');
+            valid = false;
+        }
+        if( !form.lastname || form.lastname.length === 0 ){
+            this.set('lastnameMsg', 'Please enter your last name.');
+            valid = false;
+        }
+        if( !form.password || form.password.length === 0 ){
+            this.set('passwordMsg', 'Please enter a password.');
+            valid = false;
+        }
+        if( !form.password_confirm || form.password_confirm.length === 0 ){
+            this.set('passwordconfirmMsg', 'Please confirm your password.');
+            valid = false;
+        }
+        return valid;
+    },
+
     actions: {
 
         reset: function() {
@@ -88,157 +121,142 @@ export default BaseController.extend({
             });
             this.setProperties(props);
         },
+
         validateUsername: function(){
             this._validateUsername();
         },
+
         validateUsernameOnBlur: function(){
             if( this.get('username')){
                 this._validateUsername();
             }
         },
+
         validateAccount: function(){
             this._validateAccount();
         },
+
         validateAccountOnBlur: function(){
             if( this.get('account')){
                 this._validateAccount();
             }
         },
+
         validateEmail: function(){
             this._validateEmail();
         },
+
         validateEmailOnBlur: function(){
             if( this.get('email')){
                 this._validateEmail();
             }
         },
+
         validateFirstName: function(){
             this._validateFirstName();
         },
+
         validateFirstNameOnBlur: function(){
             if( this.get('firstname')){
                 this._validateFirstName();
             }
         },
+
         validateLastName: function(){
             if( this.get('lastname')){
                 this._validateLastName();
             }
         },
+
         validateLastNameOnBlur: function(){
             if( this.get('lastname')){
                 this._validateLastName();
             }
         },
+
         validatePassword: function(){
             this._validatePassword();
         },
+
         validatePasswordOnBlur: function(){
             if( this.get('password')){
                 this._validatePassword();
             }
         },
+
         validatePasswordConfirm: function(){
             this._validatePasswordConfirm();
         },
+
         validatePasswordConfirmOnBlur: function(){
             if( this.get('password_confirm')){
                 this._validatePasswordConfirm();
             }
         },
+
         cancel: function(){
             this.send('reset');
             this.transitionToRoute('login');
         },
+
         register: function() {
 
-            if( !validateRequiredFields.apply(this) ){
-                return;
-            }
+          var form = this.getProperties(Form._datafields);
 
-            this._validateUsername();
-            this._validateAccount();
-            this._validateEmail();
-            this._validateFirstName();
-            this._validateLastName();
-            this._validatePassword();
-            this._validatePasswordConfirm();
+          if( !this.validateRequiredFields(form) ){
+              return;
+          }
 
-            //check error msgs
-            if( this.get('usernameMsg') || this.get('accountMsg') || this.get('emailMsg') ||
-                this.get('firstnameMsg') || this.get('lastnameMsg') || this.get('passwordMsg') ||
-                this.get('passwordconfirmMsg')){
-                this.warn('invalid register form, exiting');
-                return;
-            }
+          this._validateUsername();
+          this._validateAccount();
+          this._validateEmail();
+          this._validateFirstName();
+          this._validateLastName();
+          this._validatePassword();
+          this._validatePasswordConfirm();
 
-            this.send('startLongRunningAction');
-            var appController = this.get('application');
-            var form = this.getProperties(Form._datafields);
-            delete form.password_confrm;
-            
-            // Clear out any error messages.
-            var props = {};
-            Form._msgfields.forEach( function(val){
-                props[val] = "";
-            });
-            this.setProperties(props);
+          //check error msgs
+          if( this.get('usernameMsg') || this.get('accountMsg') || this.get('emailMsg') ||
+              this.get('firstnameMsg') || this.get('lastnameMsg') || this.get('passwordMsg') ||
+              this.get('passwordconfirmMsg')){
+              this.warn('invalid register form, exiting');
+              return;
+          }
 
-            bridgeit.io.admin.createAccount({
-                account: form.account,
-                description: form.accountdescription,
-                username: form.username,
-                email: form.email,
-                firstname: form.firstname,
-                lastname: form.lastname,
-                password: form.password
-            }).then(() => {
-                this.send('stopLongRunningAction');
-                appController.set('isLoggedIn', true);
-                appController.showInfoMessage('Thank you, your account was successfully created.');
-                return appController.updateAccountInfo();
-            }).then(() => {
-                this.transitionToRoute('secure.index');
-            }).catch((error) => {
-                this.warn('register failed', error);
-                appController.showErrorMessage(error, 'Account Registration Failed');
-                this.send('stopLongRunningAction');
-            });
+          this.send('startLongRunningAction');
+          var appController = this.get('application');
+          
+          delete form.password_confrm;
+          
+          // Clear out any error messages.
+          var props = {};
+          Form._msgfields.forEach( function(val){
+              props[val] = "";
+          });
+          this.setProperties(props);
 
-            function validateRequiredFields(){
-                var valid = true;
-                if( this.get('username').length === 0 ){
-                    this.set('usernameMsg', 'Please enter a username.');
-                    valid = false;
-                }
-                if( this.get('account').length === 0 ){
-                    this.set('accountMsg', 'Please enter an account name.');
-                    valid = false;
-                }
-                if( this.get('email').length === 0 ){
-                    this.set('emailMsg', 'Please enter an email.');
-                    valid = false;
-                }
-                if( this.get('firstname').length === 0 ){
-                    this.set('firstnameMsg', 'Please enter your first name.');
-                    valid = false;
-                }
-                if( this.get('lastname').length === 0 ){
-                    this.set('lastnameMsg', 'Please enter your last name.');
-                    valid = false;
-                }
-                if( this.get('password').length === 0 ){
-                    this.set('passwordMsg', 'Please enter a password.');
-                    valid = false;
-                }
-                if( this.get('password_confirm').length === 0 ){
-                    this.set('passwordconfirmMsg', 'Please confirm your password.');
-                    valid = false;
-                }
-                return valid;
-            }
-
+          bridgeit.io.admin.createAccount({
+              account: form.account,
+              description: form.accountdescription,
+              username: form.username,
+              email: form.email,
+              firstname: form.firstname,
+              lastname: form.lastname,
+              password: form.password
+          }).then(() => {
+              this.send('stopLongRunningAction');
+              appController.set('isLoggedIn', true);
+              appController.showInfoMessage('Thank you, your account was successfully created.');
+              return appController.updateAccountInfo();
+          }).then(() => {
+              this.transitionToRoute('secure.index');
+          }).catch((error) => {
+              this.warn('register failed', error);
+              appController.showErrorMessage(error, 'Account Registration Failed');
+              this.send('stopLongRunningAction');
+          });
         },
+
         willTransition: function(transition) {
             if (this.get('formDataEntered') && !confirm("Are you sure you want to leave?")) {
                 transition.abort();

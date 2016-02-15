@@ -5,6 +5,11 @@ import RealmMixin from 'console/controllers/realm-mixin';
 
 export default BaseController.extend( RealmMixin, {
 
+  //TODO add dirty form check before navigating
+  //TODO add more user-friendly json editor
+
+  editedOptionalInformation: null,
+
   actions: {
     saveRealm: function() {
       var realm = this.get('model');
@@ -18,12 +23,13 @@ export default BaseController.extend( RealmMixin, {
         var errorMessage = utils.extractErrorMessage(err);
         this.get('toast').error(errorMessage, 'Error');
       });
-
     },
+
     cancel: function() {
       this.send('reset');
       this.transitionToRoute('secure.realms.index');
     },
+
   }
 
 });

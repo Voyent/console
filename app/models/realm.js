@@ -95,21 +95,19 @@ export default BaseModel.extend({
   },
 
   saveEditedProperties: function(){
+
     this.set('services', this.get('editedServiceWrappers').get('selectedValues').map((w) => w.get('name')));
+
     var origins = this.get('editedOriginWrappers').get('selectedValues');
     if( origins.length === 0 ){
       origins = ['*'];
     }
     this.set('origins', origins);
+
     var editedCustomTextValid = this.get('editedCustomTextValid');
     var editedCustomText = this.get('editedCustomText');
     if( editedCustomTextValid ){
-      try{
-        this.set('custom', JSON.stringify(editedCustomText));
-      }
-      catch(e){
-        this.warn('Could not parse custom property', e);
-      }
+      this.set('custom', editedCustomText);
     }
     /*
     editedCustomTextValid: true,
@@ -191,7 +189,7 @@ export default BaseModel.extend({
     if( roles && !!roles.length ){
       editedRoleWrappers.pushObjects(roles.map((r) => Selectable.create({value: r, selected: true})));
     }
-    return editedOriginWrappers;
+    return editedRoleWrappers;
   },
 
   generateTestUsersForServices: function(services){
@@ -221,7 +219,32 @@ export default BaseModel.extend({
       }
     });
     return testUsers;
-  }
+  },
+
+  getRole: function(roleName){
+    var f = this.get('roles').filter((r) => r.name === roleName);
+    return f.length ? f[0] : null;
+  },
+
+  customJSON: function(){
+    var custom = this.get('custom');
+    var customJSON;
+    if( typeof custom === 'string'){
+      try{
+        customJSON = JSON.parse(custom);
+      }
+      catch(e){
+        customJSON = {};
+      }
+    }
+    else if( typeof custom === 'object'){
+      customJSON = custom;
+    }
+    else{
+      customJSON = {};
+    }
+    return customJSON;
+  }.property('custom')
 
   
 });

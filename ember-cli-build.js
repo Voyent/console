@@ -24,6 +24,7 @@ module.exports = function(defaults) {
   app.import('bower_components/bridgeit.js/src/bridgeit.js');
   app.import('bower_components/bridgeit.io.js/lib/bridgeit.io.js');
   app.import('bower_components/validator-js/validator.js');
+  app.import('bower_components/lodash/dist/lodash.js');
 
   app.import('bower_components/font-awesome/css/font-awesome.css');
   app.import('bower_components/bootstrap/dist/css/bootstrap.css');
