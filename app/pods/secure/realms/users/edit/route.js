@@ -19,6 +19,7 @@ export default Ember.Route.extend({
       this.transitionTo('secure.realms.users.index');
     });
   },
+  
   setupController: function(controller, model) {
     this._super(controller, model);
     controller.send('reset');

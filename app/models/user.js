@@ -1,5 +1,6 @@
-import Selectable from 'console/models/selectable';
 import BaseModel from './base-model';
+import Selectable from 'console/models/selectable';
+import SelectableArray from 'console/models/selectable-array';
 
 export default BaseModel.extend({
 
@@ -14,9 +15,13 @@ export default BaseModel.extend({
   password: null,
   email: null,
   custom: {},
-  customText: '{}',
 
-  nonTransientOwnProperties: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password', 'roles'],
+  //edited properties
+  editedCustomTextValid: true,
+  editedCustomTextValidMsg: null,
+  editedCustomText: null,
+
+  attributeNames: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password', 'roles'],
 
   id: function(){
     return this.get('username');
@@ -25,13 +30,21 @@ export default BaseModel.extend({
   init: function(){
     var custom = this.get('custom');
     if( custom ){
-      this.set('customText', JSON.stringify(custom)); 
       if( typeof custom === 'string'){
         try{
+          this.set('editedCustomText', custom); 
           this.set('custom', JSON.parse(custom));
         }
         catch(e){
           this.warn('WARNING: user model could not parse custom json: ' + custom);
+        }
+      }
+      else{
+        try{
+          this.set('editedCustomText', JSON.stringify(custom)); 
+        }
+        catch(e){
+          console.error(e);
         }
       }
     }
@@ -75,10 +88,37 @@ export default BaseModel.extend({
     return clonedUser;
   },
 
-  customChanged: function(){
-    var custom = this.get('custom');
-    this.set('customText', JSON.stringify(custom));
-  }.observes('custom'),
+  onEditedCustomTextChanged: function(){
+    var editedCustomText = this.get('editedCustomText');
+    var editedCustomTextValidMsg = '';
+    var valid = false;
+    if( editedCustomText ){
+      try{
+        JSON.parse(editedCustomText);
+        valid = true;
+      }
+      catch(e){
+        valid = false;
+        editedCustomTextValidMsg = e;
+      }
+    }
+    else{
+      valid = true;
+    }
+    this.set('editedCustomTextValid', valid);
+    this.set('editedCustomTextValidMsg', editedCustomTextValidMsg);
+    
+  }.observes('editedCustomText'),
+
+  saveEditedProperties: function(){
+
+    var editedCustomTextValid = this.get('editedCustomTextValid');
+    var editedCustomText = this.get('editedCustomText');
+    if( editedCustomTextValid ){
+      this.set('custom', editedCustomText);
+    }
+    this.set('roles', this.get('editedRoleWrappers.selectedValues').map((v) => v.name));
+  },
 
   addRole: function(role){
     var roles = this.get('roles');
@@ -94,32 +134,45 @@ export default BaseModel.extend({
     }
   },
 
-  roleWrappers: function(){
-    var realmRoles = this.get('realm.roles');
-    var myRoles = this.get('roles');
-    if( realmRoles ){
-      return realmRoles.map((role) => Selectable.create({
-          content: role.name,
-          selected: myRoles.indexOf(role.name) > -1 
-      }));
-    }
-    else{
-      return [];
-    }
-    
-  }.property('realm.roles.[]', 'roles.[]'),
-
   serialize: function(){
-    var ser = this.getProperties(this.get('nonTransientOwnProperties'));
-    if( ser.custom && typeof ser.custom === 'object'){
+    return this.getProperties(this.get('attributeNames'));
+  },
+
+  customJSON: function(){
+    var custom = this.get('custom');
+    var customJSON;
+    if( typeof custom === 'string'){
       try{
-        ser.custom = JSON.stringify(ser.custom);
+        customJSON = JSON.parse(custom);
       }
       catch(e){
-        this.error('Could not parse custom property', e);
+        customJSON = {};
       }
     }
-    return ser;
-  },
+    else if( typeof custom === 'object'){
+      customJSON = custom;
+    }
+    else{
+      customJSON = {};
+    }
+    return customJSON;
+  }.property('custom'),
+
+  editedRoleWrappers: function(){
+    var availableRoles = this.get('realm.roles');
+    var selectedRoles = this.get('roles');
+    var editedRoleWrappers = SelectableArray.create({content: []});
+    if( availableRoles ){
+      editedRoleWrappers.pushObjects(availableRoles.map( (r) => {
+        var selectable = Selectable.create({value: r});
+        if( selectedRoles.contains(selectable.get('value.name')) ){
+          selectable.set('selected', true);
+        }
+        return selectable;
+      }));
+    }
+    return editedRoleWrappers;
+  }.property('realm.roles.[]', 'roles.[]'),
+
 
 });

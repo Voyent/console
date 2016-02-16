@@ -2,39 +2,83 @@ import BaseController from 'console/controllers/base-controller';
 import Ember from 'ember';
 import bridgeitValidation from 'console/helpers/bridgeit-validation';
 import utils from 'console/helpers/utils';
-
-var EditUserForm = {
-  _datafields: ['password', 'password_confirm', 'email', 'firstname', 'lastname', 'disabled'],
-};
-
-EditUserForm._msgfields = EditUserForm._datafields.map(function(field){ return field+'Msg';});
-
+import errorMessages from 'console/helpers/bridgeit-error-msgs';
 
 export default BaseController.extend({
 
+  _datafields: ['password', 'password_confirm', 'email', 'firstname', 'lastname', 'disabled'],
+  _msgfields: ['passwordMsg', 'password_confirmMsg', 'emailMsg', 'firstnameMsg', 'lastnameMsg'],
   realmsController: Ember.inject.controller('secure.realms'),
 
-  onCustomInfoEntry: function(){
-    var customInfoInput = this.get('customText');
-    var customDocumentValidMsg = '';
-    var valid = false;
-    if( customInfoInput ){
-      try{
-        JSON.parse(customInfoInput);
-        valid = true;
-      }
-      catch(e){
-        valid = false;
-        customDocumentValidMsg = e;
-      }
+  validateRequiredFields: function(){
+    var valid = true;
+    var model = this.get('model');
+    if( !model.get('password') || model.get('password').length === 0 ){
+      this.set('passwordMsg', 'Please enter a password.');
+      valid = false;
+    }
+    if( !this.get('password_confirm') || this.get('password_confirm').length === 0 ){
+      this.set('passwordconfirmMsg', 'Please confirm the password.');
+      valid = false;
+    }
+    return valid;
+  },
+
+  validateEmail: function(){
+    var email = this.get('model.email');
+    if(email &&  !validator.isEmail(email)){
+      this.set('emailMsg', errorMessages.invalidEmail);
     }
     else{
-      valid = true;
+      this.set('emailMsg', '');
     }
-    this.set('customDocumentValid', valid);
-    this.set('customDocumentValidMsg', customDocumentValidMsg);
-    
-  }.observes('customText'),
+  },
+
+  validateFirstname: function(){
+    var name = this.get('model.firstname');
+    if( !name ){
+      this.set('firstnameMsg', '');
+      return;
+    }
+    if( name.length > 2 ){
+      this.set('firstnameMsg', '');
+    }
+    else{
+      this.set('firstnameMsg', errorMessages.invalidFirstname);
+    }
+  },
+
+  validateLastname: function(){
+    var name = this.get('model.lastname');
+    if( !name ){
+      this.set('lastnameMsg','');
+      return;
+    }
+    if( name.length > 2 ){
+      this.set('lastnameMsg', '');
+    }
+    else{
+      this.set('lastnameMsg', errorMessages.invalidLastname);
+    }
+  },
+
+  validatePassword: function(){
+    if( !validation.passwordValidator(this.get('model.password'))){
+      this.set('passwordMsg', errorMessages.invalidPassword);
+    }
+    else{
+      this.set('passwordMsg', '');
+    }
+  },
+
+  validatePasswordConfirm: function(){
+    if( !validator.equals(this.get('model.password'), this.get('password_confirm'))){
+      this.set('passwordconfirmMsg', errorMessages.passwordMismatch);
+    }
+    else{
+      this.set('passwordconfirmMsg', '');
+    }
+  },
 
   validateRequiredFields: function(){
     var valid = true;
@@ -67,15 +111,16 @@ export default BaseController.extend({
   },
 
   actions: {
+
     cancel: function() {
       this.send('reset');
-      this.transitionToRoute('secure.realms.users.index');
+      this.transitionToRoute('secure.realms.users');
     },
+
     reset: function() {
-      this._super();
-      var self = this;
-      EditUserForm._msgfields.forEach( function(f){ self.set(f,'');});
+      this.get('_msgfields').forEach( (f) => { this.set(f,'');});
     },
+
     save: function(){
       this.debug('save user');
 
@@ -102,21 +147,8 @@ export default BaseController.extend({
       }
 
       var user = this.get('model');
-      
-      //set edited properties
-      try{
-        var customText = this.get('customText');
-        var customJSON;
-        if( customText ){
-          customJSON = JSON.parse(customText);
-          user.set('custom', customJSON);
-        }
-      }
-      catch(e){
-      }
-      //set selected roles
-      user.set('roles', this.get('model.roleWrappers').filter(w => w.get('selected')).map(w => w.get('content')));
-      
+      user.saveEditedProperties();
+
       bridgeit.io.admin.updateRealmUser({user: user.serialize()}).then(() => {
         this.get('toast').info('Successfully edited user ' + user.get('fullname'));
         var realmController = this.get('realmsController');

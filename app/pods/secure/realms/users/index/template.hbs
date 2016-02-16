@@ -4,7 +4,14 @@
   <li>{{#link-to 'secure.realms.index'}}{{model.name}}{{/link-to}}</li>
   <li>{{#link-to 'secure.realms.users'}}Users{{/link-to}}</li>
 </ul>
-<h1 class='page-header'>{{model.id}} Users</h1>
+<h1 class='page-header'>{{model.id}} Users
+  <div class='btn-bar pull-right page-controls'>
+    {{#link-to 'secure.realms.users.create' model.id class='btn btn-info btn-sm'}}
+      Create User
+      <i class="fa fa-users"></i>
+    {{/link-to}}
+  </div>
+</h1>
 <div class="row">
   <div class="col-lg-12">
 
@@ -14,7 +21,7 @@
           <th>Username</th>
           <th>Full Name</th>
           <th>Email</th>
-          <th>Active</th>
+          <th class='col-checkbox'>Active</th>
           <th>Roles</th>
           <th></th>
         </tr>
@@ -27,13 +34,13 @@
             </td>
             <td>{{user.fullname}}</td>
             <td>{{user.email}}</td>
-            <td class='enabled'>
+            <td class='col-checkbox enabled'>
               <i class="fa {{if user.disabled 'fa-square-o' 'fa-check-square-o'}}"></i>
             </td>
-            <td>
+            <td class="col-roles">
               {{list-join user.roles ', '}}
             </td>
-            <td class='ops-row'>
+            <td class='col-ops'>
               <a {{action 'openUserInfoModal' user}}>
                 <i class='fa fa-info-circle'></i>
               </a>
@@ -96,7 +103,7 @@
               {{#if selectedUser.roles}}
                 <div class='panel panel-info'>
                   <ul class='list-group'>
-                    {{#each role in selectedUser.roles}}
+                    {{#each selectedUser.roles as |role|}}
                       <li class='list-group-item'>
                         {{role}}
                       </li>
@@ -111,7 +118,7 @@
             {{#if selectedUser.custom}}
               <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
               <div class='optional-info'>
-                {{json-highlight json=selectedUser.custom}}
+                {{json-highlight json=selectedUser.customJSON}}
               </div>
             {{/if}}
 
@@ -119,7 +126,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <div class='btn-bar page-controls pull-right'>
+        <div class='btn-bar pull-right'>
           <a class="btn btn-default btn-lg pull-right login-btn" {{action 'closeUserInfoModal'}}>Close</a>
         </div>
       </div>

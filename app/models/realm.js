@@ -31,13 +31,20 @@ export default BaseModel.extend({
   init: function(){
     var custom = this.get('custom');
     if( custom ){
-      this.set('editedCustomText', JSON.stringify(custom)); 
       if( typeof custom === 'string'){
         try{
           this.set('custom', JSON.parse(custom));
         }
         catch(e){
           this.warn('WARNING: realm model could not parse custom json', custom);
+        }
+      }
+      else{
+        try{
+          this.set('editedCustomText', JSON.stringify(custom)); 
+        }
+        catch(e){
+          console.error(e);
         }
       }
     }
@@ -109,16 +116,10 @@ export default BaseModel.extend({
     if( editedCustomTextValid ){
       this.set('custom', editedCustomText);
     }
-    /*
-    editedCustomTextValid: true,
-    editedCustomText: null,
-    editedOriginWrappers: [],
-    editedServiceWrappers: [],
-    editedRoleWrappers: [],*/
   },
 
   serialize: function(){
-    return this.getProperties(this.get('attributeNames'));
+    return this.getProperties('name', 'description', 'services', 'origins', 'quick_user', 'disabled', 'custom', 'roles');
   },
 
   onEditedCustomTextChanged: function(){

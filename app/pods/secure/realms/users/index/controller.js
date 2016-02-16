@@ -36,7 +36,7 @@ export default BaseController.extend({
       bridgeit.io.admin.deleteRealmUser({username: user.get('username')}).then(() => {
         var realm = this.get('model');
         realm.get('users').removeObject(user);
-        this.get('toast').info('Successfully deleted user ' + user.get('fullname'));
+        this.get('toast').info('Successfully deleted user ' + user.get('username'));
         this.send('closeConfirmDeleteUserPopup');
         this.set('selectedUser',null);
       }).catch((error) => {

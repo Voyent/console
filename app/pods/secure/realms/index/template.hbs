@@ -50,32 +50,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="section">
-      <h4>
-        <i class='fa fa-file-text'></i>Open Registrations
-        {{#tool-tip class="pull-right" tooltipContent="By default, users must be registered by an administrator. To allow public user registrations, enable this setting."}}
-          <i class="fa fa-question"></i>
-        {{/tool-tip}}
-      </h4>
-      <div class='open-registrations'>
-         <div class="row">
-          <div class='col-sm-12'>
-            Allow public user registrations:
-            {{#if model.quick_user}}
-              <span style='color:#0FD50F;font-weight:bold'>True</span>
-            {{else}}
-              <span style='color:red;font-weight:bold'>False</span>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-6">
     <div class="section">
       <h4><i class='fa fa-rocket'></i>Services</h4>
       <div class='services'>
@@ -96,31 +70,6 @@
         {{/if}}
       </div>
     </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="section">
-      <h4>
-        <i class='fa fa-globe'></i>Origin Whitelist
-        {{#tool-tip class="pull-right" tooltipContent="You may restrict service access by overriding this with a whitelist of URL or IP addresses. An origin of '*' will allow clients from any IP or URL to access the realm services."}}
-          <i class="fa fa-question"></i>
-        {{/tool-tip}}
-      </h4>
-      <div class='origins'>
-        {{#if model.origins }}
-          <ul class='list-group list-group-no-border'>
-            {{#each model.origins key="@identity" as |origin|}}
-              <li class="list-group-item">{{origin}}</li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <div>There are no origins currently configured for <code>{{model.name}}</code>.</div>
-        {{/if}}
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-6">
     <div class="section">
       <h4><i class='fa fa-lock'></i>Roles</h4>
       <div class='roles'>
@@ -156,6 +105,41 @@
   </div>
   <div class="col-sm-6">
     <div class="section">
+      <h4>
+        <i class='fa fa-file-text'></i>Open Registrations
+        {{partial 'tooltip-open-registration'}}
+      </h4>
+      <div class='open-registrations'>
+         <div class="row">
+          <div class='col-sm-12'>
+            Allow public user registrations:
+            {{#if model.quick_user}}
+              <span style='color:#0FD50F;font-weight:bold'>True</span>
+            {{else}}
+              <span style='color:red;font-weight:bold'>False</span>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h4>
+        <i class='fa fa-globe'></i>Origin Whitelist
+        {{partial 'tooltip-origins'}}
+      </h4>
+      <div class='origins'>
+        {{#if model.origins }}
+          <ul class='list-group list-group-no-border'>
+            {{#each model.origins key="@identity" as |origin|}}
+              <li class="list-group-item">{{origin}}</li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div>There are no origins currently configured for <code>{{model.name}}</code>.</div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="section">
       {{#if model.custom}}
         <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
         <div class='optional-info'>
@@ -163,10 +147,6 @@
         </div>
       {{/if}}
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-6">
     <div class="section">
       <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
       <div class="row">

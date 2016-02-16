@@ -14,28 +14,11 @@
         <h4><i class='fa fa-user'></i>Basic User Information</h4>
         <div class="row">
           <div class="col-sm-6">
-            <div class='form-group'>
-              <label class='control-label col-sm-4'>First Name</label>
-              <div class="col-sm-8">
-                {{focus-input id='firstname' value=model.firstname class='form-control' autocomplete='off'}}
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class='form-group'>
-              <label class='control-label col-sm-4'>Last Name</label>
-              <div class="col-sm-8">
-                {{input id='lastname' value=model.lastname class='form-control' autocomplete='off'}}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class='form-group'>
+            <div class='form-group has-feedback {{if emailMsg 'has-error'}}'>
               <label class='control-label col-sm-4'>Email</label>
               <div class="col-sm-8">
-                {{input id='email' value=model.email class='form-control' autocomplete='off'}}
+                {{input id='email' value=model.email class='form-control' autocomplete='off'
+                  focus-out='validateEmailOnBlur'}}
                 {{#if emailMsg}}
                   <span class="form-control-feedback"><i class='fa fa-times'></i></span>
                   <small id='usernameMsg' class="text-danger">{{emailMsg}}</small>
@@ -43,32 +26,68 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class='form-group'>
-              <label class='control-label col-sm-4'>Password</label>
-              <div class="col-sm-8">
-                {{input id='password' value=password type='password' class='form-control' autocomplete='off'}}
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class='form-group'>
-              <label class='control-label col-sm-4'>Password Confirmation</label>
-              <div class="col-sm-8">
-                {{input id='password_confirm' value=password_confirm type='password' class='form-control' autocomplete='off'}}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-10 col-sm-offset-2">
+           <div class="col-sm-4 col-sm-offset-2">
             <div class="checkbox no-padding">
               <label>
-                {{input type='checkbox' id='disabled' checked=disabled autocomplete='off'}}
+                {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
                 User Disabled
               </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class='form-group has-feedback {{if firstnameMsg 'has-error'}}'>
+              <label class='control-label col-sm-4'>First Name</label>
+              <div class="col-sm-8">
+                {{input id='firstname' value=model.firstname class='form-control' autocomplete='off'
+                  focus-out='validateFirstnameOnBlur'}}
+                {{#if firstnameMsg}}
+                  <span class="form-control-feedback"><i class='fa fa-times'></i></span>
+                  <small id='usernameMsg' class="text-danger">{{firstnameMsg}}</small>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class='form-group has-feedback {{if lastnameMsg 'has-error'}}'>
+              <label class='control-label col-sm-4'>Last Name</label>
+              <div class="col-sm-8">
+                {{input id='lastname' value=model.lastname class='form-control' autocomplete='off'
+                  focus-out='validateLastnameOnBlur'}}
+                {{#if lastnameMsg}}
+                  <span class="form-control-feedback"><i class='fa fa-times'></i></span>
+                  <small id='usernameMsg' class="text-danger">{{lastnameMsg}}</small>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class='form-group has-feedback {{if passwordMsg 'has-error'}}'>
+              <label class='control-label col-sm-4'>Password</label>
+              <div class="col-sm-8">
+                {{input id='password' value=model.password type='password' class='form-control' autocomplete='off'
+                  focus-out='validatePasswordOnBlur'}}
+                {{#if passwordMsg}}
+                  <span class="form-control-feedback"><i class='fa fa-times'></i></span>
+                  <small id='usernameMsg' class="text-danger">{{passwordMsg}}</small>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class='form-group has-feedback {{if passwordConfirmMsg 'has-error'}}'>
+              <label class='control-label col-sm-4'>Confirm Password</label>
+              <div class="col-sm-8">
+                {{input id='password_confirm' value=password_confirm type='password' class='form-control' 
+                  autocomplete='off' focus-out='validatePasswordConfirmOnBlur'}}
+                {{#if passwordConfirmMsg}}
+                  <span class="form-control-feedback"><i class='fa fa-times'></i></span>
+                  <small id='usernameMsg' class="text-danger">{{passwordConfirmMsg}}</small>
+                {{/if}}
+              </div>
             </div>
           </div>
         </div>
@@ -80,14 +99,20 @@
           <div class='roles section'>
             <h4>
               <i class='fa fa-lock'></i>User Roles
+              {{partial 'tooltip-user-roles'}}
             </h4>
             <ul class='list-group'>
-              {{#each model.roleWrappers as |role|}}
-                <li class='list-group-item'>
+              {{#each model.editedRoleWrappers as |wrapper|}}
+                <li class="list-group-item">
                   <label>
-                    {{input type='checkbox' checked=role.selected autocomplete='off'}}
-                    {{role.content}}
+                    {{input type='checkbox' checked=wrapper.selected autocomplete='off'}}
+                    {{wrapper.value.name}}
                   </label>
+                  <ul>
+                    {{#each wrapper.value.permissions as |permission|}}
+                      <li>{{permission}}</li>
+                    {{/each}}
+                  </ul>
                 </li>
               {{/each}}
             </ul>
@@ -105,26 +130,27 @@
             </div>
             <div class="row">
                <div class="col-sm-12">
-                {{textarea value=customText cols="80" rows="6" placeholder='Enter JSON Content' class='form-control'}}
+                {{textarea value=model.editedCustomText cols="80" rows="6" placeholder='Enter JSON Content' class='form-control'}}
               </div>
                <div class="col-sm-12">
                 <label class='control-label'>JSON Valid:</label>
-                {{#if customDocumentValid}}
-                <i class='fa fa-check success'></i>
+                {{#if model.editedCustomTextValid}}
+                  <i class='fa fa-check success'></i>
                 {{else}}
-                <i class='fa fa-times danger'></i>
+                  <i class='fa fa-times danger'></i>
                 {{/if}}
-                {{customDocumentValidMsg}}
+                {{model.editedCustomTextMsg}}
               </div>
             </div>
           </div>
         </div>
       </div>
      
-      <div class='btn-bar pull-right page-controls'>
+      <div class='btn-bar pull-right'>
         <button id="cancel" class="btn btn-lg btn-default" {{action 'cancel'}}>Cancel</button>
         {{input id='submit' type='submit' value='Save' class='btn btn-lg btn-primary pull-right login-btn'}}
       </div>
+
     </form>
 
   </div>

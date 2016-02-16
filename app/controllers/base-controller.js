@@ -63,15 +63,19 @@ export default Ember.Controller.extend({
       this.set('errorMsg', null);
       window.closeModal('#errorModal');
     },
+    
     startLongRunningAction: function(){
       this.startLongRunningAction();
     },
+
     stopLongRunningAction: function(){
       this.stopLongRunningAction();
     },
+
     logout: function(){
       this.logout();
     },
+
     gotoLogin: function(){
       this.debug('gotoLogin()');
       setTimeout( function(){

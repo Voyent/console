@@ -8,11 +8,144 @@
   <p>
     Enter the details for the new realm.
   </p>
-  <form {{action 'create' on='submit'}} id="createRealmForm" role="form" autocomplete='off'>
-    {{partial 'edit-realm'}}
-    <div class='btn-bar pull-right page-controls'>
-      <a {{action 'cancel'}} class="btn btn-lg btn-default">Cancel</a>
-      {{input id='submit' type='submit' value='Create' class='btn btn-lg btn-primary'}}
+  <form {{action 'create' on='submit'}} role='form' autocomplete='off' class="form-horizontal">
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class='basic-realm-info section'>
+          <h4><i class='fa fa-cloud'></i>Basic Realm Information</h4>
+          <div class="row">
+            <label class='col-sm-3 control-label'>Description</label>
+            <div class="col-sm-9 form-group">
+              {{textarea placeholder='Enter a description' value=model.description
+                class='form-control' autocomplete='off'}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+              <div class="checkbox">
+                <label>
+                  {{input type='checkbox' id='disabled' checked=model.disabled autocomplete='off'}}
+                  Disabled
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='services section'>
+          <h4><i class='fa fa-rocket'></i>Services</h4>
+          <div class='services'>
+            <ul class='list-group'>
+              {{#each model.editedServiceWrappers as |wrapper|}}
+                <li class='list-group-item service'>
+                  <label>
+                    {{input type='checkbox' checked=wrapper.selected autocomplete='off'}}
+                    <i class='fa {{wrapper.value.icon}}'></i>
+                    {{wrapper.value.label}}
+                  </label>
+                  <small class='pull-right'>{{wrapper.value.description}}</small>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class='roles section'>
+          <h4><i class='fa fa-lock'></i>Realm Roles</h4>
+          <ul class='list-group'>
+            {{#each model.roles as |role|}}
+              <li class='list-group-item'>
+                <strong>{{role.name}}</strong>
+                <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
+                  <i class="fa fa-times"></i>
+                </a>
+                <a {{action 'editRole' role}} class="pull-right">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <ul>
+                  {{#each role.permissions as |permission|}}
+                    <li>{{permission}}</li>
+                  {{/each}}
+                </ul>
+              </li>
+            {{/each}}
+            <li class='list-group-item origin-controls'>
+              <a {{action 'addNewRole'}}>
+                <i class="fa fa-plus-square"></i> Add New Role
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class='basic-realm-info section'>
+          <h4>
+            <i class='fa fa-file-text'></i>Open Registrations
+            {{partial 'tooltip-open-registration'}}
+          </h4>
+          <div class="row">
+            <div class="col-sm-12">
+               <div class="checkbox">
+                <label>
+                  {{input type='checkbox' id='admin' checked=model.quick_user}}
+                  Allow public user registrations
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='origins section'>
+          <h4>
+            <i class='fa fa-globe'></i>Origins
+             {{partial 'tooltip-origins'}}
+          </h4>
+          <ul class='list-group'>
+            {{#each model.editedOriginWrappers as |wrapper|}}
+              <li class='list-group-item'>
+                {{input placeholder='URL' value=wrapper.value class='form-control'}}
+                <a {{action 'removeOriginField' wrapper}}><i class="fa fa-minus-square"></i></a>
+              </li>
+            {{/each}}
+            <li class='list-group-item origin-controls'>
+              <a {{action 'addNewOriginField'}}><i class="fa fa-plus-square"></i></a>
+            </li>
+          </ul>
+        </div>
+        <div class='optional-info section'>
+          <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
+          <div class="row">
+            <div class="col-sm-12">
+              <p>
+                You may enter optional custom information for the realm as a JSON document.
+              </p>
+            </div>
+            <div class="col-sm-12">
+              <div>
+                {{textarea value=model.editedCustomText cols="80" rows="6"
+                  placeholder='Enter JSON Content' class='form-control'}}
+              </div>
+              <div>
+                <label class='control-label'>JSON Valid:</label>
+                {{#if model.editedCustomTextValid}}
+                  <i class='fa fa-check success'></i>
+                {{else}}
+                  <i class='fa fa-times danger'></i>
+                {{/if}}
+                {{model.editedCustomTextValidMsg}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+
+    <div class="row">
+      <div class='btn-bar pull-right'>
+        <a {{action 'cancel'}} class="btn btn-lg btn-default">Cancel</a>
+        {{input id='submit' type='submit' value='Create' class='btn btn-lg btn-primary'}}
+      </div>
+    </div>
+
   </form>
 </div>
