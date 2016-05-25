@@ -146,33 +146,6 @@ export default BaseController.extend( RealmMixin, {
 			}).then(() => {
 				log('completed cloning regions');
 
-				//clone all monitors
-				log('fetching location service monitors');
-				return bridgeit.io.location.findMonitors({realm: oldRealmName}).catch((err) => {
-					log('ERROR fetching monitors: ' + err.responseText);
-				});
-
-			}).then((monitors) => {
-
-				var monitorPromises = [];
-				if( monitors ){
-					log('cloning ' + monitors.length + ' monitors');
-					monitors.forEach((monitor) => {
-						monitorPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.location.createMonitor({
-								realm: newRealmName,
-								monitor: monitor
-							}).catch((err) => {
-								log('ERROR: ' + err.responseText);
-							});
-						}));
-					});
-				}
-				return Ember.RSVP.Promise.all(monitorPromises);
-
-			}).then(() => {
-				log('completed cloning monitors');
-
 				//actions
 				log('fetching action service actions');
 				return bridgeit.io.action.findActions({realm: oldRealmName}).catch((err) => {
@@ -244,7 +217,7 @@ export default BaseController.extend( RealmMixin, {
 						handlerPromises.push(Ember.RSVP.Promise.resolve().then(() => {
 							return bridgeit.io.eventhub.createHandler({
 								realm: newRealmName,
-								id: handler.id,
+								id: handler._id,
 								handler: handler
 							}).catch((err) => {
 								log('ERROR: ' + err.responseText);
@@ -272,7 +245,7 @@ export default BaseController.extend( RealmMixin, {
 						recognizerPromises.push(Ember.RSVP.Promise.resolve().then(() => {
 							bridgeit.io.eventhub.createRecognizer({
 								realm: newRealmName,
-								id: recognizer.id,
+								id: recognizer._id,
 								recognizer: recognizer
 							}).catch((err) => {
 								log('ERROR: ' + err.responseText);
