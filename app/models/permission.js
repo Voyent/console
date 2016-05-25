@@ -1,4 +1,3 @@
-import PermissionRole from 'console/models/permission-role';
 import BaseModel from './base-model';
 
 export default BaseModel.extend({
@@ -17,17 +16,5 @@ export default BaseModel.extend({
     }
   }.observes('selected'),
 
-  availableRoles: function(){
-    var self = this;
-    var permissionString = self.get('value');
-    var permissionRoles = this.get('parent').get('roles').map(function(role){
-      return PermissionRole.create({
-        permission: permissionString,
-        role: role,
-        selected: role.get('permissions').contains(permissionString)
-      });
-    });
-    return permissionRoles;
-  }.property('value', 'parent.roles.@each.content')
 
 });

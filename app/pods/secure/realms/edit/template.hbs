@@ -47,32 +47,6 @@
           </ul>
         </div>
       </div>
-      <div class='roles section'>
-        <h4><i class='fa fa-lock'></i>Realm Roles</h4>
-        <ul class='list-group'>
-          {{#each model.roles as |role|}}
-            <li class='list-group-item'>
-              <strong>{{role.name}}</strong>
-              <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
-                <i class="fa fa-times"></i>
-              </a>
-              <a {{action 'editRole' role}} class="pull-right">
-                <i class="fa fa-edit"></i>
-              </a>
-              <ul>
-                {{#each role.permissions as |permission|}}
-                  <li>{{permission}}</li>
-                {{/each}}
-              </ul>
-            </li>
-          {{/each}}
-          <li class='list-group-item origin-controls'>
-            <a {{action 'addNewRole'}}>
-              <i class="fa fa-plus-square"></i> Add New Role
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
 
     <div class="col-sm-6">
@@ -156,7 +130,3 @@
   </div>
 
 </form>
-
-{{partial 'edit-role-modal'}}
-
-{{partial 'delete-role-modal'}}

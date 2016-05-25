@@ -39,7 +39,7 @@
 
 
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div class='services'>
       <h4><i class='fa fa-rocket'></i>Services</h4>
       <div class='panel services'>
@@ -57,41 +57,6 @@
               <small class='pull-right'>{{wrapper.value.description}}</small>
             </li>
           {{/each}}
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class='roles'>
-      <h4>
-        <i class='fa fa-lock'></i>Realm Roles
-      </h4>
-      <div class="panel">
-        <div class="panel-heading">
-          Select from the following roles which will applied to all users in the realm (default roles).
-        </div>
-        <ul class='list-group'>
-          {{#each editedRoleWrappers key="@identity" as |wrapper|}}
-            <li class='list-group-item'>
-              <strong>{{wrapper.value.name}}</strong>
-              <a {{action 'confirmDeleteRole' wrapper.value}} class="pull-right text-danger">
-                <i class="fa fa-times"></i>
-              </a>
-              <a {{action 'editRole' wrapper.value}} class="pull-right">
-                <i class="fa fa-edit"></i>
-              </a>
-              <ul>
-                {{#each wrapper.value.permissions key="@identity" as |permission|}}
-                  <li>{{permission}}</li>
-                {{/each}}
-              </ul>
-            </li>
-          {{/each}}
-          <li class='list-group-item origin-controls'>
-            <a {{action 'addNewRole'}}>
-              <i class="fa fa-plus-square"></i> Add New Role
-            </a>
-          </li>
         </ul>
       </div>
     </div>

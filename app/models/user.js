@@ -9,7 +9,6 @@ export default BaseModel.extend({
   isNew: false,
 
   disabled: false,
-  roles: [],
   firstname: null,
   lastname: null,
   password: null,
@@ -21,7 +20,7 @@ export default BaseModel.extend({
   editedCustomTextValidMsg: null,
   editedCustomText: null,
 
-  attributeNames: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password', 'roles'],
+  attributeNames: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password'],
 
   id: function(){
     return this.get('username');
@@ -114,23 +113,11 @@ export default BaseModel.extend({
 
     var editedCustomTextValid = this.get('editedCustomTextValid');
     var editedCustomText = this.get('editedCustomText');
-    if( editedCustomTextValid ){
+    if( editedCustomTextValid && editedCustomText.length > 0){
       this.set('custom', editedCustomText);
     }
-    this.set('roles', this.get('editedRoleWrappers.selectedValues').map((v) => v.name));
-  },
-
-  addRole: function(role){
-    var roles = this.get('roles');
-    if( roles.indexOf(role) === -1 ){
-      roles.pushObject(role);
-    }
-  },
-
-  removeRole: function(role){
-    var roles = this.get('roles');
-    if( roles.indexOf(role) > -1 ){
-      roles.removeObject(role);
+    else{
+      this.set('custom', "{}");
     }
   },
 
@@ -157,22 +144,6 @@ export default BaseModel.extend({
     }
     return customJSON;
   }.property('custom'),
-
-  editedRoleWrappers: function(){
-    var availableRoles = this.get('realm.roles');
-    var selectedRoles = this.get('roles');
-    var editedRoleWrappers = SelectableArray.create({content: []});
-    if( availableRoles ){
-      editedRoleWrappers.pushObjects(availableRoles.map( (r) => {
-        var selectable = Selectable.create({value: r});
-        if( selectedRoles.contains(selectable.get('value.name')) ){
-          selectable.set('selected', true);
-        }
-        return selectable;
-      }));
-    }
-    return editedRoleWrappers;
-  }.property('realm.roles.[]', 'roles.[]'),
 
 
 });

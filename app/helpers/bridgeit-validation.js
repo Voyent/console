@@ -41,9 +41,7 @@ var DescriptionStringLength = 256;
 var MaxRightsLength = 4000;
 var RealmMaxLength = 75;
 var RealmMinLength = 2;
-var RolesMaxLength = 75;
 var OriginsMaxLength = 100;
-var RolesMinLength = 75; //jshint ignore:line
 var PasswordMinLength = 8;
 var PasswordMaxLength = 48;
 var EmailMaxLength = 50;
@@ -257,64 +255,6 @@ var realmReferenceFormatValidator = function (val) {
     return true;
 };
 exports.realmReferenceFormatValidator = realmReferenceFormatValidator;
-
-/**
- * Check the format of a role definition
- * @deprecate This function validates a role format that no longer exists
- *
- * @param val is an object of the form { rolename: 'yadda', permissions: [ 'permissiona', 'permissionb' ]
- */
-var roleFormatValidator = function (val) {
-
-    if (typeof(val.rolename) !== 'string') {
-        return false;
-    }
-    if (val.rolename.length > RolesMaxLength) {
-        return false;
-    }
-    var check = rolenameValidator(val.rolename);
-    if (!check) {
-        return false;
-    }
-    // defer the permissions check to the permissionFormat checker
-    check = permissionFormatValidator(val.permissions);
-    return check;
-};
-exports.roleFormatValidator = roleFormatValidator;
-
-/**
- * Check that the format of a rolename is proper.
- */
-var rolenameValidator = function (val) {
-    if (typeof(val) !== 'string') {
-        return false;
-    }
-    if (val.length > RolesMaxLength) {
-        return false;
-    }
-    return (underscoreOnlyRegex.test(val));
-};
-exports.rolenameValidator = rolenameValidator;
-
-/**
- * This validator is for User/Admin records being granted access
- * to an array of roles by name
- */
-var roleReferenceValidator = function (val) {
-    if (Array.isArray(val) === false) {
-        return false;
-    }
-    for (var i = 0; i < val.length; i++) {
-        if (!val[i] || val[i].length > RolesMaxLength) {
-            return false;
-        }
-        if (!underscoreOnlyRegex.test(val[i])) {
-            return false;
-        }
-    }
-    return true;
-};
-exports.roleReferenceValidator = roleReferenceValidator;
 
 
 /**

@@ -23,11 +23,9 @@ export default {
     passwordMismatch: 'The password and password_confirm fields do not match',
     invalidEmail: 'The Email address is invalid',
     invalidPermissionsFormat: 'Format of the permissions array is incorrect',
-    invalidRolesFormat: 'The Format of the roles array is incorrect',
     invalidUserDisabled: 'The Format of the disabled flag is not a boolean or string',
     invalidTSAEnable: 'The Format of the tsa_enable flag is neither boolean nor string',
-    invalidRolename: 'The specified rolename is invalid',
-
+    
     // Realm validation errors
     invalidRealmName: 'The realm name contains invalid characters',
     invalidRealmEnabled: 'The realm enabled field is not a boolean value',
@@ -63,9 +61,7 @@ export default {
     realmAlreadyExists: 'A realm with that name already exists',
     adminAlreadyExists: 'An administrator with that name already exists',
     lastAdminError: 'Cannot delete last Admin from account',
-    invalidRoleReference: 'Format of the role reference structure is invalid',
-    invalidRoleStructure: 'Format of the role record is incorrect',
-
+    
 
     // Various other errors
     accountNotFound: 'Account not found',
@@ -76,7 +72,6 @@ export default {
     realmNotOwned: 'Account does not contain realm',
     resourceNotFound: 'Could not find the requested resource.',
     blobNotFound: 'Blob not found',
-    roleNotFound: 'Role not found',
     contextNotFound: 'Context not found',
 
     // permission check errors
