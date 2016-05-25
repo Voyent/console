@@ -70,38 +70,6 @@
         {{/if}}
       </div>
     </div>
-    <div class="section">
-      <h4><i class='fa fa-lock'></i>Roles</h4>
-      <div class='roles'>
-      <ul class='list-group list-group-no-border'>
-        {{#each model.roles key="@identity" as |role|}}
-          <li class="list-group-item">
-            <label>{{role.name}}</label>
-            <a {{action 'confirmDeleteRole' role}} class="pull-right text-danger">
-              <i class="fa fa-times"></i>
-            </a>
-            <a {{action 'editRole' role}} class="pull-right">
-              <i class="fa fa-edit"></i>
-            </a>
-            <ul>
-              {{#each role.permissions key="@identity" as |permission|}}
-                <li>{{permission}}</li>
-              {{/each}}
-            </ul>
-          </li>
-          {{else}}
-            <li class="list-group-item">
-              There are no roles currently configured for <code>{{model.name}}</code>.
-            </li>
-        {{/each}}
-        <li class='list-group-item origin-controls'>
-          <a {{action 'addNewRole'}}>
-            <i class="fa fa-plus-square"></i> Add New Role
-          </a>
-        </li>
-      </ul>
-      </div>
-    </div>
   </div>
   <div class="col-sm-6">
     <div class="section">
@@ -160,6 +128,7 @@
   </div>
 </div>
 
-{{partial 'edit-role-modal'}}
+{{partial 'clone-realm-modal'}}
 
-{{partial 'delete-role-modal'}}
+{{partial 'delete-realm-modal'}}
+
