@@ -22,6 +22,7 @@
           <th>Full Name</th>
           <th>Email</th>
           <th class='col-checkbox'>Active</th>
+          <th>Roles</th>
           <th></th>
         </tr>
       </thead>
@@ -36,7 +37,10 @@
             <td class='col-checkbox enabled'>
               <i class="fa {{if user.disabled 'fa-square-o' 'fa-check-square-o'}}"></i>
             </td>
-             <td class='col-ops'>
+            <td class="col-roles">
+              {{list-join user.roles ', '}}
+            </td>
+            <td class='col-ops'>
               <a {{action 'openUserInfoModal' user}}>
                 <i class='fa fa-info-circle'></i>
               </a>
@@ -93,6 +97,24 @@
                 </div>
               </div>
             </div>
+
+            <h4><i class='fa fa-lock'></i>Roles</h4>
+            <div id='permissions' class='permissions'>
+              {{#if selectedUser.roles}}
+                <div class='panel panel-info'>
+                  <ul class='list-group'>
+                    {{#each selectedUser.roles as |role|}}
+                      <li class='list-group-item'>
+                        {{role}}
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
+              {{else}}
+                <div>There are no roles currently configured for the user.</div>
+              {{/if}}
+            </div>
+
 
             {{#if selectedUser.custom}}
               <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>

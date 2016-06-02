@@ -9,13 +9,14 @@ export default BaseModel.extend({
     return this.get('name');
   }.property('name'),
 
-  attributeNames: ['name', 'description', 'services', 'origins', 'users', 'quick_user', 'disabled', 'custom'],
+  attributeNames: ['name', 'description', 'services', 'origins', 'users', 'quick_user', 'disabled', 'custom', 'roles'],
 
   //attributes
   name: '',
   origins: ['*'],
   services: [],
   users: [],
+  roles: [],
   quick_user: false,
   disabled: false,
   custom: {},
@@ -121,7 +122,7 @@ export default BaseModel.extend({
   },
 
   serialize: function(){
-    return this.getProperties('name', 'description', 'services', 'origins', 'quick_user', 'disabled', 'custom');
+    return this.getProperties('name', 'description', 'services', 'origins', 'quick_user', 'disabled', 'custom', 'roles');
   },
 
   onEditedCustomTextChanged: function(){
@@ -186,6 +187,15 @@ export default BaseModel.extend({
     return selectedServiceWrappers;
   }.property('services.[]'),  
 
+  editedRoleWrappers: function(){
+    var roles = this.get('roles');
+    var editedRoleWrappers = SelectableArray.create({content: []});
+    if( roles && !!roles.length ){
+      editedRoleWrappers.pushObjects(roles.map((r) => Selectable.create({value: r, selected: true})));
+    }
+    return editedRoleWrappers;
+  },
+
   generateTestUsersForServices: function(services){
     var testUsers = [];
     var account = this.get('account');
@@ -213,6 +223,11 @@ export default BaseModel.extend({
       }
     });
     return testUsers;
+  },
+
+  getRole: function(roleName){
+    var f = this.get('roles').filter((r) => r.name === roleName);
+    return f.length ? f[0] : null;
   },
 
   customJSON: function(){
