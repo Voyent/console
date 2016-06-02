@@ -59,6 +59,11 @@ var services = [{
     name: "bridgeit.mailbox",
     label: "Mailbox Service",
     icon: 'fa-inbox'
+},{
+    name: "bridgeit.event",
+    label: "Event Service",
+    icon: "fa-bell-o"
+
 }];
 
 export default services;
