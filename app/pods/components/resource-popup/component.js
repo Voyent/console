@@ -76,7 +76,7 @@ export default Ember.Component.extend({
 				let newResourceId = this.get('newResourceId');
 				
 				//if client has set a validate callback, execute it, otherwise proceed
-				if( !validationCallback || validationCallback(editedResource, newResourceId, service, this.get('path'))){
+				if( !validationCallback || validationCallback(editedResource, newResourceId || editedResource._id, service, this.get('path'))){
 					this.sendAction('onsave', editedResource, newResourceId); 
 					this.set('resource', editedResource);
 					this.set('editedResourceStr', null);
