@@ -11,6 +11,7 @@ export default Ember.Component.extend({
 	newResourceId: null,
 	service: null,
 	path: null,
+	isnew: false,
 
 	open: function(){
 		Ember.$('#showResourceModal').modal();
@@ -61,6 +62,9 @@ export default Ember.Component.extend({
 			this.set('editing', false);
 			this.set('editedResourceStr', null);
 			this.set('newResourceId', null);
+			if( this.get('isnew')){
+				this.close();
+			}
 		},
 
 		save: function(){
@@ -73,11 +77,12 @@ export default Ember.Component.extend({
 				
 				//if client has set a validate callback, execute it, otherwise proceed
 				if( !validationCallback || validationCallback(editedResource, newResourceId, service, this.get('path'))){
-					this.sendAction('onsave', editedResource); 
+					this.sendAction('onsave', editedResource, newResourceId); 
 					this.set('resource', editedResource);
 					this.set('editedResourceStr', null);
 					this.set('editing', false);
 					this.set('newResourceId', null);
+					this.set('isnew', false);
 				}
 			}
 		},

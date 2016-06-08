@@ -429,7 +429,7 @@
 
 {{#if showResourcePopup}}
   {{resource-popup resource=selectedResource service=serviceForResource onsave='onResourceSaved' onclose='onResourceClosed' 
-    editing=editingResource newResourceId=newResourceId validate=validateResource path=selectedResourcePath}}
+    editing=editingResource validate=validateResource path=selectedResourcePath isnew=isCreatingNewResource}}
 {{/if}}
 
 {{#if resourceToDelete}}

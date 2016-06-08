@@ -13,8 +13,8 @@ export default BaseController.extend( RealmMixin, {
 	application: Ember.inject.controller(),
 	cloneRealmLog: null,
 	cloneRealmInProcess: false,
-	newResourceId: null,
-
+	isCreatingNewResource: false,
+	
 	openConfirmDeleteRealmPopup: function() {
 		Ember.$('#deleteRealmModal').modal();
 	},
@@ -382,7 +382,7 @@ export default BaseController.extend( RealmMixin, {
 			this.set('selectedResourcePath', path);
 		},
 
-		onResourceSaved: function(resource){
+		onResourceSaved: function(resource, id){
 			if( resource ){
 				let service = this.get('serviceForResource');
 				let realm = this.get('model');
@@ -430,10 +430,8 @@ export default BaseController.extend( RealmMixin, {
 					//create new resource
 					else{ 
 
-						//if user created id, set it on doc
-						let newResourceId = this.get('newResourceId');
-						if( newResourceId ){
-							resource._id = newResourceId;
+						if( id ){
+							resource._id = id;
 						}
 
 						return Ember.RSVP.Promise.resolve().then(() => {
@@ -444,20 +442,20 @@ export default BaseController.extend( RealmMixin, {
 								});
 							}
 							else if( service === 'action'){
-								return bridgeit.io.action.createAction({id: newResourceId, action: resource}).then((uri) => {
+								return bridgeit.io.action.createAction({id: id, action: resource}).then((uri) => {
 									realm.get('actions').pushObject(resource);
 									return uri;
 								});
 							}
 							else if( service === 'eventhub'){
 								if( path === 'handlers'){
-									return bridgeit.io.eventhub.createHandler({id: newResourceId, handler: resource}).then((uri) => {
+									return bridgeit.io.eventhub.createHandler({id: id, handler: resource}).then((uri) => {
 										realm.get('handlers').pushObject(resource);
 										return uri;
 									});
 								}
 								else if( path === 'recognizers'){
-									return bridgeit.io.eventhub.createRecognizer({id: newResourceId, recognizer: resource}).then((uri) => {
+									return bridgeit.io.eventhub.createRecognizer({id: id, recognizer: resource}).then((uri) => {
 										realm.get('recognizers').pushObject(resource);
 										return uri;
 									});
@@ -465,21 +463,21 @@ export default BaseController.extend( RealmMixin, {
 							}
 							else if( service === 'location'){
 								if( path === 'regions'){
-									return bridgeit.io.location.createRegion({id: newResourceId, region: resource}).then((uri) => {
-										realm.get('handlers').pushObject(resource);
+									return bridgeit.io.location.createRegion({id: id, region: resource}).then((uri) => {
+										realm.get('regions').pushObject(resource);
 										return uri;
 									});
 								}
-								else if( path === 'recognizers'){
-									return bridgeit.io.location.createRecognizer({id: newResourceId, recognizer: resource}).then((uri) => {
-										realm.get('recognizers').pushObject(resource);
+								else if( path === 'poi'){
+									return bridgeit.io.location.createPOI({id: id, poi: resource}).then((uri) => {
+										realm.get('pois').pushObject(resource);
 										return uri;
 									});
 								}
 							}
 						}).then((uri) => {							
 							//set new id on the resource if the user hasn't
-							if( !newResourceId){
+							if( !id){
 								let uriParts = uri.split('/');
 								let newId = uriParts[uriParts.length-1];
 								resource._id = newId;
@@ -501,6 +499,7 @@ export default BaseController.extend( RealmMixin, {
 			this.set('showResourcePopup', false);
 			this.set('selectedResourcePath', null);
 			this.set('serviceForResource', null);
+			this.set('isCreatingNewResource', false);
 		},
 
 		editResource: function(resource, service, path){
@@ -509,6 +508,7 @@ export default BaseController.extend( RealmMixin, {
 			this.set('selectedResource', resource);
 			this.set('serviceForResource', service);
 			this.set('selectedResourcePath', path);
+			this.set('isCreatingNewResource', false);
 		},
 
 		deleteResource: function(resource, service, path){
@@ -620,6 +620,7 @@ export default BaseController.extend( RealmMixin, {
 			this.set('serviceForResource', service);
 			this.set('showResourcePopup', true);
 			this.set('selectedResourcePath', path);
+			this.set('isCreatingNewResource', true);
 		},
 
 		showResourcePermissions: function(resource, service, path){
