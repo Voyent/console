@@ -5,13 +5,11 @@ export default Ember.Component.extend({
 	document: null,
 
 	didRender: function(){
-		console.log('json-document.didRender()');
 		this._super(...arguments);
 		this.renderDocument();
 	},
 
 	didUpdateAttrs: function(){
-		console.log('json-document.didUpdateAttrs()');
 		this._super(...arguments);
 		this.renderDocument();
 	},
