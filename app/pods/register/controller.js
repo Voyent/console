@@ -15,7 +15,7 @@ export default BaseController.extend({
         if( val ){
             this.set('formDataEntered', true);
         }
-    }.observes(Form._datafields),
+    }.observes('username', 'account', 'accountdescription', 'password', 'password_confirm', 'email', 'firstname', 'lastname'),
 
     _validateUsername: function(){
         if( !validation.usernameValidator(this.get('username'))){

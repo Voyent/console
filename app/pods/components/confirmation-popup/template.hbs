@@ -1,0 +1,16 @@
+<div class="modal fade" id='confirmationModal'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>{{title}}</div>
+      <div class='modal-body'>
+        {{text}}
+      </div>
+      <div class="modal-footer">
+        <div class='btn-bar pull-right'>
+          <a class="btn btn-lg btn-default login-btn" {{action 'confirm'}}>{{confirmationLabel}}</a>
+          <a class="btn btn-lg btn-primary login-btn" {{action 'deny'}}>{{denyLabel}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

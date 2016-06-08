@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'console/config/environment';
 
 export default Ember.Route.extend({
 

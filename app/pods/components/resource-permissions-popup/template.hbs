@@ -1,0 +1,310 @@
+<div class="modal fade" id='resourcePermissionsPopup'>
+  <div class='modal-dialog modal-lg'>
+    <div class='modal-content'>
+      <div class='modal-header'>{{resource._id}} Permissions</div>
+      <div class='modal-body'>
+
+        {{#unless editing}}
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a {{action 'showTableTab'}} role="tab" data-toggle="tab">Table</a></li>
+            <li role="presentation"><a {{action 'showJSONTab'}} role="tab" data-toggle="tab">JSON</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane {{if tableTabShown 'active'}}" id="table">
+                <div class='form-group'>
+                  <label class='col-sm-2 control-label'>Owner</label>
+                  <div class="col-sm-10">{{resourcePermissions.owner}}</div>
+                </div>
+                <br/>
+                <hr/>
+                <div>
+                  <div class='form-group'>
+                    <label class='col-sm-2 control-label'>Rights</label>
+                    <div class="col-sm-10"></div>
+                  </div>
+
+                  <table class="table table-striped table-condensed resource-permissions-tbl">
+                    <thead>
+                      <th></th>
+                      <th>Read</th>
+                      <th>Update</th>
+                      <th>Delete</th>
+                      <th>Execute</th>
+                      <th>Metadata Read</th>
+                      <th>Metadata Update</th>
+                      <th>Client Metadata Update</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Owner</td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'r')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'u')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'x')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'd')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'pr')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'pu')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'owner' 'mu')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Realm</td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'r')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'u')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'x')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'd')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'pr')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'pu')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#if (resource-permissions resourcePermissions 'realm' 'mu')}}
+                            <i class='fa fa-check-circle'></i>
+                          {{/if}}
+                        </td>
+                      </tr>
+                      {{#each resourcePermissionsRoles as |role|}}
+                         <tr>
+                          <td>Role: {{role}}</td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'r' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'u' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'x' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'd' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'pr' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'pu' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                          <td>
+                            {{#if (resource-permissions resourcePermissions 'roles' 'mu' role)}}
+                              <i class='fa fa-check-circle'></i>
+                            {{/if}}
+                          </td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane {{if tableTabShown '' 'active'}}" id="json">
+              {{json-document document=resourcePermissions }}
+            </div>
+          </div>
+        {{else}}
+           <form {{action 'save' on='submit'}} class='form-horizontal clearfix' autocomplete='off'>
+            {{#if error}}
+              <div class='alert alert-danger'>
+                {{error}}
+              </div>
+            {{/if}}
+            <div class='form-group'>
+              <label class='col-sm-2 control-label'>Resource Id</label>
+                <div class="col-sm-10"><div class='form-control'>{{resource._id}}</div></div>
+            </div>
+            <div class='form-group'>
+              <label class='col-sm-2 control-label'>Owner</label>
+              <div class="col-sm-10">
+                {{ember-selectize
+                      content=ownernames
+                      value=editedPermissions.owner
+                      placeholder='Enter the resource owner username'}}
+              </div>
+            </div>
+            <div class='form-group'>
+              <label class='col-sm-2 control-label'>Permissions</label>
+              <div class="col-sm-10">
+              </div>
+            </div>
+            <div>
+              <table class="table table-striped table-condensed resource-permissions-tbl">
+                <thead>
+                  <th></th>
+                  <th>Read</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                  <th>Execute</th>
+                  <th>Metadata Read</th>
+                  <th>Metadata Update</th>
+                  <th>Client Metadata Update</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Owner</td>
+                    <td>
+                      {{input checked=editedPermissions.owner_r type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_u type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_d type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_x type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_pr type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_pu type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.owner_mu type='checkbox' }}
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Realm</td>
+                    <td>
+                      {{input checked=editedPermissions.realm_r type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_u type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_d type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_x type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_pr type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_pu type='checkbox' }}
+                    </td>
+                    <td>
+                      {{input checked=editedPermissions.realm_mu type='checkbox' }}
+                    </td>
+                    <td></td>
+                  </tr>
+                  {{#each resourcePermissionsRoles as |role|}}
+                     <tr>
+                      <td>Role: {{role}}</td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_r role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_u role)) type='checkbox' }}
+                      </td>
+                      <td>
+                       {{input checked=(mut (get editedPermissions.roles_d role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_x role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_pr role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_pu role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        {{input checked=(mut (get editedPermissions.roles_mu role)) type='checkbox' }}
+                      </td>
+                      <td>
+                        <a {{action 'deleteRole' role}}><i class="fa fa-times"></i></a>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+              <div class="form-group add-role">
+                <div class='col-sm-8'>
+                  {{input type='text' value=newRole class='form-control' autocomplete='off'}}
+                </div>
+                <div class="col-sm-4">
+                  <a class="btn btn-lg btn-default login-btn" {{action 'addRole'}}>Add Role</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        {{/unless}}
+      </div>
+     <div class="modal-footer">
+        <div class='btn-bar pull-right'>
+          {{#unless editing}}
+            <a class="btn btn-lg btn-default login-btn" {{action 'close'}}>Close</a>
+            <a class="btn btn-lg btn-primary login-btn" {{action 'edit'}}>Edit</a>
+          {{else}}
+            <a class="btn btn-lg btn-default login-btn" {{action 'cancelEdit'}}>Cancel</a>
+            <a class="btn btn-lg btn-primary login-btn" {{action 'save'}}>Save</a>
+          {{/unless}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,20 +10,6 @@ export default BaseController.extend({
   _msgfields: ['passwordMsg', 'password_confirmMsg', 'emailMsg', 'firstnameMsg', 'lastnameMsg'],
   realmsController: Ember.inject.controller('secure.realms'),
 
-  validateRequiredFields: function(){
-    var valid = true;
-    var model = this.get('model');
-    if( !model.get('password') || model.get('password').length === 0 ){
-      this.set('passwordMsg', 'Please enter a password.');
-      valid = false;
-    }
-    if( !this.get('password_confirm') || this.get('password_confirm').length === 0 ){
-      this.set('passwordconfirmMsg', 'Please confirm the password.');
-      valid = false;
-    }
-    return valid;
-  },
-
   validateEmail: function(){
     var email = this.get('model.email');
     if(email &&  !validator.isEmail(email)){
@@ -63,7 +49,7 @@ export default BaseController.extend({
   },
 
   validatePassword: function(){
-    if( !validation.passwordValidator(this.get('model.password'))){
+    if( !bridgeitValidation.passwordValidator(this.get('model.password'))){
       this.set('passwordMsg', errorMessages.invalidPassword);
     }
     else{

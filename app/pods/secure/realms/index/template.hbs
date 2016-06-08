@@ -143,10 +143,11 @@
       {{#if model.custom}}
         <h4><i class='fa fa-ellipsis-h'></i>Optional Information</h4>
         <div class='optional-info'>
-          {{json-highlight json=model.customJSON}}
+          {{json-document document=model.customJSON}}
         </div>
       {{/if}}
     </div>
+
     <div class="section">
       <h4>{{#link-to 'secure.realms.users'}}<i class='fa fa-users'></i>Users{{/link-to}}</h4>
       <div class="row">
@@ -157,7 +158,265 @@
         </div>
       </div>
     </div>
+
   </div>
+</div>
+
+<hr/>
+
+<h4><i class='fa fa-cube'></i>Resources</h4>
+
+<div class="row">
+
+  <div class="col-sm-6">
+
+    {{#if model.hasDocumentsService}}
+       <div class="section">
+        <h4><i class='fa'>{}</i>Documents</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.documents as |doc|}}
+                <li class="list-group-item">
+                  {{doc._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' doc 'documents'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' doc 'documents'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' doc 'documents'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' doc 'documents'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No documents</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'documents'}}>New Document</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.hasEventHubService}}
+      <div class="section">
+        <h4><i class='fa fa-flash'></i>Event Hub</h4>
+        <strong class="section-subtitle">Handlers</strong>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.handlers as |handler|}}
+                <li class="list-group-item">
+                  {{handler._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' handler 'eventhub' 'handlers'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' handler 'eventhub' 'handlers'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' handler 'eventhub' 'handlers'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' handler 'eventhub' 'handlers'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No handlers</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'eventhub' 'handlers'}}>New Handler</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <strong class="section-subtitle">Recognizers</strong>
+         <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.recognizers as |recognizer|}}
+                <li class="list-group-item">
+                  {{recognizer._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' recognizer 'eventhub' 'recognizers'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' recognizer 'eventhub' 'recognizers'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' recognizer 'eventhub' 'recognizers'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' handler 'eventhub' 'recognizers'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No recognizers</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'eventhub' 'recognizers'}}>New Recognizer</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.hasLocationService}}
+      <div class="section">
+        <h4><i class='fa fa-location-arrow'></i>Location</h4>
+        <strong class="section-subtitle">Regions</strong>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.regions as |region|}}
+                <li class="list-group-item">
+                  {{region._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' region 'location' 'regions'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' region 'location' 'regions'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' region 'location' 'regions'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' region 'location' 'regions'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No regions</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'location' 'regions'}}>New Region</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <strong class="section-subtitle">Points of Interest</strong>
+         <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.pois as |poi|}}
+                <li class="list-group-item">
+                  {{poi._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' poi 'location' 'poi'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' poi 'location' 'poi'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' poi 'location' 'poi'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' poi 'location' 'poi'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No points of interest</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'location' 'poi'}}>New Point of Interest</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+
+  </div>
+  <div class="col-sm-6">
+
+    {{#if model.hasActionService}}
+      <div class="section">
+        <h4><i class='fa fa-paper-plane-o'></i>Actions</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.actions as |action|}}
+                <li class="list-group-item">
+                  {{action._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' action 'action' 'actions'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' action 'action' 'actions'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' action 'action' 'actions'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' action 'action' 'actions'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No actions</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'action' 'actions'}}>New Action</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.hasQueryService}}
+      <div class="section">
+        <h4><i class='fa fa-search'></i>Queries</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.queries as |query|}}
+                <li class="list-group-item">
+                  {{query._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' query 'query' 'queries'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' query 'query' 'queries'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' query 'query' 'queries'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' query 'query' 'queries'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No queries</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'query' 'queries'}}>New Query</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.hasMailboxService}}
+      <div class="section">
+        <h4><i class='fa fa-inbox'></i>Mailboxes</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.mailboxes as |mailbox|}}
+                <li class="list-group-item">
+                  {{mailbox._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No mailboxes</li>
+              {{/each}}
+              <li class="list-group-item" style="text-align: right">
+                 <a class="btn btn-default login-btn" {{action 'createNewResource' 'mailbox' 'mailboxes'}}>New Query</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if model.hasStorageService}}
+      <div class="section">
+        <h4><i class='fa fa-database'></i>Storage</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class='list-group list-group-no-border'>
+              {{#each model.blobs as |blob|}}
+                <li class="list-group-item">
+                  {{blob._id}} 
+                  <div class="resource-line-options">
+                    <a {{action 'showResource' blob 'storage' 'blobs'}}><i class="fa fa-folder-open-o"></i></a>
+                    <a {{action 'editResource' blob 'storage' 'blobs'}}><i class="fa fa-pencil"></i></a>
+                    <a {{action 'deleteResource' blob 'storage' 'blobs'}}><i class="fa fa-remove"></i></a>
+                    <a {{action 'showResourcePermissions' blob 'storage' 'blobs'}}><i class="fa fa-key"></i></a>
+                  </div>
+                </li>
+              {{else}}
+                <li class="list-group-item">No storage items</li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+  </div>
+  
 </div>
 
 {{partial 'edit-role-modal'}}
@@ -167,4 +426,19 @@
 {{partial 'clone-realm-modal'}}
 
 {{partial 'delete-realm-modal'}}
+
+{{#if showResourcePopup}}
+  {{resource-popup resource=selectedResource service=serviceForResource onsave='onResourceSaved' onclose='onResourceClosed' 
+    editing=editingResource newResourceId=newResourceId validate=validateResource path=selectedResourcePath}}
+{{/if}}
+
+{{#if resourceToDelete}}
+  {{confirmation-popup title='Delete Confirmation' text=confirmDeleteResourceText
+    onconfirm='onConfirmDeleteResource' ondeny='onDenyDeleteResource'}}
+{{/if}}
+
+{{#if showResourcePermissions}}
+  {{resource-permissions-popup resource=selectedResource service=serviceForResource toast=toast
+    onclose='onCloseResourcePermissions' ownernames=accountUsernames path=selectedResourcePath}}
+{{/if}}
 

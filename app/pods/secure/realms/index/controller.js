@@ -13,6 +13,7 @@ export default BaseController.extend( RealmMixin, {
 	application: Ember.inject.controller(),
 	cloneRealmLog: null,
 	cloneRealmInProcess: false,
+	newResourceId: null,
 
 	openConfirmDeleteRealmPopup: function() {
 		Ember.$('#deleteRealmModal').modal();
@@ -20,6 +21,44 @@ export default BaseController.extend( RealmMixin, {
 
 	closeDeleteRealmPopup: function() {
 		Ember.$('#deleteRealmModal').modal('hide');
+	},
+
+	accountUsernames: function(){
+		//gather all usernames from account admins and realm users
+		let usernames = this.get('application.account.adminUsernames');
+		let realmUsers = this.get('model.users');
+		if( realmUsers ){
+			usernames = usernames.concat(realmUsers.map((u) => u.get('username')));
+		}
+		return usernames;
+	}.property('application.account.admins.[]', 'model.users.[]'),
+
+	validateResource: function(resource, id, service, path){
+		//this is undefined as function is called by component
+		if( service === 'action'){
+			if( !id ){
+				window.alert('Please enter the required id for the action.');
+				return false;
+			}
+		}
+		else if( service === 'documents'){
+
+		}
+		else if( service === 'query'){
+
+		}
+		else if( service === 'mailbox'){
+
+		}
+		else if( service === 'location'){
+			if( path === 'poi'){
+
+			}
+			else if( path === 'regions'){
+
+			}
+		}
+		return true;
 	},
 
 	actions: {
@@ -71,7 +110,7 @@ export default BaseController.extend( RealmMixin, {
 				this.transitionToRoute('secure.index');
 			});
 		},
-		
+
 		cloneRealm: function(){
 
 			var log = function log(msg){
@@ -285,6 +324,34 @@ export default BaseController.extend( RealmMixin, {
 			}).then(() => {
 				log('completed cloning queries');
 
+				//mailboxes
+				log('fetching mailboxes');
+				return bridgeit.io.mailbox.findMailboxes({realm: oldRealmName}).catch((err) => {
+					log('ERROR fetching mailboxes: ' + err.responseText);
+				});
+
+			}).then((mailboxes) => {
+
+				var mailboxPromises = [];
+				if( mailboxes ){
+					log('cloning ' + mailboxes.length + ' mailboxes');
+					mailboxes.forEach((mailbox) => {
+						mailboxPromises.push(Ember.RSVP.Promise.resolve().then(() => {
+							bridgeit.io.mailbox.createMailbox({
+								realm: newRealmName,
+								id: mailbox._id,
+								mailbox: mailbox
+							}).catch((err) => {
+								log('ERROR: ' + err.responseText);
+							});
+						}));
+					});
+				}
+				return Ember.RSVP.Promise.all(mailboxPromises);
+
+			}).then(() => {
+				log('completed cloning mailboxes');
+
 				log('fetching new realm: ' + newRealmName);
 
 				return bridgeit.io.admin.getRealm({realm: newRealmName});
@@ -307,5 +374,267 @@ export default BaseController.extend( RealmMixin, {
 			});
 
 		},
+
+		showResource: function(resource, service, path){
+			this.set('selectedResource', resource);
+			this.set('serviceForResource', service);
+			this.set('showResourcePopup', true);
+			this.set('selectedResourcePath', path);
+		},
+
+		onResourceSaved: function(resource){
+			if( resource ){
+				let service = this.get('serviceForResource');
+				let realm = this.get('model');
+				let path = this.get('selectedResourcePath');
+
+				return Ember.RSVP.Promise.resolve().then(() => {
+					//update existing resource
+					if( resource._id ){ 
+						if( service === 'documents'){
+							return bridgeit.io.documents.updateDocument({id: resource._id, document: resource}).then(() => {
+								realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
+							});
+						}
+						else if( service === 'action'){
+							return bridgeit.io.action.updateAction({id: resource._id, action: resource}).then(() => {
+								realm.set('actions', realm.get('actions').map((d) => d._id === resource._id ? resource : d));
+							});
+						}
+						else if( service === 'eventhub'){
+							if( path === 'handlers'){
+								bridgeit.io.eventhub.updateHandler({id: resource._id, handler: resource}).then(() => {
+									realm.set('handlers', realm.get('handlers').map((d) => d._id === resource._id ? resource : d));
+								});
+							}
+							else if( path === 'recognizers'){
+								bridgeit.io.eventhub.updateRecognizer({id: resource._id, recognizer: resource}).then(() => {
+									realm.set('recognizers', realm.get('recognizers').map((d) => d._id === resource._id ? resource : d));
+								});
+							}
+						}
+						else if( service === 'location'){
+							if( path === 'regions'){
+								bridgeit.io.location.updateRegion({id: resource._id, region: resource}).then(() => {
+									realm.set('regions', realm.get('regions').map((d) => d._id === resource._id ? resource : d));
+								});
+							}
+							else if( path === 'poi'){
+								bridgeit.io.location.updatePOI({id: resource._id, poi: resource}).then(() => {
+									realm.set('pois', realm.get('pois').map((d) => d._id === resource._id ? resource : d));
+								});
+							}
+						}
+						
+					}
+					//create new resource
+					else{ 
+
+						//if user created id, set it on doc
+						let newResourceId = this.get('newResourceId');
+						if( newResourceId ){
+							resource._id = newResourceId;
+						}
+
+						return Ember.RSVP.Promise.resolve().then(() => {
+							if( service === 'documents'){
+								return bridgeit.io.documents.createDocument({document: resource}).then((uri) => {
+									realm.get('documents').pushObject(resource);
+									return uri;
+								});
+							}
+							else if( service === 'action'){
+								return bridgeit.io.action.createAction({id: newResourceId, action: resource}).then((uri) => {
+									realm.get('actions').pushObject(resource);
+									return uri;
+								});
+							}
+							else if( service === 'eventhub'){
+								if( path === 'handlers'){
+									return bridgeit.io.eventhub.createHandler({id: newResourceId, handler: resource}).then((uri) => {
+										realm.get('handlers').pushObject(resource);
+										return uri;
+									});
+								}
+								else if( path === 'recognizers'){
+									return bridgeit.io.eventhub.createRecognizer({id: newResourceId, recognizer: resource}).then((uri) => {
+										realm.get('recognizers').pushObject(resource);
+										return uri;
+									});
+								}
+							}
+							else if( service === 'location'){
+								if( path === 'regions'){
+									return bridgeit.io.location.createRegion({id: newResourceId, region: resource}).then((uri) => {
+										realm.get('handlers').pushObject(resource);
+										return uri;
+									});
+								}
+								else if( path === 'recognizers'){
+									return bridgeit.io.location.createRecognizer({id: newResourceId, recognizer: resource}).then((uri) => {
+										realm.get('recognizers').pushObject(resource);
+										return uri;
+									});
+								}
+							}
+						}).then((uri) => {							
+							//set new id on the resource if the user hasn't
+							if( !newResourceId){
+								let uriParts = uri.split('/');
+								let newId = uriParts[uriParts.length-1];
+								resource._id = newId;
+							}
+						});
+					}
+				}).then(() => {
+					this.get('toast').info(path + ' resource saved');
+					this.set('editingResource', false); //reset
+				}).catch((error) => {
+					this.get('application').showErrorMessage(error, path + ' resource could not be saved');
+				});
+			}
+			
+		},
+
+		onResourceClosed: function(){
+			this.set('selectedResource', null);
+			this.set('showResourcePopup', false);
+			this.set('selectedResourcePath', null);
+			this.set('serviceForResource', null);
+		},
+
+		editResource: function(resource, service, path){
+			this.set('editingResource', true);
+			this.set('showResourcePopup', true);
+			this.set('selectedResource', resource);
+			this.set('serviceForResource', service);
+			this.set('selectedResourcePath', path);
+		},
+
+		deleteResource: function(resource, service, path){
+			let resourceType;
+			if( service === 'documents' ){
+				resourceType = 'document';
+			}
+			else if( service === 'action'){
+				resourceType = 'action';
+			}
+
+			this.set('confirmDeleteResourceText', 'Are you sure you want to delete the ' + resourceType + ' ' + resource._id + '?');
+			this.set('resourceToDelete', resource);
+			this.set('serviceForResource', service);
+			this.set('selectedResourcePath', path);
+		},
+
+		onConfirmDeleteResource: function(){
+			let resource = this.get('resourceToDelete');
+			let service = this.get('serviceForResource');
+			let path = this.get('selectedResourcePath');
+			if( resource ){
+				if( service === 'documents'){
+					bridgeit.io.documents.deleteDocument({id: resource._id}).then(() => {
+						//remove doc from realm
+						let realm = this.get('model');
+						realm.set('documents', realm.get('documents').filter((d) => d._id !== resource._id));
+						this.get('toast').info('Document deleted');
+						this.set('resourceToDelete', null);
+						this.set('confirmDeleteResourceText', null);
+					}).catch((error) => {
+						this.get('application').showErrorMessage(error, 'Document could not be deleted');
+					});
+				}
+				else if( service === 'action'){
+					bridgeit.io.action.deleteAction({id: resource._id}).then(() => {
+						let realm = this.get('model');
+						realm.set('actions', realm.get('actions').filter((d) => d._id !== resource._id));
+						this.get('toast').info('Action deleted');
+						this.set('resourceToDelete', null);
+						this.set('confirmDeleteResourceText', null);
+					}).catch((error) => {
+						this.get('application').showErrorMessage(error, 'Action could not be deleted');
+					});
+				}
+				else if( service === 'eventhub'){
+					if( path === 'handlers'){
+						bridgeit.io.eventhub.deleteHandler({id: resource._id}).then(() => {
+							let realm = this.get('model');
+							realm.set('handlers', realm.get('handlers').filter((d) => d._id !== resource._id));
+							this.get('toast').info('Handler deleted');
+							this.set('resourceToDelete', null);
+							this.set('confirmDeleteResourceText', null);
+						}).catch((error) => {
+							this.get('application').showErrorMessage(error, 'Event Hub Handler could not be deleted');
+						});
+					}
+					else if( path === 'recognizers' ){
+						bridgeit.io.eventhub.deleteRecognizer({id: resource._id}).then(() => {
+							let realm = this.get('model');
+							realm.set('recognizers', realm.get('recognizers').filter((d) => d._id !== resource._id));
+							this.get('toast').info('Recognizer deleted');
+							this.set('resourceToDelete', null);
+							this.set('confirmDeleteResourceText', null);
+						}).catch((error) => {
+							this.get('application').showErrorMessage(error, 'Event Hub Recognizer could not be deleted');
+						});
+					}
+					
+				}
+				else if( service === 'location'){
+					if( path === 'poi'){
+						bridgeit.io.location.deletePOI({id: resource._id}).then(() => {
+							let realm = this.get('model');
+							realm.set('pois', realm.get('pois').filter((d) => d._id !== resource._id));
+							this.get('toast').info('POI deleted');
+							this.set('resourceToDelete', null);
+							this.set('confirmDeleteResourceText', null);
+						}).catch((error) => {
+							this.get('application').showErrorMessage(error, 'Point of Interest could not be deleted');
+						});
+					}
+					else if( path === 'regions' ){
+						bridgeit.io.location.deleteRegion({id: resource._id}).then(() => {
+							let realm = this.get('model');
+							realm.set('regions', realm.get('regions').filter((d) => d._id !== resource._id));
+							this.get('toast').info('Region deleted');
+							this.set('resourceToDelete', null);
+							this.set('confirmDeleteResourceText', null);
+						}).catch((error) => {
+							this.get('application').showErrorMessage(error, 'Region could not be deleted');
+						});
+					}
+					
+				}
+				
+			}
+		},
+
+		onDenyDeleteResource: function(){
+			this.set('resourceToDelete', null);
+			this.set('confirmDeleteResourceText', null);
+		},
+
+		createNewResource: function(service, path){
+			let resource = {};
+			this.set('editingResource', true);
+			this.set('selectedResource', resource);
+			this.set('serviceForResource', service);
+			this.set('showResourcePopup', true);
+			this.set('selectedResourcePath', path);
+		},
+
+		showResourcePermissions: function(resource, service, path){
+			this.set('selectedResource', resource);
+			this.set('serviceForResource', service);
+			this.set('showResourcePermissions', true);
+			this.set('selectedResourcePath', path);
+		},
+
+		onCloseResourcePermissions: function(){
+			this.set('selectedResource', null);
+			this.set('serviceForResource', null);
+			this.set('showResourcePermissions', false);
+			this.set('selectedResourcePath', null);
+		},
+
 	}
 });

@@ -495,3 +495,37 @@ a{
     color: #333;
   }
 }
+
+.resource-line-options{
+  display: inline-block;
+  float: right;
+}
+.resource-permissions-tbl{
+  font-size: 12px;
+
+  td, th{
+    text-align: center;
+  }
+  td:first-child{
+    text-align: left;
+  }
+  i{
+    color: green;
+  }
+  i.fa-times{
+    color: red;
+  }
+}
+
+#resourcePermissionsPopup{
+  form{
+    margin: 10px;
+  }
+}
+
+.section-subtitle{
+  display: block;
+  margin: 20px;
+  font-size: 20px;
+  color: #848484;
+}

@@ -1,0 +1,68 @@
+<div class="modal fade" id='showResourceModal'>
+  <div class='modal-dialog modal-lg'>
+    <div class='modal-content'>
+      <div class='modal-header'>{{if resource._id resource._id 'New'}}</div>
+      <div class='modal-body'>
+        <div class="row">
+          <div class="col-xs-12">
+            {{#unless editing}}
+              {{json-document document=resource }}
+            {{else}}
+              <form {{action 'save' on='submit'}} class='form-horizontal clearfix' autocomplete='off'>
+                {{#if error}}
+                  <div class='alert alert-danger'>
+                    {{error}}
+                  </div>
+                {{/if}}
+                <div class='form-group'>
+                  <label class='col-sm-2 control-label'>Id</label>
+                    <div class="col-sm-10">
+                      {{#if resource._id}}
+                        {{input type='text' 
+                          value=resource._id class='form-control' autocomplete='off' readonly='readonly'}}
+                      {{else}}
+                        {{input type='text' 
+                          value=newResourceId class='form-control' autocomplete='off'}}
+                      {{/if}}
+                    </div>
+                </div>
+                <div class='form-group'>
+                  <label class='col-sm-2 control-label'>Content</label>
+                  <div class="col-sm-10">
+                    {{textarea value=editedResourceStr cols="80" rows="6"
+                      class='form-control'}}
+                  </div>
+                </div>
+                <div class='form-group'>
+                  <label class='col-sm-2 control-label'>JSON Valid:</label>
+                  <div class="col-sm-10">
+                    <div class='form-control'>
+                      {{#if valid}}
+                        <i class='fa fa-check success'></i>
+                      {{else}}
+                        <i class='fa fa-times danger'></i>
+                      {{/if}}
+                      {{validationMsg}}
+                    </div>
+                  </div>
+                </div>
+              </form>
+            {{/unless}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class='btn-bar pull-right'>
+          {{#unless editing}}
+            <a class="btn btn-lg btn-default login-btn" {{action 'close'}}>Close</a>
+            <a class="btn btn-lg btn-primary login-btn" {{action 'edit'}}>Edit</a>
+            <a class="btn btn-lg btn-primary login-btn btn-danger" {{action 'delete'}}>Delete</a>
+          {{else}}
+            <a class="btn btn-lg btn-default login-btn" {{action 'cancelEdit'}}>Cancel</a>
+            <a class="btn btn-lg btn-primary login-btn" {{action 'save'}}>Save</a>
+          {{/unless}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

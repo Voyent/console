@@ -110,7 +110,12 @@ var Account = BaseModel.extend({
 
   sortedServiceModels: function(){
     return this.get('serviceModels').sortBy('name');
-  }.property('serviceModels.[]')
+  }.property('serviceModels.[]'),
+
+  adminUsernames: function(){
+    return this.get('admins').map((a) => a.get('username'));
+  }.property('admins.[]'),
+
 
 
 

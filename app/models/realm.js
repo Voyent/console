@@ -22,6 +22,8 @@ export default BaseModel.extend({
   custom: {},
   account: null,
 
+  documents: [],
+
   //edited properties
   editedCustomTextValid: true,
   editedCustomTextValidMsg: null,
@@ -248,7 +250,39 @@ export default BaseModel.extend({
       customJSON = {};
     }
     return customJSON;
-  }.property('custom')
+  }.property('custom'),
+
+  hasService: function(service){
+    return this.get('services').indexOf(service) > -1;
+  },
+
+  hasDocumentsService: function(){
+    return this.hasService('bridgeit.doc');
+  }.property('services.[]'),
+
+  hasActionService: function(){
+    return this.hasService('bridgeit.action');
+  }.property('services.[]'),
+
+  hasEventHubService: function(){
+    return this.hasService('bridgeit.eventhub');
+  }.property('services.[]'),
+
+  hasLocationService: function(){
+    return this.hasService('bridgeit.locate');
+  }.property('services.[]'),
+
+  hasQueryService: function(){
+    return this.hasService('bridgeit.query');
+  }.property('services.[]'),
+
+  hasStorageService: function(){
+    return this.hasService('bridgeit.store');
+  }.property('services.[]'),
+
+  hasMailboxService: function(){
+    return this.hasService('bridgeit.mailbox');
+  }.property('services.[]'),
 
   
 });
