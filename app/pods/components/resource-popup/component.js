@@ -71,13 +71,15 @@ export default Ember.Component.extend({
 			if( this.get('editing') && this.get('valid')){
 				let editedResourceStr = this.get('editedResourceStr');
 				let editedResource = JSON.parse(editedResourceStr);
+				let originalResource = this.get('resource');
 				let validationCallback = this.get('validate');
 				let service = this.get('service');
-				let newResourceId = this.get('newResourceId');
+				let id = this.get('newResourceId') || editedResource._id || originalResource._id;
 				
 				//if client has set a validate callback, execute it, otherwise proceed
-				if( !validationCallback || validationCallback(editedResource, newResourceId || editedResource._id, service, this.get('path'))){
-					this.sendAction('onsave', editedResource, newResourceId); 
+				if( !validationCallback || validationCallback(editedResource, id, 
+					service, this.get('path'))){
+					this.sendAction('onsave', editedResource, id); 
 					this.set('resource', editedResource);
 					this.set('editedResourceStr', null);
 					this.set('editing', false);

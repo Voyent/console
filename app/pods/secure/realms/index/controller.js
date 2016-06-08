@@ -387,40 +387,45 @@ export default BaseController.extend( RealmMixin, {
 				let service = this.get('serviceForResource');
 				let realm = this.get('model');
 				let path = this.get('selectedResourcePath');
+				let originalResource = this.get('selectedResource');
+
 
 				return Ember.RSVP.Promise.resolve().then(() => {
 					//update existing resource
-					if( resource._id ){ 
+					if( originalResource._id ){ 
+
+						resource._id = originalResource._id; //ensure id remains constant
+						
 						if( service === 'documents'){
-							return bridgeit.io.documents.updateDocument({id: resource._id, document: resource}).then(() => {
+							return bridgeit.io.documents.updateDocument({id: originalResource._id, document: resource}).then(() => {
 								realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
 						else if( service === 'action'){
-							return bridgeit.io.action.updateAction({id: resource._id, action: resource}).then(() => {
+							return bridgeit.io.action.updateAction({id: originalResource._id, action: resource}).then(() => {
 								realm.set('actions', realm.get('actions').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
 						else if( service === 'eventhub'){
 							if( path === 'handlers'){
-								bridgeit.io.eventhub.updateHandler({id: resource._id, handler: resource}).then(() => {
+								bridgeit.io.eventhub.updateHandler({id: originalResource._id, handler: resource}).then(() => {
 									realm.set('handlers', realm.get('handlers').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 							else if( path === 'recognizers'){
-								bridgeit.io.eventhub.updateRecognizer({id: resource._id, recognizer: resource}).then(() => {
+								bridgeit.io.eventhub.updateRecognizer({id: originalResource._id, recognizer: resource}).then(() => {
 									realm.set('recognizers', realm.get('recognizers').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 						}
 						else if( service === 'location'){
 							if( path === 'regions'){
-								bridgeit.io.location.updateRegion({id: resource._id, region: resource}).then(() => {
+								bridgeit.io.location.updateRegion({id: originalResource._id, region: resource}).then(() => {
 									realm.set('regions', realm.get('regions').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 							else if( path === 'poi'){
-								bridgeit.io.location.updatePOI({id: resource._id, poi: resource}).then(() => {
+								bridgeit.io.location.updatePOI({id: originalResource._id, poi: resource}).then(() => {
 									realm.set('pois', realm.get('pois').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
