@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     }
     this.set('customDocumentValid', valid);
     this.set('customDocumentValidMsg', customDocumentValidMsg);
-    
+
   }.observes('customText'),
 
   actions: {
@@ -79,7 +79,7 @@ export default Ember.Mixin.create({
       role.set('permissions', selectedPermissions);
       var roles = this.get('model.roles');
       if( role.get('isNew')){
-        bridgeit.io.admin.createRealmRole({realm: this.get('model.id'), role: role}).then(() => {
+        voyent.io.admin.createRealmRole({realm: this.get('model.id'), role: role}).then(() => {
           roles.pushObject({
             name: role.get('content'),
             permissions: role.get('permissions')
@@ -91,7 +91,7 @@ export default Ember.Mixin.create({
       }
       else{
         var originalRole = this.get('originalEditedRole');
-        return bridgeit.io.admin.updateRealmRole({realm: this.get('model.id'), role: role}).then(() => {
+        return voyent.io.admin.updateRealmRole({realm: this.get('model.id'), role: role}).then(() => {
           roles.removeObject(originalRole);
           roles.pushObject(role);
           Ember.$('#editRoleModal').modal('hide');
@@ -110,14 +110,14 @@ export default Ember.Mixin.create({
       var serviceModels = account.get('serviceModels').slice(0);
       var permissionGroups = [];
       var groupedWrappers = {};
-      var availablePermissions = serviceModels != null && 
+      var availablePermissions = serviceModels != null &&
         serviceModels.length > 0 ? serviceModels.map((s) => s.get('permissions')).reduce((prev, curr) => prev.concat(curr)) : [];
 
       serviceModels.forEach((serviceModel) => {
         var serviceName = serviceModel.get('name');
         var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
           .map((p) => Selectable.create({
-            content: p, 
+            content: p,
             selected: role.permissions ? role.permissions.contains(p) : false,
             groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
             label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
@@ -127,8 +127,8 @@ export default Ember.Mixin.create({
 
       permissionGroups.pushObject(
         PermissionGroup.create({
-          service: 'bridgeit.user',
-          permissions: groupedWrappers['bridgeit.user']
+          service: 'services.user',
+          permissions: groupedWrappers['services.user']
         }));
 
       permissionGroups.pushObjects(realm.get('sortedServices').map(function(s){
@@ -175,7 +175,7 @@ export default Ember.Mixin.create({
         return;
       }
       Ember.$('#confirmDeleteRoleModal').modal('hide');
-      bridgeit.io.admin.deleteRealmRole({
+      voyent.io.admin.deleteRealmRole({
         id: roleName
       }).then(() => {
         this.get('application').showInfoMessage('Deleted role ' + roleName);
@@ -195,4 +195,3 @@ export default Ember.Mixin.create({
 });
 
 
-  

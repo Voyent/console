@@ -3,7 +3,7 @@
     "document",
     "window",
     "-Promise",
-    "bridgeit",
+    "voyent",
     "validator",
     "_"
   ],

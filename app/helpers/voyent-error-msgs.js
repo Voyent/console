@@ -25,7 +25,7 @@ export default {
     invalidPermissionsFormat: 'Format of the permissions array is incorrect',
     invalidUserDisabled: 'The Format of the disabled flag is not a boolean or string',
     invalidTSAEnable: 'The Format of the tsa_enable flag is neither boolean nor string',
-    
+
     // Realm validation errors
     invalidRealmName: 'The realm name contains invalid characters',
     invalidRealmEnabled: 'The realm enabled field is not a boolean value',
@@ -34,7 +34,7 @@ export default {
     invalidServicesArray: 'The service reference array format is invalid',
     invalidQuickUser: 'The quick_user field is not boolean format',
     invalidAdminAccess: 'The admin_access field is not boolean format',
-    invalidTemplatePermission: 'The template user may not be granted bridgeit.auth permissions',
+    invalidTemplatePermission: 'The template user may not be granted services.auth permissions',
     quickUserDisabled: 'Quick user signup not enabled',
     quickUserNoTemplate: 'Quick user template record is not defined',
     quickUserPasswordRequired: 'The quick user record must contain a new password',
@@ -56,12 +56,12 @@ export default {
     invalidRealmAccess: 'The Realm in the request is not administered by access_token',
 
     adminPermissionContentError: 'Administrators may not be granted service or app level permissions',
-    ungrantablePermission: 'bridgeit permission not in set linked to realm',
+    ungrantablePermission: 'voyent permission not in set linked to realm',
     duplicateResource: 'A record with the same key field already exists',
     realmAlreadyExists: 'A realm with that name already exists',
     adminAlreadyExists: 'An administrator with that name already exists',
     lastAdminError: 'Cannot delete last Admin from account',
-    
+
 
     // Various other errors
     accountNotFound: 'Account not found',

@@ -1,8 +1,8 @@
 import BaseController from 'console/controllers/base-controller';
 import Ember from 'ember';
-import bridgeitValidation from 'console/helpers/bridgeit-validation';
+import voyentValidation from 'console/helpers/voyent-validation';
 import utils from 'console/helpers/utils';
-import errorMessages from 'console/helpers/bridgeit-error-msgs';
+import errorMessages from 'console/helpers/voyent-error-msgs';
 
 export default BaseController.extend({
 
@@ -49,7 +49,7 @@ export default BaseController.extend({
   },
 
   validatePassword: function(){
-    if( !bridgeitValidation.passwordValidator(this.get('model.password'))){
+    if( !voyentValidation.passwordValidator(this.get('model.password'))){
       this.set('passwordMsg', errorMessages.invalidPassword);
     }
     else{
@@ -135,7 +135,7 @@ export default BaseController.extend({
       var user = this.get('model');
       user.saveEditedProperties();
 
-      bridgeit.io.admin.updateRealmUser({user: user.serialize()}).then(() => {
+      voyent.io.admin.updateRealmUser({user: user.serialize()}).then(() => {
         this.get('toast').info('Successfully edited user ' + user.get('fullname'));
         var realmController = this.get('realmsController');
         var realm = realmController.get('model');
@@ -157,11 +157,11 @@ export default BaseController.extend({
           this.get('toast').error(errorMessage);
         }
       );
-      
+
     },
     validateUsername: function(){
-      if( !bridgeitValidation.usernameValidator(this.get('model.username'))){
-        this.set('usernameMsg', bridgeitValidation.usernameMsg);
+      if( !voyentValidation.usernameValidator(this.get('model.username'))){
+        this.set('usernameMsg', voyentValidation.usernameMsg);
         return;
       }
       else{
@@ -205,8 +205,8 @@ export default BaseController.extend({
     },
     validatePassword: function(){
       var password = this.get('password');
-      if( password && !bridgeitValidation.passwordValidator(password)){
-        this.set('passwordMsg', bridgeitValidation.passwordMsg);
+      if( password && !voyentValidation.passwordValidator(password)){
+        this.set('passwordMsg', voyentValidation.passwordMsg);
       }
       else{
         this.set('passwordMsg', '');

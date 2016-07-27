@@ -14,7 +14,7 @@ export default BaseController.extend( RealmMixin, {
 	cloneRealmLog: null,
 	cloneRealmInProcess: false,
 	isCreatingNewResource: false,
-	
+
 	openConfirmDeleteRealmPopup: function() {
 		Ember.$('#deleteRealmModal').modal();
 	},
@@ -62,7 +62,7 @@ export default BaseController.extend( RealmMixin, {
 	},
 
 	actions: {
-		
+
 		openCloneRealmPopup: function() {
 			this.set('showCloneRealmPopup', true);
 			Ember.$('#cloneRealmModal').modal();
@@ -99,14 +99,14 @@ export default BaseController.extend( RealmMixin, {
 			var realm = this.get('model');
 			var account = this.get('application.account');
 
-			return bridgeit.io.admin.deleteRealm({realmName: realm.get('id')}).then(() => {
-				
+			return voyent.io.admin.deleteRealm({realmName: realm.get('id')}).then(() => {
+
 				//set the account on the realm so it has access to parent properties
 				realm.set('account', account);
 
 				//remove deleted realm from account.realms
 				var realms = account.get('realms').filter((r) => r.get('id') !== realm.get('id'));
-				account.set('realms', realms); 
+				account.set('realms', realms);
 				this.transitionToRoute('secure.index');
 			});
 		},
@@ -126,14 +126,14 @@ export default BaseController.extend( RealmMixin, {
 			var oldRealmName = realm.get('id');
 			log("Starting clone realm process");
 
-			
+
 			//admin.cloneRealm() will only clone basic info
-			return bridgeit.io.admin.cloneRealm({originRealmName: realm.get('id'), destRealmName: newRealmName}).then((clonedRealmURI) => {
+			return voyent.io.admin.cloneRealm({originRealmName: realm.get('id'), destRealmName: newRealmName}).then((clonedRealmURI) => {
 				log('created newly cloned realm with basic info: ' + clonedRealmURI);
 
 				//clone all POIs
 				log('fetching location service POIs');
-				return bridgeit.io.location.getAllPOIs({realm: oldRealmName}).catch((err) => {
+				return voyent.io.location.getAllPOIs({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching POIs: ' + err.responseText);
 				});
 
@@ -144,7 +144,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + pois.length + ' POIs');
 					pois.forEach((poi) => {
 						poiPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.location.createPOI({
+							return voyent.io.location.createPOI({
 								realm: newRealmName,
 								poi: poi
 							}).catch((err) => {
@@ -160,7 +160,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//clone all regions
 				log('fetching location service regions');
-				return bridgeit.io.location.findRegions({realm: oldRealmName}).catch((err) => {
+				return voyent.io.location.findRegions({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching regions: ' + err.responseText);
 				});
 
@@ -171,7 +171,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + regions.length + ' regions');
 					regions.forEach((region) => {
 						regionPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.location.createRegion({
+							return voyent.io.location.createRegion({
 								realm: newRealmName,
 								region: region
 							}).catch((err) => {
@@ -187,7 +187,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//actions
 				log('fetching action service actions');
-				return bridgeit.io.action.findActions({realm: oldRealmName}).catch((err) => {
+				return voyent.io.action.findActions({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching actions: ' + err.responseText);
 				});
 
@@ -198,7 +198,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + actions.length + ' actions');
 					actions.forEach((action) => {
 						actionPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.action.createAction({
+							return voyent.io.action.createAction({
 								realm: newRealmName,
 								id: action._id,
 								action: action
@@ -216,7 +216,7 @@ export default BaseController.extend( RealmMixin, {
 				//docs, will only fetch documents in the main collection
 				//TODO awaiting http://jira.icesoft.org/browse/NTFY-388
 				log('fetching document service documents');
-				return bridgeit.io.documents.findDocuments({realm: oldRealmName}).catch((err) => {
+				return voyent.io.documents.findDocuments({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching documents: ' + err.responseText);
 				});
 
@@ -227,7 +227,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + documents.length + ' documents');
 					documents.forEach((doc) => {
 						docPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.documents.createDocument({
+							return voyent.io.documents.createDocument({
 								realm: newRealmName,
 								document: doc
 							}).catch((err) => {
@@ -243,7 +243,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//eventhub handlers
 				log('fetching eventhub handlers');
-				return bridgeit.io.eventhub.findHandlers({realm: oldRealmName}).catch((err) => {
+				return voyent.io.eventhub.findHandlers({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching handlers: ' + err.responseText);
 				});
 
@@ -254,7 +254,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + handlers.length + ' handlers');
 					handlers.forEach((handler) => {
 						handlerPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return bridgeit.io.eventhub.createHandler({
+							return voyent.io.eventhub.createHandler({
 								realm: newRealmName,
 								id: handler._id,
 								handler: handler
@@ -271,7 +271,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//eventhub recognizers
 				log('fetching eventhub recognizers');
-				return bridgeit.io.eventhub.findRecognizers({realm: oldRealmName}).catch((err) => {
+				return voyent.io.eventhub.findRecognizers({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching recognizers: ' + err.responseText);
 				});
 
@@ -282,7 +282,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + recognizers.length + ' recognizers');
 					recognizers.forEach((recognizer) => {
 						recognizerPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							bridgeit.io.eventhub.createRecognizer({
+							voyent.io.eventhub.createRecognizer({
 								realm: newRealmName,
 								id: recognizer._id,
 								recognizer: recognizer
@@ -299,7 +299,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//eventhub queries
 				log('fetching query service queries');
-				return bridgeit.io.query.findQueries({realm: oldRealmName}).catch((err) => {
+				return voyent.io.query.findQueries({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching queries: ' + err.responseText);
 				});
 
@@ -310,7 +310,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + queries.length + ' queries');
 					queries.forEach((query) => {
 						queryPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							bridgeit.io.query.createQuery({
+							voyent.io.query.createQuery({
 								realm: newRealmName,
 								query: query
 							}).catch((err) => {
@@ -326,7 +326,7 @@ export default BaseController.extend( RealmMixin, {
 
 				//mailboxes
 				log('fetching mailboxes');
-				return bridgeit.io.mailbox.findMailboxes({realm: oldRealmName}).catch((err) => {
+				return voyent.io.mailbox.findMailboxes({realm: oldRealmName}).catch((err) => {
 					log('ERROR fetching mailboxes: ' + err.responseText);
 				});
 
@@ -337,7 +337,7 @@ export default BaseController.extend( RealmMixin, {
 					log('cloning ' + mailboxes.length + ' mailboxes');
 					mailboxes.forEach((mailbox) => {
 						mailboxPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							bridgeit.io.mailbox.createMailbox({
+							voyent.io.mailbox.createMailbox({
 								realm: newRealmName,
 								id: mailbox._id,
 								mailbox: mailbox
@@ -354,7 +354,7 @@ export default BaseController.extend( RealmMixin, {
 
 				log('fetching new realm: ' + newRealmName);
 
-				return bridgeit.io.admin.getRealm({realm: newRealmName});
+				return voyent.io.admin.getRealm({realm: newRealmName});
 
 			}).then((clonedRealm) => {
 
@@ -392,48 +392,48 @@ export default BaseController.extend( RealmMixin, {
 
 				return Ember.RSVP.Promise.resolve().then(() => {
 					//update existing resource
-					if( originalResource._id ){ 
+					if( originalResource._id ){
 
 						resource._id = originalResource._id; //ensure id remains constant
-						
+
 						if( service === 'documents'){
-							return bridgeit.io.documents.updateDocument({id: originalResource._id, document: resource}).then(() => {
+							return voyent.io.documents.updateDocument({id: originalResource._id, document: resource}).then(() => {
 								realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
 						else if( service === 'action'){
-							return bridgeit.io.action.updateAction({id: originalResource._id, action: resource}).then(() => {
+							return voyent.io.action.updateAction({id: originalResource._id, action: resource}).then(() => {
 								realm.set('actions', realm.get('actions').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
 						else if( service === 'eventhub'){
 							if( path === 'handlers'){
-								bridgeit.io.eventhub.updateHandler({id: originalResource._id, handler: resource}).then(() => {
+								voyent.io.eventhub.updateHandler({id: originalResource._id, handler: resource}).then(() => {
 									realm.set('handlers', realm.get('handlers').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 							else if( path === 'recognizers'){
-								bridgeit.io.eventhub.updateRecognizer({id: originalResource._id, recognizer: resource}).then(() => {
+								voyent.io.eventhub.updateRecognizer({id: originalResource._id, recognizer: resource}).then(() => {
 									realm.set('recognizers', realm.get('recognizers').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 						}
 						else if( service === 'location'){
 							if( path === 'regions'){
-								bridgeit.io.location.updateRegion({id: originalResource._id, region: resource}).then(() => {
+								voyent.io.location.updateRegion({id: originalResource._id, region: resource}).then(() => {
 									realm.set('regions', realm.get('regions').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 							else if( path === 'poi'){
-								bridgeit.io.location.updatePOI({id: originalResource._id, poi: resource}).then(() => {
+								voyent.io.location.updatePOI({id: originalResource._id, poi: resource}).then(() => {
 									realm.set('pois', realm.get('pois').map((d) => d._id === resource._id ? resource : d));
 								});
 							}
 						}
-						
+
 					}
 					//create new resource
-					else{ 
+					else{
 
 						if( id ){
 							resource._id = id;
@@ -441,26 +441,26 @@ export default BaseController.extend( RealmMixin, {
 
 						return Ember.RSVP.Promise.resolve().then(() => {
 							if( service === 'documents'){
-								return bridgeit.io.documents.createDocument({document: resource}).then((uri) => {
+								return voyent.io.documents.createDocument({document: resource}).then((uri) => {
 									realm.get('documents').pushObject(resource);
 									return uri;
 								});
 							}
 							else if( service === 'action'){
-								return bridgeit.io.action.createAction({id: id, action: resource}).then((uri) => {
+								return voyent.io.action.createAction({id: id, action: resource}).then((uri) => {
 									realm.get('actions').pushObject(resource);
 									return uri;
 								});
 							}
 							else if( service === 'eventhub'){
 								if( path === 'handlers'){
-									return bridgeit.io.eventhub.createHandler({id: id, handler: resource}).then((uri) => {
+									return voyent.io.eventhub.createHandler({id: id, handler: resource}).then((uri) => {
 										realm.get('handlers').pushObject(resource);
 										return uri;
 									});
 								}
 								else if( path === 'recognizers'){
-									return bridgeit.io.eventhub.createRecognizer({id: id, recognizer: resource}).then((uri) => {
+									return voyent.io.eventhub.createRecognizer({id: id, recognizer: resource}).then((uri) => {
 										realm.get('recognizers').pushObject(resource);
 										return uri;
 									});
@@ -468,19 +468,19 @@ export default BaseController.extend( RealmMixin, {
 							}
 							else if( service === 'location'){
 								if( path === 'regions'){
-									return bridgeit.io.location.createRegion({id: id, region: resource}).then((uri) => {
+									return voyent.io.location.createRegion({id: id, region: resource}).then((uri) => {
 										realm.get('regions').pushObject(resource);
 										return uri;
 									});
 								}
 								else if( path === 'poi'){
-									return bridgeit.io.location.createPOI({id: id, poi: resource}).then((uri) => {
+									return voyent.io.location.createPOI({id: id, poi: resource}).then((uri) => {
 										realm.get('pois').pushObject(resource);
 										return uri;
 									});
 								}
 							}
-						}).then((uri) => {							
+						}).then((uri) => {
 							//set new id on the resource if the user hasn't
 							if( !id){
 								let uriParts = uri.split('/');
@@ -496,7 +496,7 @@ export default BaseController.extend( RealmMixin, {
 					this.get('application').showErrorMessage(error, path + ' resource could not be saved');
 				});
 			}
-			
+
 		},
 
 		onResourceClosed: function(){
@@ -537,7 +537,7 @@ export default BaseController.extend( RealmMixin, {
 			let path = this.get('selectedResourcePath');
 			if( resource ){
 				if( service === 'documents'){
-					bridgeit.io.documents.deleteDocument({id: resource._id}).then(() => {
+					voyent.io.documents.deleteDocument({id: resource._id}).then(() => {
 						//remove doc from realm
 						let realm = this.get('model');
 						realm.set('documents', realm.get('documents').filter((d) => d._id !== resource._id));
@@ -549,7 +549,7 @@ export default BaseController.extend( RealmMixin, {
 					});
 				}
 				else if( service === 'action'){
-					bridgeit.io.action.deleteAction({id: resource._id}).then(() => {
+					voyent.io.action.deleteAction({id: resource._id}).then(() => {
 						let realm = this.get('model');
 						realm.set('actions', realm.get('actions').filter((d) => d._id !== resource._id));
 						this.get('toast').info('Action deleted');
@@ -561,7 +561,7 @@ export default BaseController.extend( RealmMixin, {
 				}
 				else if( service === 'eventhub'){
 					if( path === 'handlers'){
-						bridgeit.io.eventhub.deleteHandler({id: resource._id}).then(() => {
+						voyent.io.eventhub.deleteHandler({id: resource._id}).then(() => {
 							let realm = this.get('model');
 							realm.set('handlers', realm.get('handlers').filter((d) => d._id !== resource._id));
 							this.get('toast').info('Handler deleted');
@@ -572,7 +572,7 @@ export default BaseController.extend( RealmMixin, {
 						});
 					}
 					else if( path === 'recognizers' ){
-						bridgeit.io.eventhub.deleteRecognizer({id: resource._id}).then(() => {
+						voyent.io.eventhub.deleteRecognizer({id: resource._id}).then(() => {
 							let realm = this.get('model');
 							realm.set('recognizers', realm.get('recognizers').filter((d) => d._id !== resource._id));
 							this.get('toast').info('Recognizer deleted');
@@ -582,11 +582,11 @@ export default BaseController.extend( RealmMixin, {
 							this.get('application').showErrorMessage(error, 'Event Hub Recognizer could not be deleted');
 						});
 					}
-					
+
 				}
 				else if( service === 'location'){
 					if( path === 'poi'){
-						bridgeit.io.location.deletePOI({id: resource._id}).then(() => {
+						voyent.io.location.deletePOI({id: resource._id}).then(() => {
 							let realm = this.get('model');
 							realm.set('pois', realm.get('pois').filter((d) => d._id !== resource._id));
 							this.get('toast').info('POI deleted');
@@ -597,7 +597,7 @@ export default BaseController.extend( RealmMixin, {
 						});
 					}
 					else if( path === 'regions' ){
-						bridgeit.io.location.deleteRegion({id: resource._id}).then(() => {
+						voyent.io.location.deleteRegion({id: resource._id}).then(() => {
 							let realm = this.get('model');
 							realm.set('regions', realm.get('regions').filter((d) => d._id !== resource._id));
 							this.get('toast').info('Region deleted');
@@ -607,9 +607,9 @@ export default BaseController.extend( RealmMixin, {
 							this.get('application').showErrorMessage(error, 'Region could not be deleted');
 						});
 					}
-					
+
 				}
-				
+
 			}
 		},
 

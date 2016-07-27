@@ -5,16 +5,16 @@ export default BaseController.extend( RealmMixin, {
 
   testUsers: null,
   customDocumentValid: true,
- 
+
   actions: {
     cancel: function(){
       this.transitionToRoute('secure.index');
     },
-    
+
     create: function(){
       var appController = this.get('application');
       var realm = this.get('model');
-      
+
       if( !realm.get('name')){
         appController.showErrorMessage('Please enter the name of the new realm.');
         return;
@@ -26,9 +26,9 @@ export default BaseController.extend( RealmMixin, {
         var testUsers = realm.generateTestUsersForServices(services);
         realm.get('users').pushObjects(testUsers);
       }
-      
-      bridgeit.io.admin.createRealm({realm: realm.serialize()}).then((json) => {
-        this.debug('bridgeit.io.admin.createRealm() resp', json);
+
+      voyent.io.admin.createRealm({realm: realm.serialize()}).then((json) => {
+        this.debug('voyent.io.admin.createRealm() resp', json);
         appController.showInfoMessage('Created new realm');
         var account = appController.get('account');
         realm.set('account', account);

@@ -1,4 +1,4 @@
-import errors from 'console/helpers/bridgeit-errors';
+import errors from 'console/helpers/voyent-errors';
 
 var require = function(){
     return {
@@ -10,7 +10,7 @@ var require = function(){
     };
 };
 
-var exports = {}; 
+var exports = {};
 
 /**
  * Shared validation functions for validating various fields.
@@ -348,7 +348,7 @@ function validateBatchPermissions(rawPermissions) {
         }
         if (!permStruct.op) {
             if ('string' == typeof (permStruct.permission)) { //jshint ignore:line
-                permStruct.op = 'and'; 
+                permStruct.op = 'and';
             }
             if (Array.isArray(permStruct.permission)) {
                 permStruct.op = 'single';

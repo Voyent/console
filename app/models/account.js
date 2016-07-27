@@ -81,10 +81,10 @@ var Account = BaseModel.extend({
   },
 
   loadServiceModels: function(payload){
-    var servicesToFilter = ['bridgeit.starter'];
+    var servicesToFilter = ['services.starter'];
     if( payload && payload.services ){
       var serviceModels = payload.services.filter((s) => {
-        if( s.name === 'bridgeit.auth'){
+        if( s.name === 'services.auth'){
           this.set('authPermissions', s.permissions);
         }
         return s.name && !servicesToFilter.contains(s.name);
@@ -94,7 +94,7 @@ var Account = BaseModel.extend({
         return service;
       });
       serviceModels.pushObject( Service.create({
-        name: 'bridgeit.user',
+        name: 'services.user',
         permissions: [
           'bridgeit.user.editUser',
           'bridgeit.user.viewUser',
@@ -102,7 +102,7 @@ var Account = BaseModel.extend({
           'bridgeit.user.viewOther',
           'bridgeit.user.editOther',
           'bridgeit.user.deleteOther'],
-        description: 'The BridgeIt Authorization and Authentication service'
+        description: 'The Voyent Authorization and Authentication service'
       }));
       this.set('serviceModels', serviceModels);
     }

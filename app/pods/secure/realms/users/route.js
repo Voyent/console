@@ -5,7 +5,7 @@ export default Ember.Route.extend({
 
   model: function(){
     var realm = this.modelFor('secure.realms');
-    return bridgeit.io.admin.getRealmUsers({realmName: realm.get('id')}).then((users) => {
+    return voyent.io.admin.getRealmUsers({realmName: realm.get('id')}).then((users) => {
       if( users ){
         realm.users = users.map( u => User.create(u));
       }

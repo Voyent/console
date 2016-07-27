@@ -21,35 +21,35 @@ var AccessManager = Ember.Service.extend({
         reject(err);
       }
       else{
-        bridgeit.io.startTransaction();
-        var bridgeitParams = {
+        voyent.io.startTransaction();
+        var voyentParams = {
           host: config.host,
           account: account,
           username: username,
           password: password,
           usePushService: false,
           ssl: true,
-          connectionTimeout: 60, 
+          connectionTimeout: 60,
           onSessionExpiry: expiredCallback
         };
-        return bridgeit.io.auth.connect(bridgeitParams).then(resolve)['catch'](reject);
+        return voyent.io.auth.connect(voyentParams).then(resolve)['catch'](reject);
       }
     });
-    
+
   },
 
   logout: function(){
-    bridgeit.io.auth.disconnect();
-    bridgeit.io.endTransaction();
-    
+    voyent.io.auth.disconnect();
+    voyent.io.endTransaction();
+
   },
 
   isLoggedIn: function(){
-    return bridgeit.io.auth.isLoggedIn();
+    return voyent.io.auth.isLoggedIn();
   },
 
   loadAccountInfo: function(){
-    return bridgeit.io.admin.getAccount();
+    return voyent.io.admin.getAccount();
   },
 
 
