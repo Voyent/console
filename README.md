@@ -1,2 +1,2 @@
 # console
-An administration console for BridgeIt Services
+An administration console for Voyent Services
