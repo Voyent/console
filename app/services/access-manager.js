@@ -28,7 +28,7 @@ var AccessManager = Ember.Service.extend({
           username: username,
           password: password,
           usePushService: false,
-          ssl: true,
+          ssl: false,
           connectionTimeout: 60,
           onSessionExpiry: expiredCallback
         };

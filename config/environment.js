@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'console',
     podModulePrefix: 'console/pods',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'hash',
     EmberENV: {
       FEATURES: {
