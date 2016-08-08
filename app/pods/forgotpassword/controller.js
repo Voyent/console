@@ -30,7 +30,7 @@ export default BaseController.extend({
         return;
       }
 
-      bridgeit.io.auth.forgotPassword({
+      voyent.io.auth.forgotPassword({
         account: account,
         username: username
       }).then((result) => {
@@ -40,12 +40,12 @@ export default BaseController.extend({
         else{
           this.get('toast').error("Sorry, an unknown error occurred.");
         }
-        
+
       }).catch((error) => {
         this.get('toast').error(utils.extractErrorMessage(error));
       });
     }
-    
+
   }
 
 });

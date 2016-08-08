@@ -16,51 +16,51 @@
  */
 
 var services = [{
-    name: 'bridgeit.auth',
+    name: 'services.auth',
     label: "Authoriziation Service",
     icon: 'fa-key'
 },{
-    name: "bridgeit.store",
+    name: "services.store",
     label: "Storage Service",
     icon: 'fa-database'
 },{
-    name: "bridgeit.locate",
+    name: "services.locate",
     label: "Location Service",
     icon: 'fa-location-arrow'
 },{
-    name: "bridgeit.metrics",
+    name: "services.metrics",
     label: "Metrics Service",
     icon: 'fa-bar-chart-o'
 },{
-    name: "bridgeit.push",
+    name: "services.push",
     label: "Notification Service",
     icon: 'fa-cloud-download'
 },{
-    name: "bridgeit.doc",
+    name: "services.doc",
     label: "Document Service",
     icon: 'fa-folder-open'
 },{
-    name: "bridgeit.query",
+    name: "services.query",
     label: "Query Service",
     icon: "fa-search"
 },{
-    name: "bridgeit.context",
+    name: "services.context",
     label: "Context Service",
     icon: 'fa-cogs'
 },{
-    name: "bridgeit.action",
+    name: "services.action",
     label: "Action Service",
     icon: 'fa-paper-plane-o'
 },{
-    name: "bridgeit.eventhub",
+    name: "services.eventhub",
     label: "Event Hub Service",
     icon: 'fa-flash'
 },{
-    name: "bridgeit.mailbox",
+    name: "services.mailbox",
     label: "Mailbox Service",
     icon: 'fa-inbox'
 },{
-    name: "bridgeit.event",
+    name: "services.event",
     label: "Event Service",
     icon: "fa-bell-o"
 

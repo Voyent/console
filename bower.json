@@ -3,12 +3,11 @@
   "dependencies": {
     "ember": "~2.5.0",
     "ember-cli-shims": "0.1.1",
-    "ember-cli-test-loader": "0.2.2",
     "ember-qunit-notifications": "0.1.0",
     "jquery": "^1.11.3",
     "bootstrap": "~3.3.5",
     "font-awesome": "fontawesome#~4.4.0",
-    "bridgeit.io.js": "dev",
+    "voyent.io.js": "https://github.com/voyent/voyent.io.js.git#dev",
     "validator-js": "~4.2.0",
     "toastr": "~2.1.2",
     "lodash": "~4.3.0",

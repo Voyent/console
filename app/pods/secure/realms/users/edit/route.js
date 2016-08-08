@@ -8,7 +8,7 @@ export default Ember.Route.extend({
   model: function(params){
     var realm = this.modelFor('secure.realms');
     var userId = params.user_id;
-    return bridgeit.io.admin.getRealmUser({username: userId}).then( user => {
+    return voyent.io.admin.getRealmUser({username: userId}).then( user => {
       var userModel = User.create(user);
       userModel.set('realm', realm);
       return userModel;
@@ -19,7 +19,7 @@ export default Ember.Route.extend({
       this.transitionTo('secure.realms.users.index');
     });
   },
-  
+
   setupController: function(controller, model) {
     this._super(controller, model);
     controller.send('reset');

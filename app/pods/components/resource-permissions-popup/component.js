@@ -2,7 +2,7 @@ import Ember from 'ember';
 import utils from 'console/helpers/utils';
 
 export default Ember.Component.extend({
-	
+
 	resource: null,
 	resourcePermissions: null,
 	resourcePermissionsRoles: [],
@@ -15,10 +15,10 @@ export default Ember.Component.extend({
 	valid: true,
 	validationMsg: null,
 	ownernames: [],
-	
+
 	open: function(){
 		Ember.$('#resourcePermissionsPopup').modal();
-	},	
+	},
 
 	edit: function(){
 		this.set('editing', true);
@@ -28,9 +28,9 @@ export default Ember.Component.extend({
 		let perms = ['r', 'u', 'd', 'x', 'pr', 'pu', 'mu'];
 		let resourcePermissions = this.get('resourcePermissions');
 		let rights = resourcePermissions.rights;
-		let editedPermissions =  {owner: resourcePermissions.owner, roles: {}, roles_r: {}, roles_u: {}, roles_d: {}, 
+		let editedPermissions =  {owner: resourcePermissions.owner, roles: {}, roles_r: {}, roles_u: {}, roles_d: {},
 			roles_x: {}, roles_pr: {}, roles_pu: {}, roles_mu: {}};
-		
+
 		//owner
 		perms.forEach((p) => editedPermissions['owner_' + p] = false); //set all owner rights to false at first
 		rights.owner.forEach((p) => editedPermissions['owner_' + p] = true); //then set all listed rights to true
@@ -47,7 +47,7 @@ export default Ember.Component.extend({
 				editedPermissions['roles_' + p][r] = true;
 			}); //then set all listed rights to true
 		});
-		
+
 		this.set('editedPermissions', editedPermissions);
 
 	},
@@ -64,7 +64,7 @@ export default Ember.Component.extend({
 
 	didUpdateAttrs: function(){
 		console.log('resource-permissions-popup.didUpdateAttrs()');
-		this.fetchResourcePermissions();		
+		this.fetchResourcePermissions();
 	},
 
 	didInsertElement: function(){
@@ -81,14 +81,14 @@ export default Ember.Component.extend({
 		let path = this.get('path');
 
 		if( service && resource ){
-			bridgeit.io[service].getResourcePermissions({id: resource._id, path: path})
+			voyent.io[service].getResourcePermissions({id: resource._id, path: path})
 				.then((resourcePermissions) => {
 					this.set('resourcePermissions', resourcePermissions);
 					if( resourcePermissions && resourcePermissions.rights && resourcePermissions.rights.roles ){
 						this.set('resourcePermissionsRoles', Object.keys(resourcePermissions.rights.roles));
 					}
 				});
-			
+
 		}
 		else{
 			let msg = 'Cannot load recource permissions: service=' + service + ' resource=' + (resource ? resource._id : null);
@@ -168,7 +168,7 @@ export default Ember.Component.extend({
 				let path = this.get('path');
 
 				if( service && resource ){
-					bridgeit.io[service].updateResourcePermissions({id: resource._id, permissions: resourcePerms, path: path})
+					voyent.io[service].updateResourcePermissions({id: resource._id, permissions: resourcePerms, path: path})
 						.then((response) => {
 							if( toast ){
 								toast.info('Updated permissions');
@@ -182,7 +182,7 @@ export default Ember.Component.extend({
 							}
 							console.error('Error updating permission', errorMessage);
 						});
-					
+
 				}
 				else{
 					let msg = 'Cannot update recource permissions: service=' + service + ' resource=' + (resource ? resource._id : null);

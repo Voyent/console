@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'console',
     podModulePrefix: 'console/pods',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'hash',
     EmberENV: {
       FEATURES: {
@@ -23,9 +23,9 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval' 'unsafe-inline'",
       'font-src': "'self'",
-      'connect-src': "'self' dev.bridgeit.io",
+      'connect-src': "'self' dev.voyent.cloud",
       'img-src': "'self' data: *",
-      'media-src': "'self' dev.bridgeit.io",
+      'media-src': "'self' dev.voyent.cloud",
       'style-src': "'self' 'unsafe-inline'"
     },
   };

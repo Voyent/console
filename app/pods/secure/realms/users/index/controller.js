@@ -33,7 +33,7 @@ export default BaseController.extend({
 
       var user = this.get('selectedUser');
 
-      bridgeit.io.admin.deleteRealmUser({username: user.get('username')}).then(() => {
+      voyent.io.admin.deleteRealmUser({username: user.get('username')}).then(() => {
         var realm = this.get('model');
         realm.get('users').removeObject(user);
         this.get('toast').info('Successfully deleted user ' + user.get('username'));

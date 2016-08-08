@@ -72,7 +72,7 @@ export default BaseModel.extend({
     var selectedServices = this.get('services');
     var permissionGroups = [];
     var groupedWrappers = {};
-    var availableServiceModels = serviceModels.filter((s) => selectedServices.contains(s.name) || s.name === 'bridgeit.user');
+    var availableServiceModels = serviceModels.filter((s) => selectedServices.contains(s.name) || s.name === 'services.user');
     var availablePermissions = availableServiceModels != null &&
       availableServiceModels.length > 0 ? availableServiceModels.map((s) => s.get('permissions'))
       .reduce( (prev, curr) => prev.concat(curr) ) : [];
@@ -91,8 +91,8 @@ export default BaseModel.extend({
 
     permissionGroups.pushObject(
       PermissionGroup.create({
-        service: 'bridgeit.user',
-        permissions: groupedWrappers['bridgeit.user']
+        service: 'services.user',
+        permissions: groupedWrappers['services.user']
       }));
 
     permissionGroups.pushObjects(selectedServices.map((s) => {
@@ -165,10 +165,10 @@ export default BaseModel.extend({
 
   editedServiceWrappers: function(){
     var account = this.get('account');
-    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'bridgeit.user');
+    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'services.user');
     var editedServiceWrappers = SelectableArray.create({content: []});
     if( accountServiceModels ){
-      editedServiceWrappers.pushObjects(accountServiceModels.filter((w) => w.get('value') !== 'bridgeit.auth').map( (w) => {
+      editedServiceWrappers.pushObjects(accountServiceModels.filter((w) => w.get('value') !== 'services.auth').map( (w) => {
         var selectable = Selectable.create({value: w});
         if( this.get('services').contains(selectable.get('value.name')) ){
           selectable.set('selected', true);
@@ -181,7 +181,7 @@ export default BaseModel.extend({
 
   selectedServiceWrappers: function(){
     var account = this.get('account');
-    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'bridgeit.user');
+    var accountServiceModels = account.get('sortedServiceModels').filter((sm) => sm.name !== 'services.user');
     var selectedServiceWrappers = [];
     var selectedServices = this.get('services');
     if( accountServiceModels ){
@@ -205,16 +205,16 @@ export default BaseModel.extend({
     this.get('account.serviceModels').forEach((serviceModel) => {
       var name = serviceModel.name;
       if( name && services.indexOf(name) > -1 ){
-        if( name === 'bridgeit.push' ){
-          testUsers['bridgeit.push'] = [
+        if( name === 'services.push' ){
+          testUsers['services.push'] = [
             {username: 'TEST_PUSH_ADMIN', firstname: 'TEST', lastname: 'PUSH_ADMIN',
-              password: 'testtest', permissions: account.getServiceModel('bridgeit.push').get('permissions')},
+              password: 'testtest', permissions: account.getServiceModel('services.push').get('permissions')},
             {username: 'TEST_PUSH_USER', firstname: 'TEST', lastname: 'PUSH_USER',
               password: 'testtest', permissions: ['bridgeit.push.listen']},
           ];
         }
         else{
-          var service = name.replace('bridgeit.','').toUpperCase();
+          var service = name.replace('services.','').toUpperCase();
           testUsers[serviceModel.name] = [{
             username: 'TEST_' + service + '_USER',
             firstname: 'TEST',
@@ -258,31 +258,31 @@ export default BaseModel.extend({
   },
 
   hasDocumentsService: function(){
-    return this.hasService('bridgeit.doc');
+    return this.hasService('services.doc');
   }.property('services.[]'),
 
   hasActionService: function(){
-    return this.hasService('bridgeit.action');
+    return this.hasService('services.action');
   }.property('services.[]'),
 
   hasEventHubService: function(){
-    return this.hasService('bridgeit.eventhub');
+    return this.hasService('services.eventhub');
   }.property('services.[]'),
 
   hasLocationService: function(){
-    return this.hasService('bridgeit.locate');
+    return this.hasService('services.locate');
   }.property('services.[]'),
 
   hasQueryService: function(){
-    return this.hasService('bridgeit.query');
+    return this.hasService('services.query');
   }.property('services.[]'),
 
   hasStorageService: function(){
-    return this.hasService('bridgeit.store');
+    return this.hasService('services.store');
   }.property('services.[]'),
 
   hasMailboxService: function(){
-    return this.hasService('bridgeit.mailbox');
+    return this.hasService('services.mailbox');
   }.property('services.[]'),
 
 

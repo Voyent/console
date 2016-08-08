@@ -1,5 +1,5 @@
 import BaseController from 'console/controllers/base-controller';
-import validation from 'console/helpers/bridgeit-validation';
+import validation from 'console/helpers/voyent-validation';
 import Ember from 'ember';
 import User from 'console/models/user';
 
@@ -162,7 +162,7 @@ export default BaseController.extend({
 
       var admin = this.get('selectedAdmin');
       if( admin ){
-        return bridgeit.io.admin.createAdministrator({admin: admin}).then(() => {
+        return voyent.io.admin.createAdministrator({admin: admin}).then(() => {
           return this.get('application').updateAccountInfo();
         }).then(() => {
           this.send('cancelCreateAdmin');
@@ -187,7 +187,7 @@ export default BaseController.extend({
     deleteAdminConfirmed: function(){
       var admin = this.get('selectedAdmin');
       if( admin ){
-        return bridgeit.io.admin.deleteAdministrator({username: admin.username}).then(() => {
+        return voyent.io.admin.deleteAdministrator({username: admin.username}).then(() => {
           return this.get('application').updateAccountInfo();
         }).then(() => {
           this.send('cancelDeleteAdmin');
@@ -245,7 +245,7 @@ export default BaseController.extend({
         this.set('selectedAdmin.roles',admin.roles.split(','));
       }
 
-      bridgeit.io.admin.updateAdministrator({admin: admin}).then( () => {
+      voyent.io.admin.updateAdministrator({admin: admin}).then( () => {
         return this.get('application').updateAccountInfo();
       }).then(() => {
         this.send('cancelEditAdmin');

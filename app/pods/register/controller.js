@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import BaseController from 'console/controllers/base-controller';
-import validation from 'console/helpers/bridgeit-validation';
+import validation from 'console/helpers/voyent-validation';
 
 var Form = {
     _datafields: ['username', 'account', 'accountdescription', 'password', 'password_confirm', 'email', 'firstname', 'lastname'],
@@ -10,7 +10,7 @@ var Form = {
 export default BaseController.extend({
 
     formDataEntered: false,
-    
+
     formDataChanged: function(val){
         if( val ){
             this.set('formDataEntered', true);
@@ -225,9 +225,9 @@ export default BaseController.extend({
 
           this.send('startLongRunningAction');
           var appController = this.get('application');
-          
+
           delete form.password_confrm;
-          
+
           // Clear out any error messages.
           var props = {};
           Form._msgfields.forEach( function(val){
@@ -235,7 +235,7 @@ export default BaseController.extend({
           });
           this.setProperties(props);
 
-          bridgeit.io.admin.createAccount({
+          voyent.io.admin.createAccount({
               account: form.account,
               description: form.accountdescription,
               username: form.username,

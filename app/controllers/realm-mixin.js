@@ -80,7 +80,7 @@ export default Ember.Mixin.create({
       role.set('permissions', selectedPermissions);
       var roles = this.get('model.roles');
       if( role.get('isNew')){
-        bridgeit.io.admin.createRealmRole({realm: this.get('model.id'), role: role}).then(() => {
+        voyent.io.admin.createRealmRole({realm: this.get('model.id'), role: role}).then(() => {
           roles.pushObject({
             name: role.get('content'),
             permissions: role.get('permissions')
@@ -92,7 +92,7 @@ export default Ember.Mixin.create({
       }
       else{
         var originalRole = this.get('originalEditedRole');
-        return bridgeit.io.admin.updateRealmRole({realm: this.get('model.id'), role: role}).then(() => {
+        return voyent.io.admin.updateRealmRole({realm: this.get('model.id'), role: role}).then(() => {
           roles.removeObject(originalRole);
           roles.pushObject(role);
           Ember.$('#editRoleModal').modal('hide');
@@ -128,8 +128,8 @@ export default Ember.Mixin.create({
 
       permissionGroups.pushObject(
         PermissionGroup.create({
-          service: 'bridgeit.user',
-          permissions: groupedWrappers['bridgeit.user']
+          service: 'services.user',
+          permissions: groupedWrappers['services.user']
         }));
 
       permissionGroups.pushObjects(realm.get('sortedServices').map(function(s){
@@ -176,7 +176,7 @@ export default Ember.Mixin.create({
         return;
       }
       Ember.$('#confirmDeleteRoleModal').modal('hide');
-      bridgeit.io.admin.deleteRealmRole({
+      voyent.io.admin.deleteRealmRole({
         id: roleName
       }).then(() => {
         this.get('application').showInfoMessage('Deleted role ' + roleName);

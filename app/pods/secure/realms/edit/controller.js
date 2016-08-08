@@ -13,8 +13,8 @@ export default BaseController.extend( RealmMixin, {
       var realm = this.get('model');
 
       realm.saveEditedProperties();
-      
-      bridgeit.io.admin.updateRealm({realm: realm.serialize()}).then(() => {
+
+      voyent.io.admin.updateRealm({realm: realm.serialize()}).then(() => {
         this.get('toast').info('Successfully updated realm information', 'Realm Updated');
         this.transitionToRoute('secure.realms.index');
       }).catch((err) => {

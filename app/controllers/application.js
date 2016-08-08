@@ -9,16 +9,16 @@ export default BaseController.extend({
   account: null,
   errorMessage: null,
   errorTitle: null,
-  isLoggedIn: false,  
-  
+  isLoggedIn: false,
+
   updateAccountInfo: function(){
     return this.get('accessManager').loadAccountInfo().then((account) => {
       this.set('account', Account.create(account));
-      var username = bridgeit.io.auth.getLastKnownUsername();
+      var username = voyent.io.auth.getLastKnownUsername();
       var admin = account.admins.filter(a => a.username === username)[0];
       this.set('currentUser', User.create(admin));
     }).then(() => {
-      return bridgeit.io.admin.getServiceDefinitions();
+      return voyent.io.admin.getServiceDefinitions();
     }).then( (services) => {
       this.get('account').loadServiceModels(services);
     }).catch((error) => {
@@ -47,11 +47,11 @@ export default BaseController.extend({
       this.set('isLoggedIn', false);
       this.set('currentUser', null);
       this.set('account', null);
-      bridgeit.io.endTransaction();
+      voyent.io.endTransaction();
       this.transitionToRoute('index');
-    },  
+    },
   }
 
-  
+
 
 });

@@ -59,7 +59,7 @@ export default BaseController.extend({
       }
       var application = this.get('application');
       this.send('startLongRunningAction');
-      window.bridgeit.io.auth.disconnect();
+      window.voyent.io.auth.disconnect();
       var accessManager = this.get('accessManager');
       return accessManager.login(this.get('account'), this.get('username'), this.get('password')).then( () => {
         application.set('isLoggedIn', true);

@@ -1,4 +1,4 @@
-import errors from 'console/helpers/bridgeit-errors';
+import errors from 'console/helpers/voyent-errors';
 
 var require = function(){
     return {
@@ -29,7 +29,7 @@ var firstLastNameRegex = /^[$!{}]/;
 var spaceAndLimitedPunctuationRegex = /^[A-Za-z0-9\.\s,!#@$%^&*]*$/;
 var serviceNameRegex = /^[A-Za-z0-9\.]*$/;
 var spaceOnlyRegex = /^[A-Za-z0-9\s]*$/; //jshint ignore:line
-var underscoreOnlyRegex = /^[A-Za-z0-9_]*$/;
+var underscoreOnlyRegex = /^[A-Za-z0-9_]*$/; //jshint ignore:line
 var permissionOpRegex = /[and|or|single]/;
 var lowerCaseDotRegex = /^[a-z\.]*$/;
 
@@ -332,7 +332,8 @@ function validateBatchPermissions(rawPermissions) {
 
     for (var i = 0; i < rawPermissions.length; i++) {
         var permStruct = rawPermissions[i];
-        if (!permStruct.name ) {
+        // if (!permStruct.name || !rolenameValidator(permStruct.name)) {
+        if (!permStruct.name) {
             throw new errors.BadRequestDetailsError('invalidPermissionsFormat', 'Permission entry must have name');
         }
         if ( ('string' != typeof (permStruct.permission)) && (!Array.isArray(permStruct.permission))) { //jshint ignore:line
@@ -432,7 +433,9 @@ var validateRightsJSON = function(val) {
     // ensure rights are in the list of available rights
 
     for (var v in val.roles) {
-
+        /*if (!rolenameValidator(v) ) {
+            return new errors.BadRequestError('invalidRolename');
+        }*/
 
         var roleRights  = val.roles[v];
         if (roleRights) {

@@ -1,8 +1,8 @@
 import Ember from 'ember';
 import BaseController from 'console/controllers/base-controller';
 import utils from 'console/helpers/utils';
-import validation from 'console/helpers/bridgeit-validation';
-import errorMessages from 'console/helpers/bridgeit-error-msgs';
+import validation from 'console/helpers/voyent-validation';
+import errorMessages from 'console/helpers/voyent-error-msgs';
 
 export default BaseController.extend({
 
@@ -99,7 +99,7 @@ export default BaseController.extend({
     reset: function() {
       this.get('_msgfields').forEach((f) => { this.set(f,'');});
     },
-    
+
     cancel: function() {
       this.send('reset');
       this.transitionToRoute('secure.realms');
@@ -137,7 +137,7 @@ export default BaseController.extend({
       var realm = user.get('realm');
       user.saveEditedProperties();
 
-      bridgeit.io.admin.createRealmUser({user: user.serialize()}).then((url) => {
+      voyent.io.admin.createRealmUser({user: user.serialize()}).then((url) => {
         console.log('created the new user: ' + url);
         realm.get('users').pushObject(user);
         this.get('toast').info('Successfully created new user ' + user.get('username'), 'User created');
@@ -152,25 +152,25 @@ export default BaseController.extend({
     validateUsernameOnBlur: function(){
       this.validateUsername();
     },
-    
+
     validateEmailOnBlur: function(){
       if( this.get('model.email')){
         this.validateEmail();
       }
     },
-    
+
     validateFirstnameOnBlur: function(){
       this.validateFirstname();
     },
-    
+
     validateLastnameOnBlur: function(){
       this.validateLastname();
     },
-    
+
     validatePasswordOnBlur: function(){
       this.validatePassword();
     },
-    
+
     validatePasswordConfirmOnBlur: function(){
       if( this.get('password_confirm')){
         this.validatePasswordConfirm();

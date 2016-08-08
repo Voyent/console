@@ -21,8 +21,8 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   app.import('bower_components/bootstrap/dist/js/bootstrap.js');
-  app.import('bower_components/bridgeit.js/src/bridgeit.js');
-  app.import('bower_components/bridgeit.io.js/lib/bridgeit.io.js');
+  app.import('bower_components/voyent.js/src/voyent.js');
+  app.import('bower_components/voyent.io.js/lib/voyent.io.js');
   app.import('bower_components/validator-js/validator.js');
   app.import('bower_components/lodash/dist/lodash.js');
 

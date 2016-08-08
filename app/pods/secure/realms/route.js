@@ -13,7 +13,7 @@ export default Ember.Route.extend({
 
     if( realm.get('hasDocumentsService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.documents.findDocuments({realm: realm.get('id')}).then((documents) => {
+        return voyent.io.documents.findDocuments({realm: realm.get('id')}).then((documents) => {
           realm.set('documents', documents);
         });
       }));
@@ -28,7 +28,7 @@ export default Ember.Route.extend({
 
     if( realm.get('hasActionService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.action.findActions({
+        return voyent.io.action.findActions({
           realm: realm.get('id')
         }).then((actions) => {
           realm.set('actions', actions);
@@ -38,14 +38,14 @@ export default Ember.Route.extend({
 
     if( realm.get('hasEventHubService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.eventhub.findHandlers({
+        return voyent.io.eventhub.findHandlers({
           realm: realm.get('id')
         }).then((handlers) => {
           realm.set('handlers', handlers);
         });
       }));
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.eventhub.findRecognizers({
+        return voyent.io.eventhub.findRecognizers({
           realm: realm.get('id')
         }).then((recognizers) => {
           realm.set('recognizers', recognizers);
@@ -55,14 +55,14 @@ export default Ember.Route.extend({
 
     if( realm.get('hasLocationService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.location.getAllRegions({
+        return voyent.io.location.getAllRegions({
           realm: realm.get('id')
         }).then((regions) => {
           realm.set('regions', regions);
         });
       }));
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.location.getAllPOIs({
+        return voyent.io.location.getAllPOIs({
           realm: realm.get('id')
         }).then((pois) => {
           realm.set('pois', pois);
@@ -72,7 +72,7 @@ export default Ember.Route.extend({
 
     if( realm.get('hasQueryService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.query.findQueries({
+        return voyent.io.query.findQueries({
           realm: realm.get('id')
         }).then((queries) => {
           realm.set('queries', queries);
@@ -82,7 +82,7 @@ export default Ember.Route.extend({
 
     if( realm.get('hasMailboxService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.mailbox.findMailboxes({
+        return voyent.io.mailbox.findMailboxes({
           realm: realm.get('id')
         }).then((mailboxes) => {
           realm.set('mailboxes', mailboxes);
@@ -92,7 +92,7 @@ export default Ember.Route.extend({
 
     if( realm.get('hasStorageService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return bridgeit.io.storage.getMetaInfo({
+        return voyent.io.storage.getMetaInfo({
           realm: realm.get('id')
         }).then((blobs) => {
           realm.set('blobs', blobs);
@@ -106,11 +106,11 @@ export default Ember.Route.extend({
   },
 
   afterModel: function(model){
-  	bridgeit.io.setCurrentRealm(model.get('name'));
+  	voyent.io.setCurrentRealm(model.get('name'));
   },
 
   deactivate: function(){
-  	bridgeit.io.setCurrentRealm('admin');
+  	voyent.io.setCurrentRealm('admin');
   }
 
 });
