@@ -14,7 +14,7 @@ export default BaseController.extend( RealmMixin, {
 	cloneRealmLog: null,
 	cloneRealmInProcess: false,
 	isCreatingNewResource: false,
-	
+
 	openConfirmDeleteRealmPopup: function() {
 		Ember.$('#deleteRealmModal').modal();
 	},
@@ -62,7 +62,7 @@ export default BaseController.extend( RealmMixin, {
 	},
 
 	actions: {
-		
+
 		openCloneRealmPopup: function() {
 			this.set('showCloneRealmPopup', true);
 			Ember.$('#cloneRealmModal').modal();
@@ -100,13 +100,13 @@ export default BaseController.extend( RealmMixin, {
 			var account = this.get('application.account');
 
 			return bridgeit.io.admin.deleteRealm({realmName: realm.get('id')}).then(() => {
-				
+
 				//set the account on the realm so it has access to parent properties
 				realm.set('account', account);
 
 				//remove deleted realm from account.realms
 				var realms = account.get('realms').filter((r) => r.get('id') !== realm.get('id'));
-				account.set('realms', realms); 
+				account.set('realms', realms);
 				this.transitionToRoute('secure.index');
 			});
 		},
@@ -126,7 +126,7 @@ export default BaseController.extend( RealmMixin, {
 			var oldRealmName = realm.get('id');
 			log("Starting clone realm process");
 
-			
+
 			//admin.cloneRealm() will only clone basic info
 			return bridgeit.io.admin.cloneRealm({originRealmName: realm.get('id'), destRealmName: newRealmName}).then((clonedRealmURI) => {
 				log('created newly cloned realm with basic info: ' + clonedRealmURI);
@@ -225,11 +225,14 @@ export default BaseController.extend( RealmMixin, {
 				var docPromises = [];
 				if( documents ){
 					log('cloning ' + documents.length + ' documents');
-					documents.forEach((doc) => {
+          let realm = this.get('model');
+          var collection = realm.get('collection');
+          documents.forEach((doc) => {
 						docPromises.push(Ember.RSVP.Promise.resolve().then(() => {
 							return bridgeit.io.documents.createDocument({
 								realm: newRealmName,
-								document: doc
+								document: doc,
+                collection: collection
 							}).catch((err) => {
 								log('ERROR: ' + err.responseText);
 							});
@@ -375,11 +378,72 @@ export default BaseController.extend( RealmMixin, {
 
 		},
 
+    loadResourceCollection: function(target){
+      this.set('collection',target);
+      var ember = this;
+      bridgeit.io.documents.findDocuments({collection:target}).then((documents) => {
+          let realm = ember.get('model');
+          realm.set('documents',documents);
+          realm.set('collection',target);
+      });
+    },
+
 		showResource: function(resource, service, path){
-			this.set('selectedResource', resource);
-			this.set('serviceForResource', service);
-			this.set('showResourcePopup', true);
-			this.set('selectedResourcePath', path);
+
+	var ember = this;
+      function resourceCallback(resource, service, path) {
+			ember.set('selectedResource', resource);
+			ember.set('serviceForResource', service);
+			ember.set('showResourcePopup', true);
+			ember.set('selectedResourcePath', path);
+      }
+
+      switch (service) {
+        case 'documents':
+          let realm = this.get('model');
+          var collection = realm.get('collection');
+          bridgeit.io.documents.getDocument({'id': resource._id, 'collection':collection}).then(function (doc) {
+            resourceCallback(doc, service, path);
+          });
+          break;
+        case 'eventhub':
+          bridgeit.io.eventhub.getHandler({'id': resource._id}).then(function (handler) {
+            resourceCallback(handler, service, path);
+          }).catch(function (err) {
+            if (err.status === 404) {
+              bridgeit.io.eventhub.getRecognizer({'id': resource._id}).then(function (recognizer) {
+                resourceCallback(recognizer, service, path);
+              });
+            }
+          });
+          break;
+        case 'location':
+          bridgeit.io.location.findRegions({'query': {'_id': resource._id}}).then(function (region) {
+            resourceCallback(region[0], service, path);
+          }).catch(function () {
+            console.log('inError');
+            bridgeit.io.location.findPOIs({'query': {'_id': resource._id}}).then(function (poi) {
+              resourceCallback(poi[0], service, path);
+            });
+          });
+          break;
+        case 'action':
+          bridgeit.io.action.getAction({'id': resource._id}).then(function (action) {
+            resourceCallback(action, service, path);
+          });
+          break;
+        case 'query':
+          bridgeit.io.query.getQuery({'id': resource._id}).then(function (query) {
+            resourceCallback(query[0], service, path);
+          });
+          break;
+        case 'mailbox':
+          bridgeit.io.mailbox.getMailbox({'id': resource._id}).then(function (mailbox) {
+            resourceCallback(mailbox, service, path);
+          });
+          break;
+      }
+
 		},
 
 		onResourceSaved: function(resource, id){
@@ -388,16 +452,19 @@ export default BaseController.extend( RealmMixin, {
 				let realm = this.get('model');
 				let path = this.get('selectedResourcePath');
 				let originalResource = this.get('selectedResource');
-
+        console.log('TRYING TO SAVE');
+        console.log(this.get('model'));
 
 				return Ember.RSVP.Promise.resolve().then(() => {
 					//update existing resource
-					if( originalResource._id ){ 
+					if( originalResource._id ){
 
 						resource._id = originalResource._id; //ensure id remains constant
-						
+
 						if( service === 'documents'){
-							return bridgeit.io.documents.updateDocument({id: originalResource._id, document: resource}).then(() => {
+              let realm = this.get('model');
+              var collection = realm.get('collection');
+							return bridgeit.io.documents.updateDocument({id: originalResource._id, document: resource, collection:collection}).then(() => {
 								realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
@@ -430,10 +497,20 @@ export default BaseController.extend( RealmMixin, {
 								});
 							}
 						}
-						
+            else if( service === 'query'){
+              return bridgeit.io.query.updateQuery({id: originalResource._id, query: resource}).then(() => {
+                  realm.set('query', realm.get('queries').map((d) => d._id === resource._id ? resource : d));
+            });
+            }
+            else if( service === 'mailbox'){
+              return bridgeit.io.mailbox.updateMailbox({id: originalResource._id, mailbox: resource}).then(() => {
+                  realm.set('mailbox', realm.get('mailboxes').map((d) => d._id === resource._id ? resource : d));
+            });
+            }
+
 					}
 					//create new resource
-					else{ 
+					else{
 
 						if( id ){
 							resource._id = id;
@@ -441,7 +518,9 @@ export default BaseController.extend( RealmMixin, {
 
 						return Ember.RSVP.Promise.resolve().then(() => {
 							if( service === 'documents'){
-								return bridgeit.io.documents.createDocument({document: resource}).then((uri) => {
+                let realm = this.get('model');
+                var collection = realm.get('collection');
+								return bridgeit.io.documents.createDocument({document: resource,collection:collection}).then((uri) => {
 									realm.get('documents').pushObject(resource);
 									return uri;
 								});
@@ -480,7 +559,7 @@ export default BaseController.extend( RealmMixin, {
 									});
 								}
 							}
-						}).then((uri) => {							
+						}).then((uri) => {
 							//set new id on the resource if the user hasn't
 							if( !id){
 								let uriParts = uri.split('/');
@@ -496,7 +575,7 @@ export default BaseController.extend( RealmMixin, {
 					this.get('application').showErrorMessage(error, path + ' resource could not be saved');
 				});
 			}
-			
+
 		},
 
 		onResourceClosed: function(){
@@ -507,14 +586,68 @@ export default BaseController.extend( RealmMixin, {
 			this.set('isCreatingNewResource', false);
 		},
 
-		editResource: function(resource, service, path){
-			this.set('editingResource', true);
-			this.set('showResourcePopup', true);
-			this.set('selectedResource', resource);
-			this.set('serviceForResource', service);
-			this.set('selectedResourcePath', path);
-			this.set('isCreatingNewResource', false);
-		},
+    editResource: function (resource, service, path) {
+      var ember = this;
+      function resourceCallback(resource, service, path) {
+        console.log('Editing');
+        console.log(resource);
+        console.log(service);
+        ember.set('editingResource', true);
+        ember.set('showResourcePopup', true);
+        ember.set('selectedResource', resource);
+        ember.set('serviceForResource', service);
+        ember.set('selectedResourcePath', path);
+        ember.set('isCreatingNewResource', false);
+      }
+
+      switch (service) {
+        case 'documents':
+          let realm = this.get('model');
+          var collection = realm.get('collection');
+          bridgeit.io.documents.getDocument({'id': resource._id,collection:collection}).then(function (doc) {
+            resourceCallback(doc, service, path);
+          });
+          break;
+        case 'eventhub':
+          bridgeit.io.eventhub.getHandler({'id': resource._id}).then(function (handler) {
+            resourceCallback(handler, service, path);
+          }).catch(function (err) {
+            if (err.status === 404) {
+              bridgeit.io.eventhub.getRecognizer({'id': resource._id}).then(function (recognizer) {
+                resourceCallback(recognizer, service, path);
+              });
+            }
+          });
+          break;
+        case 'location':
+          bridgeit.io.location.findRegions({'query': {'_id': resource._id}}).then(function (region) {
+            resourceCallback(region[0], service, path);
+          }).catch(function () {
+            console.log('inError');
+            bridgeit.io.location.findPOIs({'query': {'_id': resource._id}}).then(function (poi) {
+              resourceCallback(poi[0], service, path);
+            });
+          });
+          break;
+        case 'action':
+          bridgeit.io.action.getAction({'id': resource._id}).then(function (action) {
+            resourceCallback(action, service, path);
+          });
+          break;
+        case 'query':
+          bridgeit.io.query.getQuery({'id': resource._id}).then(function (query) {
+            resourceCallback(query[0], service, path);
+          });
+          break;
+        case 'mailbox':
+          bridgeit.io.mailbox.getMailbox({'id': resource._id}).then(function (mailbox) {
+            resourceCallback(mailbox, service, path);
+          });
+          break;
+      }
+
+    },
+
 
 		deleteResource: function(resource, service, path){
 			let resourceType;
@@ -535,9 +668,11 @@ export default BaseController.extend( RealmMixin, {
 			let resource = this.get('resourceToDelete');
 			let service = this.get('serviceForResource');
 			let path = this.get('selectedResourcePath');
+      let realm = this.get('model');
+      var collection = realm.get('collection');
 			if( resource ){
 				if( service === 'documents'){
-					bridgeit.io.documents.deleteDocument({id: resource._id}).then(() => {
+					bridgeit.io.documents.deleteDocument({id: resource._id,collection:collection}).then(() => {
 						//remove doc from realm
 						let realm = this.get('model');
 						realm.set('documents', realm.get('documents').filter((d) => d._id !== resource._id));
@@ -582,7 +717,7 @@ export default BaseController.extend( RealmMixin, {
 							this.get('application').showErrorMessage(error, 'Event Hub Recognizer could not be deleted');
 						});
 					}
-					
+
 				}
 				else if( service === 'location'){
 					if( path === 'poi'){
@@ -607,9 +742,9 @@ export default BaseController.extend( RealmMixin, {
 							this.get('application').showErrorMessage(error, 'Region could not be deleted');
 						});
 					}
-					
+
 				}
-				
+
 			}
 		},
 

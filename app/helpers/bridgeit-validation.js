@@ -10,7 +10,7 @@ var require = function(){
     };
 };
 
-var exports = {}; 
+var exports = {};
 
 /**
  * Shared validation functions for validating various fields.
@@ -332,7 +332,7 @@ function validateBatchPermissions(rawPermissions) {
 
     for (var i = 0; i < rawPermissions.length; i++) {
         var permStruct = rawPermissions[i];
-        if (!permStruct.name || !rolenameValidator(permStruct.name)) {
+        if (!permStruct.name ) {
             throw new errors.BadRequestDetailsError('invalidPermissionsFormat', 'Permission entry must have name');
         }
         if ( ('string' != typeof (permStruct.permission)) && (!Array.isArray(permStruct.permission))) { //jshint ignore:line
@@ -348,7 +348,7 @@ function validateBatchPermissions(rawPermissions) {
         }
         if (!permStruct.op) {
             if ('string' == typeof (permStruct.permission)) { //jshint ignore:line
-                permStruct.op = 'and'; 
+                permStruct.op = 'and';
             }
             if (Array.isArray(permStruct.permission)) {
                 permStruct.op = 'single';
@@ -432,9 +432,7 @@ var validateRightsJSON = function(val) {
     // ensure rights are in the list of available rights
 
     for (var v in val.roles) {
-        if (!rolenameValidator(v) ) {
-            return new errors.BadRequestError('invalidRolename');
-        }
+
 
         var roleRights  = val.roles[v];
         if (roleRights) {

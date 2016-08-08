@@ -3,7 +3,7 @@
   <li>{{#link-to 'secure.index'}}Realms{{/link-to}}</li>
   <li>{{#link-to 'secure.realms.index'}}{{model.id}}{{/link-to}}</li>
 </ul>
-<h1 class='page-header'>{{model.id}} 
+<h1 class='page-header'>{{model.id}}
   <div class='btn-bar pull-right page-controls'>
     {{#link-to 'secure.realms.users.index' model.id class='btn btn-info btn-sm'}}
       List Users
@@ -174,11 +174,22 @@
        <div class="section">
         <h4><i class='fa'>{}</i>Documents</h4>
         <div class="row">
+            <select onchange={{action "loadResourceCollection" value="target.value"}}>
+                {{#each model.collections as |collection|}}
+                  <option value={{collection}}>
+                    {{collection}}
+                  </option>
+                {{/each}}
+            </select>
+        </div>
+         <br/>
+         <br/>
+           <div class="row">
           <div class="col-sm-12">
             <ul class='list-group list-group-no-border'>
               {{#each model.documents as |doc|}}
                 <li class="list-group-item">
-                  {{doc._id}} 
+                  {{doc._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' doc 'documents'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' doc 'documents'}}><i class="fa fa-pencil"></i></a>
@@ -207,7 +218,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.handlers as |handler|}}
                 <li class="list-group-item">
-                  {{handler._id}} 
+                  {{handler._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' handler 'eventhub' 'handlers'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' handler 'eventhub' 'handlers'}}><i class="fa fa-pencil"></i></a>
@@ -230,7 +241,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.recognizers as |recognizer|}}
                 <li class="list-group-item">
-                  {{recognizer._id}} 
+                  {{recognizer._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' recognizer 'eventhub' 'recognizers'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' recognizer 'eventhub' 'recognizers'}}><i class="fa fa-pencil"></i></a>
@@ -259,7 +270,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.regions as |region|}}
                 <li class="list-group-item">
-                  {{region._id}} 
+                  {{region._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' region 'location' 'regions'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' region 'location' 'regions'}}><i class="fa fa-pencil"></i></a>
@@ -282,7 +293,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.pois as |poi|}}
                 <li class="list-group-item">
-                  {{poi._id}} 
+                  {{poi._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' poi 'location' 'poi'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' poi 'location' 'poi'}}><i class="fa fa-pencil"></i></a>
@@ -314,7 +325,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.actions as |action|}}
                 <li class="list-group-item">
-                  {{action._id}} 
+                  {{action._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' action 'action' 'actions'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' action 'action' 'actions'}}><i class="fa fa-pencil"></i></a>
@@ -342,7 +353,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.queries as |query|}}
                 <li class="list-group-item">
-                  {{query._id}} 
+                  {{query._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' query 'query' 'queries'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' query 'query' 'queries'}}><i class="fa fa-pencil"></i></a>
@@ -370,7 +381,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.mailboxes as |mailbox|}}
                 <li class="list-group-item">
-                  {{mailbox._id}} 
+                  {{mailbox._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' mailbox 'mailbox' 'mailboxes'}}><i class="fa fa-pencil"></i></a>
@@ -398,7 +409,7 @@
             <ul class='list-group list-group-no-border'>
               {{#each model.blobs as |blob|}}
                 <li class="list-group-item">
-                  {{blob._id}} 
+                  {{blob._id}}
                   <div class="resource-line-options">
                     <a {{action 'showResource' blob 'storage' 'blobs'}}><i class="fa fa-folder-open-o"></i></a>
                     <a {{action 'editResource' blob 'storage' 'blobs'}}><i class="fa fa-pencil"></i></a>
@@ -416,7 +427,7 @@
     {{/if}}
 
   </div>
-  
+
 </div>
 
 {{partial 'edit-role-modal'}}
@@ -428,7 +439,7 @@
 {{partial 'delete-realm-modal'}}
 
 {{#if showResourcePopup}}
-  {{resource-popup resource=selectedResource service=serviceForResource onsave='onResourceSaved' onclose='onResourceClosed' 
+  {{resource-popup resource=selectedResource service=serviceForResource onsave='onResourceSaved' onclose='onResourceClosed'
     editing=editingResource validate=validateResource path=selectedResourcePath isnew=isCreatingNewResource}}
 {{/if}}
 

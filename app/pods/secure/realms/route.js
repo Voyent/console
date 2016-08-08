@@ -17,6 +17,13 @@ export default Ember.Route.extend({
           realm.set('documents', documents);
         });
       }));
+
+      promises.push(Ember.RSVP.Promise.resolve().then(() => {
+          return bridgeit.io.documents.findCollections({realm: realm.get('id')}).then((collections) => {
+            realm.set('collections', collections);
+            realm.set('collection', collections[0]);
+        });
+      }));
     }
 
     if( realm.get('hasActionService')){

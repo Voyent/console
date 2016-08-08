@@ -6,7 +6,7 @@ import User from 'console/models/user';
 export default BaseController.extend({
 
   selectedAdmin: null,
-  
+
   validateRequiredFields: function(){
     var valid = true;
     if( !this.get('selectedAdmin.username') || this.get('selectedAdmin.username').length === 0 ){
@@ -25,7 +25,7 @@ export default BaseController.extend({
         this.set('lastnameMsg', 'Please enter the last name.');
         valid = false;
     }
-    if( this.get('selectedAdmin.password') && (!this.get('selectedAdmin.password_confirm') || 
+    if( this.get('selectedAdmin.password') && (!this.get('selectedAdmin.password_confirm') ||
       this.get('selectedAdmin.password_confirm').length === 0) ){
         this.set('passwordconfirmMsg', 'Please confirm the password.');
         valid = false;
@@ -168,7 +168,7 @@ export default BaseController.extend({
           this.send('cancelCreateAdmin');
         }).catch((err) => {
           this.get('application').showErrorMessage(err, 'Server Error');
-        });                
+        });
       }
     },
 
@@ -193,7 +193,7 @@ export default BaseController.extend({
           this.send('cancelDeleteAdmin');
         }).catch((err) => {
           this.get('application').showErrorMessage(err, 'Server Error');
-        });                
+        });
       }
     },
 
@@ -239,6 +239,12 @@ export default BaseController.extend({
         this.set(prop, "");
       });
 
+      if(typeof admin.roles === 'string'){
+        console.log('Split');
+        console.log(admin.roles.split(','));
+        this.set('selectedAdmin.roles',admin.roles.split(','));
+      }
+
       bridgeit.io.admin.updateAdministrator({admin: admin}).then( () => {
         return this.get('application').updateAccountInfo();
       }).then(() => {
@@ -247,7 +253,7 @@ export default BaseController.extend({
         this.get('application').showErrorMessage(err, 'Server Error');
       });
     },
-    
+
   }
 
 });

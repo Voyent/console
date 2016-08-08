@@ -23,7 +23,8 @@ export default BaseModel.extend({
   account: null,
 
   documents: [],
-
+  collections: [],
+  collection:'documents',
   //edited properties
   editedCustomTextValid: true,
   editedCustomTextValidMsg: null,
@@ -43,7 +44,7 @@ export default BaseModel.extend({
       }
       else{
         try{
-          this.set('editedCustomText', JSON.stringify(custom)); 
+          this.set('editedCustomText', JSON.stringify(custom));
         }
         catch(e){
           console.error(e);
@@ -72,7 +73,7 @@ export default BaseModel.extend({
     var permissionGroups = [];
     var groupedWrappers = {};
     var availableServiceModels = serviceModels.filter((s) => selectedServices.contains(s.name) || s.name === 'bridgeit.user');
-    var availablePermissions = availableServiceModels != null && 
+    var availablePermissions = availableServiceModels != null &&
       availableServiceModels.length > 0 ? availableServiceModels.map((s) => s.get('permissions'))
       .reduce( (prev, curr) => prev.concat(curr) ) : [];
 
@@ -80,7 +81,7 @@ export default BaseModel.extend({
       var serviceName = sm.get('name');
       var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
         .map((p) => Selectable.create({
-          content: p, 
+          content: p,
           selected: false,
           groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
           label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
@@ -146,7 +147,7 @@ export default BaseModel.extend({
     }
     this.set('editedCustomTextValid', valid);
     this.set('editedCustomTextValidMsg', editedCustomTextValidMsg);
-    
+
   }.observes('editedCustomText'),
 
   editedOriginWrappers: function(){
@@ -159,7 +160,7 @@ export default BaseModel.extend({
       editedOriginWrappers.pushObject(Selectable.create({value: '', selected: true}));
     }
     return editedOriginWrappers;
-    
+
   }.property('origins.[]'),
 
   editedServiceWrappers: function(){
@@ -184,10 +185,10 @@ export default BaseModel.extend({
     var selectedServiceWrappers = [];
     var selectedServices = this.get('services');
     if( accountServiceModels ){
-      selectedServiceWrappers = accountServiceModels.filter((w) => selectedServices.indexOf(w.get('value')) > -1 ); 
+      selectedServiceWrappers = accountServiceModels.filter((w) => selectedServices.indexOf(w.get('value')) > -1 );
     }
     return selectedServiceWrappers;
-  }.property('services.[]'),  
+  }.property('services.[]'),
 
   editedRoleWrappers: function(){
     var roles = this.get('roles');
@@ -284,5 +285,5 @@ export default BaseModel.extend({
     return this.hasService('bridgeit.mailbox');
   }.property('services.[]'),
 
-  
+
 });

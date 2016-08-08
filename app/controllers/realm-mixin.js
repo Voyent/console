@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     }
     this.set('customDocumentValid', valid);
     this.set('customDocumentValidMsg', customDocumentValidMsg);
-    
+
   }.observes('customText'),
 
   actions: {
@@ -65,6 +65,7 @@ export default Ember.Mixin.create({
     },
 
     saveEditedRole: function(){
+      console.log("SAVING EDITED ROLE");
       this.debug('saveEditedRole()');
       var role = this.get('editedRole');
       var selectedPermissions = [];
@@ -110,14 +111,14 @@ export default Ember.Mixin.create({
       var serviceModels = account.get('serviceModels').slice(0);
       var permissionGroups = [];
       var groupedWrappers = {};
-      var availablePermissions = serviceModels != null && 
+      var availablePermissions = serviceModels != null &&
         serviceModels.length > 0 ? serviceModels.map((s) => s.get('permissions')).reduce((prev, curr) => prev.concat(curr)) : [];
 
       serviceModels.forEach((serviceModel) => {
         var serviceName = serviceModel.get('name');
         var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
           .map((p) => Selectable.create({
-            content: p, 
+            content: p,
             selected: role.permissions ? role.permissions.contains(p) : false,
             groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
             label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
@@ -195,4 +196,3 @@ export default Ember.Mixin.create({
 });
 
 
-  
