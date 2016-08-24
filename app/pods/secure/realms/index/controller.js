@@ -379,7 +379,9 @@ export default BaseController.extend( RealmMixin, {
 		},
 
     loadResourceCollection: function(target){
-      this.set('collection',target);
+      if(target) {
+        this.set('collection', target);
+      }
       var ember = this;
       voyent.io.documents.findDocuments({collection:target}).then((documents) => {
           let realm = ember.get('model');
@@ -421,7 +423,6 @@ export default BaseController.extend( RealmMixin, {
           voyent.io.location.findRegions({'query': {'_id': resource._id}}).then(function (region) {
             resourceCallback(region[0], service, path);
           }).catch(function () {
-            console.log('inError');
             voyent.io.location.findPOIs({'query': {'_id': resource._id}}).then(function (poi) {
               resourceCallback(poi[0], service, path);
             });
@@ -442,6 +443,11 @@ export default BaseController.extend( RealmMixin, {
             resourceCallback(mailbox, service, path);
           });
           break;
+        case 'push':
+          voyent.io.push.getCloudRegistration({'id': resource._id}).then(function (registration) {
+            resourceCallback(registration[0], service, path);
+          });
+          break;
       }
 
 		},
@@ -452,8 +458,6 @@ export default BaseController.extend( RealmMixin, {
 				let realm = this.get('model');
 				let path = this.get('selectedResourcePath');
 				let originalResource = this.get('selectedResource');
-        console.log('TRYING TO SAVE');
-        console.log(this.get('model'));
 
 				return Ember.RSVP.Promise.resolve().then(() => {
 					//update existing resource
@@ -464,8 +468,8 @@ export default BaseController.extend( RealmMixin, {
 						if( service === 'documents'){
               let realm = this.get('model');
               var collection = realm.get('collection');
-							return voyent.io.documents.updateDocument({id: originalResource._id, document: resource, collection:collection}).then(() => {
-								realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
+              return voyent.io.documents.updateDocument({id: originalResource._id, document: resource, collection:collection}).then(() => {
+                  realm.set('documents', realm.get('documents').map((d) => d._id === resource._id ? resource : d));
 							});
 						}
 						else if( service === 'action'){
@@ -507,6 +511,11 @@ export default BaseController.extend( RealmMixin, {
                   realm.set('mailbox', realm.get('mailboxes').map((d) => d._id === resource._id ? resource : d));
             });
             }
+            else if( service === 'push'){
+              return voyent.io.push.updateCloudRegistration({id: originalResource._id, resource: resource}).then(() => {
+                  realm.set('registrations', realm.get('registrations').map((d) => d._id === resource._id ? resource : d));
+            });
+            }
 
 					}
 					//create new resource
@@ -521,7 +530,7 @@ export default BaseController.extend( RealmMixin, {
                 let realm = this.get('model');
                 var collection = realm.get('collection');
 								return voyent.io.documents.createDocument({document: resource,collection:collection}).then((uri) => {
-									realm.get('documents').pushObject(resource);
+                    realm.get('documents').pushObject(resource);
 									return uri;
 								});
 							}
@@ -589,9 +598,7 @@ export default BaseController.extend( RealmMixin, {
     editResource: function (resource, service, path) {
       var ember = this;
       function resourceCallback(resource, service, path) {
-        console.log('Editing');
-        console.log(resource);
-        console.log(service);
+
         ember.set('editingResource', true);
         ember.set('showResourcePopup', true);
         ember.set('selectedResource', resource);
@@ -623,7 +630,6 @@ export default BaseController.extend( RealmMixin, {
           voyent.io.location.findRegions({'query': {'_id': resource._id}}).then(function (region) {
             resourceCallback(region[0], service, path);
           }).catch(function () {
-            console.log('inError');
             voyent.io.location.findPOIs({'query': {'_id': resource._id}}).then(function (poi) {
               resourceCallback(poi[0], service, path);
             });
@@ -644,6 +650,11 @@ export default BaseController.extend( RealmMixin, {
             resourceCallback(mailbox, service, path);
           });
           break;
+        case 'push':
+          voyent.io.push.getCloudRegistration({'id': resource._id}).then(function (registration) {
+            resourceCallback(registration[0], service, path);
+          });
+          break;
       }
 
     },
@@ -657,6 +668,9 @@ export default BaseController.extend( RealmMixin, {
 			else if( service === 'action'){
 				resourceType = 'action';
 			}
+      else if( service === 'push'){
+        resourceType = 'push registration';
+      }
 
 			this.set('confirmDeleteResourceText', 'Are you sure you want to delete the ' + resourceType + ' ' + resource._id + '?');
 			this.set('resourceToDelete', resource);
@@ -672,10 +686,10 @@ export default BaseController.extend( RealmMixin, {
       var collection = realm.get('collection');
 			if( resource ){
 				if( service === 'documents'){
-					bridgeit.io.documents.deleteDocument({id: resource._id,collection:collection}).then(() => {
+					voyent.io.documents.deleteDocument({id: resource._id,collection:collection}).then(() => {
 						//remove doc from realm
 						let realm = this.get('model');
-						realm.set('documents', realm.get('documents').filter((d) => d._id !== resource._id));
+            realm.set('documents', realm.get('documents').filter((d) => d._id !== resource._id));
 						this.get('toast').info('Document deleted');
 						this.set('resourceToDelete', null);
 						this.set('confirmDeleteResourceText', null);
@@ -744,7 +758,17 @@ export default BaseController.extend( RealmMixin, {
 					}
 
 				}
-
+        else if( service === 'push'){
+          voyent.io.push.deleteCloudRegistration({id: resource._id}).then(() => {
+            let realm = this.get('model');
+          realm.set('registrations', realm.get('registrations').filter((d) => d._id !== resource._id));
+          this.get('toast').info('Registration deleted');
+          this.set('resourceToDelete', null);
+          this.set('confirmDeleteResourceText', null);
+        }).catch((error) => {
+            this.get('application').showErrorMessage(error, 'Registration could not be deleted');
+        });
+        }
 			}
 		},
 

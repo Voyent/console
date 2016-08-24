@@ -79,6 +79,7 @@ export default BaseModel.extend({
 
     serviceModels.forEach((sm) => {
       var serviceName = sm.get('name');
+      //TODO Check below
       var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
         .map((p) => Selectable.create({
           content: p,
@@ -205,6 +206,7 @@ export default BaseModel.extend({
     this.get('account.serviceModels').forEach((serviceModel) => {
       var name = serviceModel.name;
       if( name && services.indexOf(name) > -1 ){
+        //TODO: Check permission below
         if( name === 'services.push' ){
           testUsers['services.push'] = [
             {username: 'TEST_PUSH_ADMIN', firstname: 'TEST', lastname: 'PUSH_ADMIN',
@@ -258,32 +260,36 @@ export default BaseModel.extend({
   },
 
   hasDocumentsService: function(){
-    return this.hasService('services.doc');
+
+    return this.hasService('doc.service');
   }.property('services.[]'),
 
   hasActionService: function(){
-    return this.hasService('services.action');
+    return this.hasService('action.service');
   }.property('services.[]'),
 
   hasEventHubService: function(){
-    return this.hasService('services.eventhub');
+    return this.hasService('eventhub.service');
   }.property('services.[]'),
 
   hasLocationService: function(){
-    return this.hasService('services.locate');
+    return this.hasService('locate.service');
   }.property('services.[]'),
 
   hasQueryService: function(){
-    return this.hasService('services.query');
+    return this.hasService('query.service');
   }.property('services.[]'),
 
   hasStorageService: function(){
-    return this.hasService('services.store');
+    return this.hasService('store.service');
   }.property('services.[]'),
 
   hasMailboxService: function(){
-    return this.hasService('services.mailbox');
+    return this.hasService('mailbox.service');
   }.property('services.[]'),
 
+  hasPushService: function(){
+    return this.hasService('push.service');
+  }.property('services.[]')
 
 });

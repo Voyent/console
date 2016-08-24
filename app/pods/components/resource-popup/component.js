@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-	
+
 	resource: null,
 	editedResourceStr: null,
 	editing: false,
@@ -15,7 +15,7 @@ export default Ember.Component.extend({
 
 	open: function(){
 		Ember.$('#showResourceModal').modal();
-	},	
+	},
 
 	edit: function(){
 		this.set('editing', true);
@@ -75,11 +75,11 @@ export default Ember.Component.extend({
 				let validationCallback = this.get('validate');
 				let service = this.get('service');
 				let id = this.get('newResourceId') || editedResource._id || originalResource._id;
-				
+
 				//if client has set a validate callback, execute it, otherwise proceed
-				if( !validationCallback || validationCallback(editedResource, id, 
+				if( !validationCallback || validationCallback(editedResource, id,
 					service, this.get('path'))){
-					this.sendAction('onsave', editedResource, id); 
+					this.sendAction('onsave', editedResource, id);
 					this.set('resource', editedResource);
 					this.set('editedResourceStr', null);
 					this.set('editing', false);

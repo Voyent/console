@@ -8,22 +8,23 @@ export default Ember.Route.extend({
     var account = appController.get('account');
     var realms = account.get('realms');
     var realm = Realm.create(realms.filter( r => r.name === params.realm_id )[0]);
-
     let promises = [];
 
     if( realm.get('hasDocumentsService')){
       promises.push(Ember.RSVP.Promise.resolve().then(() => {
-        return voyent.io.documents.findDocuments({realm: realm.get('id')}).then((documents) => {
-          realm.set('documents', documents);
-        });
-      }));
-
-      promises.push(Ember.RSVP.Promise.resolve().then(() => {
-          return bridgeit.io.documents.findCollections({realm: realm.get('id')}).then((collections) => {
+      return voyent.io.documents.getCollections({realm: realm.get('id')}).then((collections) => {
             realm.set('collections', collections);
             realm.set('collection', collections[0]);
         });
       }));
+
+      promises.push(Ember.RSVP.Promise.resolve().then(() => {
+        return voyent.io.documents.findDocuments({realm: realm.get('id'), collection:realm.get('collection')}).then((documents) => {
+          realm.set('documents', documents);
+        });
+      }));
+
+
     }
 
     if( realm.get('hasActionService')){
@@ -98,6 +99,16 @@ export default Ember.Route.extend({
           realm.set('blobs', blobs);
         });
       }));
+    }
+
+    if( realm.get('hasPushService')){
+      promises.push(Ember.RSVP.Promise.resolve().then(() => {
+          return voyent.io.push.findCloudRegistrations({
+            realm: realm.get('id')
+          }).then((registrations) => {
+            realm.set('registrations', registrations);
+    });
+    }));
     }
 
     return Ember.RSVP.Promise.all(promises).then(() => {

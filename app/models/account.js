@@ -93,6 +93,7 @@ var Account = BaseModel.extend({
         service.set('serviceCatalog', serviceCatalog);
         return service;
       });
+      //TODO: Check permissions below
       serviceModels.pushObject( Service.create({
         name: 'services.user',
         permissions: [

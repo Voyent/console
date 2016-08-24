@@ -426,6 +426,30 @@
       </div>
     {{/if}}
 
+    {{#if model.hasPushService}}
+        <div class="section">
+            <h4><i class='fa fa-database'></i>Cloud</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class='list-group list-group-no-border'>
+                      {{#each model.registrations as |registration|}}
+                          <li class="list-group-item">
+                            {{registration._id}}
+                              <div class="resource-line-options">
+                                  <a {{action 'showResource' registration 'push' 'registrations'}}><i class="fa fa-folder-open-o"></i></a>
+                                  <a {{action 'editResource' registration 'push' 'registrations'}}><i class="fa fa-pencil"></i></a>
+                                  <a {{action 'deleteResource' registration 'push' 'registrations'}}><i class="fa fa-remove"></i></a>
+                              </div>
+                          </li>
+                      {{else}}
+                          <li class="list-group-item">No cloud registration</li>
+                      {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
   </div>
 
 </div>

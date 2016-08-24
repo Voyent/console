@@ -65,7 +65,6 @@ export default Ember.Mixin.create({
     },
 
     saveEditedRole: function(){
-      console.log("SAVING EDITED ROLE");
       this.debug('saveEditedRole()');
       var role = this.get('editedRole');
       var selectedPermissions = [];
@@ -116,6 +115,7 @@ export default Ember.Mixin.create({
 
       serviceModels.forEach((serviceModel) => {
         var serviceName = serviceModel.get('name');
+        //TODO: Check below
         var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
           .map((p) => Selectable.create({
             content: p,
