@@ -106,7 +106,9 @@ export default Ember.Route.extend({
           return voyent.io.push.findCloudRegistrations({
             realm: realm.get('id')
           }).then((registrations) => {
-            realm.set('registrations', registrations);
+            if(registrations && registrations !== []){
+        realm.set('registrations', registrations);
+      }
     });
     }));
     }
