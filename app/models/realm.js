@@ -257,32 +257,30 @@ export default BaseModel.extend({
   },
 
   hasDocumentsService: function(){
-    return this.hasService('services.doc');
+    return this.hasService('doc.service');
   }.property('services.[]'),
 
   hasActionService: function(){
-    return this.hasService('services.action');
+    return this.hasService('action.service');
   }.property('services.[]'),
 
   hasEventHubService: function(){
-    return this.hasService('services.eventhub');
+    return this.hasService('eventhub.service');
   }.property('services.[]'),
 
   hasLocationService: function(){
-    return this.hasService('services.locate');
+    return this.hasService('locate.service');
   }.property('services.[]'),
 
   hasQueryService: function(){
-    return this.hasService('services.query');
+    return this.hasService('query.service');
   }.property('services.[]'),
 
   hasStorageService: function(){
-    return this.hasService('services.store');
+    return this.hasService('store.service');
   }.property('services.[]'),
 
   hasMailboxService: function(){
-    return this.hasService('services.mailbox');
-  }.property('services.[]'),
-
-
+    return this.hasService('mailbox.service');
+  }.property('services.[]')
 });

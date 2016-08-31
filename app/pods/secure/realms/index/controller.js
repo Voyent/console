@@ -324,34 +324,6 @@ export default BaseController.extend( RealmMixin, {
 			}).then(() => {
 				log('completed cloning queries');
 
-				//mailboxes
-				log('fetching mailboxes');
-				return voyent.io.mailbox.findMailboxes({realm: oldRealmName}).catch((err) => {
-					log('ERROR fetching mailboxes: ' + err.responseText);
-				});
-
-			}).then((mailboxes) => {
-
-				var mailboxPromises = [];
-				if( mailboxes ){
-					log('cloning ' + mailboxes.length + ' mailboxes');
-					mailboxes.forEach((mailbox) => {
-						mailboxPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							voyent.io.mailbox.createMailbox({
-								realm: newRealmName,
-								id: mailbox._id,
-								mailbox: mailbox
-							}).catch((err) => {
-								log('ERROR: ' + err.responseText);
-							});
-						}));
-					});
-				}
-				return Ember.RSVP.Promise.all(mailboxPromises);
-
-			}).then(() => {
-				log('completed cloning mailboxes');
-
 				log('fetching new realm: ' + newRealmName);
 
 				return voyent.io.admin.getRealm({realm: newRealmName});
