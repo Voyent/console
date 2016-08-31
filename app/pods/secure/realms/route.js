@@ -82,13 +82,16 @@ export default Ember.Route.extend({
     }
 
     if( realm.get('hasMailboxService')){
-      promises.push(Ember.RSVP.Promise.resolve().then(() => {
+      //don't show anything for mailbox service
+      //since there could be a massive amount of
+      //messages and they cannot be updated anyway
+      /*promises.push(Ember.RSVP.Promise.resolve().then(() => {
         return voyent.io.mailbox.findMailboxes({
           realm: realm.get('id')
         }).then((mailboxes) => {
           realm.set('mailboxes', mailboxes);
         });
-      }));
+      }));*/
     }
 
     if( realm.get('hasStorageService')){

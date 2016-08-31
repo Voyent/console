@@ -260,7 +260,6 @@ export default BaseModel.extend({
   },
 
   hasDocumentsService: function(){
-
     return this.hasService('doc.service');
   }.property('services.[]'),
 
