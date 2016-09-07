@@ -213,33 +213,35 @@ export default BaseController.extend( RealmMixin, {
 			}).then(() => {
 				log('completed cloning actions');
 
-				//docs, will only fetch documents in the main collection
-				//TODO awaiting http://jira.icesoft.org/browse/NTFY-388
-				log('fetching document service documents');
-				return voyent.io.documents.findDocuments({realm: oldRealmName}).catch((err) => {
-					log('ERROR fetching documents: ' + err.responseText);
-				});
+      log('completed cloning actions');
 
-			}).then((documents) => {
+      //docs, will only fetch documents in the main collection
+      //TODO awaiting http://jira.icesoft.org/browse/NTFY-388
+      log('fetching document service documents');
+      return voyent.io.documents.findDocuments({realm: oldRealmName}).catch((err) => {
+          log('ERROR fetching documents: ' + err.responseText);
+    });
 
-				var docPromises = [];
-				if( documents ){
-					log('cloning ' + documents.length + ' documents');
-          let realm = this.get('model');
-          var collection = realm.get('collection');
-          documents.forEach((doc) => {
-						docPromises.push(Ember.RSVP.Promise.resolve().then(() => {
-							return voyent.io.documents.createDocument({
-								realm: newRealmName,
-								document: doc,
-                collection: collection
-							}).catch((err) => {
-								log('ERROR: ' + err.responseText);
-							});
-						}));
-					});
-				}
-				return Ember.RSVP.Promise.all(docPromises);
+    }).then((documents) => {
+
+        var docPromises = [];
+      if( documents ){
+        log('cloning ' + documents.length + ' documents');
+        let realm = this.get('model');
+        var collection = realm.get('collection');
+        documents.forEach((doc) => {
+          docPromises.push(Ember.RSVP.Promise.resolve().then(() => {
+            return voyent.io.documents.createDocument({
+              realm: newRealmName,
+              document: doc,
+              collection: collection
+            }).catch((err) => {
+              log('ERROR: ' + err.responseText);
+      });
+      }));
+      });
+      }
+      return Ember.RSVP.Promise.all(docPromises);
 
 			}).then(() => {
 				log('completed cloning documents');
