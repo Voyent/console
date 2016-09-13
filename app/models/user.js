@@ -15,13 +15,14 @@ export default BaseModel.extend({
   email: null,
   roles: [],
   custom: {},
+  permissions: [],
 
   //edited properties
   editedCustomTextValid: true,
   editedCustomTextValidMsg: null,
   editedCustomText: null,
 
-  attributeNames: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password', 'roles'],
+  attributeNames: ['username', 'firstname', 'lastname',  'disabled', 'email', 'custom', 'password', 'roles', 'permissions'],
 
   id: function(){
     return this.get('username');
@@ -32,7 +33,7 @@ export default BaseModel.extend({
     if( custom ){
       if( typeof custom === 'string'){
         try{
-          this.set('editedCustomText', custom); 
+          this.set('editedCustomText', custom);
           this.set('custom', JSON.parse(custom));
         }
         catch(e){
@@ -41,7 +42,7 @@ export default BaseModel.extend({
       }
       else{
         try{
-          this.set('editedCustomText', JSON.stringify(custom)); 
+          this.set('editedCustomText', JSON.stringify(custom));
         }
         catch(e){
           console.error(e);
@@ -74,7 +75,7 @@ export default BaseModel.extend({
       currentUser: false,
     });
     this.get('nonTransientOwnProperties').forEach(
-      function(prop){ 
+      function(prop){
         self.set(prop, null);
       }
     );
@@ -107,7 +108,7 @@ export default BaseModel.extend({
     }
     this.set('editedCustomTextValid', valid);
     this.set('editedCustomTextValidMsg', editedCustomTextValidMsg);
-    
+
   }.observes('editedCustomText'),
 
   saveEditedProperties: function(){

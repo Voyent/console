@@ -58,6 +58,10 @@ export default Ember.Mixin.create({
     },
 
     cancelEditedRole: function(){
+      console.log('Edited Role');
+      console.log(this.get('editedRole'));
+      console.log('Permission Groups');
+      console.log(this.get('editedRolePermissionGroups'));
       this.set('editedRole', null);
       this.set('editedRoleName', null);
       this.set('editedRolePermissionGroups', []);
@@ -120,8 +124,8 @@ export default Ember.Mixin.create({
           .map((p) => Selectable.create({
             content: p,
             selected: role.permissions ? role.permissions.contains(p) : false,
-            groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
-            label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
+            groupName: p.indexOf('services') === 0 ? p.split('.')[1] : '',
+            label: p.replace(/services\.[a-zA-Z]+\./i,'')
           }));
         groupedWrappers[serviceName] = innerWrappers;
       });

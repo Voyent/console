@@ -98,7 +98,7 @@
               </div>
             </div>
 
-            <h4><i class='fa fa-lock'></i>Roles</h4>
+            <h4><i class='fa fa-lock'></i>Permissions & Roles</h4>
             <div id='permissions' class='permissions'>
               {{#if selectedUser.roles}}
                 <div class='panel panel-info'>
@@ -112,6 +112,19 @@
                 </div>
               {{else}}
                 <div>There are no roles currently configured for the user.</div>
+              {{/if}}
+              {{#if selectedUser.permissions}}
+                  <div class='panel panel-info'>
+                      <ul class='list-group'>
+                        {{#each selectedUser.permissions as |permission|}}
+                            <li class='list-group-item'>
+                              {{permission}}
+                            </li>
+                        {{/each}}
+                      </ul>
+                  </div>
+              {{else}}
+                  <div>There are no permissions currently configured for the user.</div>
               {{/if}}
             </div>
 

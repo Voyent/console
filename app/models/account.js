@@ -97,12 +97,12 @@ var Account = BaseModel.extend({
       serviceModels.pushObject( Service.create({
         name: 'services.user',
         permissions: [
-          'bridgeit.user.editUser',
-          'bridgeit.user.viewUser',
-          'bridgeit.user.deleteUser',
-          'bridgeit.user.viewOther',
-          'bridgeit.user.editOther',
-          'bridgeit.user.deleteOther'],
+          'services.user.editUser',
+          'services.user.viewUser',
+          'services.user.deleteUser',
+          'services.user.viewOther',
+          'services.user.editOther',
+          'services.user.deleteOther'],
         description: 'The Voyent Authorization and Authentication service'
       }));
       this.set('serviceModels', serviceModels);

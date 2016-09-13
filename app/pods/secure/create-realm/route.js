@@ -26,7 +26,7 @@ export default Ember.Route.extend({
               {username: 'TEST_PUSH_ADMIN', firstname: 'TEST', lastname: 'PUSH_ADMIN',
                 password: 'testtest', permissions: account.getServiceModel('services.push').get('permissions')},
               {username: 'TEST_PUSH_USER', firstname: 'TEST', lastname: 'PUSH_USER',
-                password: 'testtest', permissions: ['bridgeit.push.listen']},
+                password: 'testtest', permissions: ['services.push.listen']},
             ];
           }
           else{

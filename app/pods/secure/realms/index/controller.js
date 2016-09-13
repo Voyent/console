@@ -213,7 +213,6 @@ export default BaseController.extend( RealmMixin, {
 			}).then(() => {
 				log('completed cloning actions');
 
-      log('completed cloning actions');
 
       //docs, will only fetch documents in the main collection
       //TODO awaiting http://jira.icesoft.org/browse/NTFY-388

@@ -135,6 +135,10 @@ export default BaseController.extend({
       var user = this.get('model');
       user.saveEditedProperties();
 
+      console.log('USER IS');
+      console.log(user);
+      console.log(user.serialize());
+
       voyent.io.admin.updateRealmUser({user: user.serialize()}).then(() => {
         this.get('toast').info('Successfully edited user ' + user.get('fullname'));
         var realmController = this.get('realmsController');
@@ -242,6 +246,19 @@ export default BaseController.extend({
     },
     removePermission: function(permission){
       this.get('permissionWrappers').removeObject(permission);
+    },
+    deletePermission:function(permission){
+      let realm = this.get('model');
+      realm.set('permissions', realm.get('permissions').filter((d) => d !== permission));
+    },
+    addPermission:function(){
+      let realm = this.get('model');
+      var permissions = realm.get('permissions');
+      var newPermission = realm.get('newPermission');
+      if(permissions.indexOf(newPermission) === -1){
+        permissions.pushObject(newPermission);
+        realm.set('newPermission',null);
+      }
     }
   }
 

@@ -76,19 +76,28 @@ export default BaseModel.extend({
     var availablePermissions = availableServiceModels != null &&
       availableServiceModels.length > 0 ? availableServiceModels.map((s) => s.get('permissions'))
       .reduce( (prev, curr) => prev.concat(curr) ) : [];
-
     serviceModels.forEach((sm) => {
       var serviceName = sm.get('name');
-      //TODO Check below
-      var innerWrappers = availablePermissions.filter((p) => p.indexOf(serviceName) === 0)
+      var modifiedServiceName = serviceName === 'services.user'?'services.user':'services.' + serviceName.split('.')[0];
+      var innerWrappers = availablePermissions.filter((p) => p.indexOf(modifiedServiceName) === 0)
         .map((p) => Selectable.create({
           content: p,
           selected: false,
-          groupName: p.indexOf('bridgeit') === 0 ? p.split('.')[1] : '',
-          label: p.replace(/bridgeit\.[a-zA-Z]+\./i,'')
+          groupName: p.indexOf('services') === 0 ? p.split('.')[1] : '',
+          label: p.replace(/services\.[a-zA-Z]+\./i,'')
         }));
       groupedWrappers[serviceName] = innerWrappers;
     });
+
+    //TEMP workaround for current push permissions
+    var innerWrappers = availablePermissions.filter((p) => p.indexOf('voyent.push') === 0)
+    .map((p) => Selectable.create({
+      content: p,
+      selected: false,
+      groupName: p.indexOf('voyent') === 0 ? p.split('.')[1] : '',
+      label: p.replace(/voyent\.[a-zA-Z]+\./i,'')
+    }));
+    groupedWrappers['push.service'] = innerWrappers;
 
     permissionGroups.pushObject(
       PermissionGroup.create({
@@ -97,7 +106,7 @@ export default BaseModel.extend({
       }));
 
     permissionGroups.pushObjects(selectedServices.map((s) => {
-      return PermissionGroup.create({
+        return PermissionGroup.create({
         service: s,
         permissions: groupedWrappers[s]
       });
@@ -212,7 +221,7 @@ export default BaseModel.extend({
             {username: 'TEST_PUSH_ADMIN', firstname: 'TEST', lastname: 'PUSH_ADMIN',
               password: 'testtest', permissions: account.getServiceModel('services.push').get('permissions')},
             {username: 'TEST_PUSH_USER', firstname: 'TEST', lastname: 'PUSH_USER',
-              password: 'testtest', permissions: ['bridgeit.push.listen']},
+              password: 'testtest', permissions: ['services.push.listen']},
           ];
         }
         else{
