@@ -83,8 +83,10 @@ var Account = BaseModel.extend({
   loadServiceModels: function(payload){
     var servicesToFilter = ['services.starter'];
     if( payload && payload.services ){
+      console.log('PAYLOAD');
+      console.log(payload.services);
       var serviceModels = payload.services.filter((s) => {
-        if( s.name === 'services.auth'){
+        if( s.name === 'auth.service'){
           this.set('authPermissions', s.permissions);
         }
         return s.name && !servicesToFilter.contains(s.name);
@@ -93,7 +95,7 @@ var Account = BaseModel.extend({
         service.set('serviceCatalog', serviceCatalog);
         return service;
       });
-      //TODO: Check permissions below
+      //TODO: Check permissions below. They aren't lining up with what's in the auth user config.
       serviceModels.pushObject( Service.create({
         name: 'services.user',
         permissions: [

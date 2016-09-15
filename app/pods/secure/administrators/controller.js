@@ -213,7 +213,6 @@ export default BaseController.extend({
       if( !this.validateRequiredFields() ){
           return;
       }
-
       var admin = this.get('selectedAdmin');
 
       this.validateEmail();
@@ -240,9 +239,14 @@ export default BaseController.extend({
       });
 
       if(typeof admin.roles === 'string'){
-        console.log('Split');
+        console.log('Split roles');
         console.log(admin.roles.split(','));
         this.set('selectedAdmin.roles',admin.roles.split(','));
+      }
+      if(typeof admin.permissions === 'string'){
+        console.log('Split permissions');
+        console.log(admin.permissions.split(','));
+        this.set('selectedAdmin.permissions',admin.permissions.split(','));
       }
 
       voyent.io.admin.updateAdministrator({admin: admin}).then( () => {
