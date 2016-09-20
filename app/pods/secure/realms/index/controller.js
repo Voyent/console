@@ -527,6 +527,12 @@ export default BaseController.extend( RealmMixin, {
 									});
 								}
 							}
+              else if( service === 'query'){
+                return voyent.io.query.createQuery({id: id, query: resource}).then((uri) => {
+                    realm.get('queries').pushObject(resource);
+                    return uri;
+              });
+              }
 							else if( service === 'location'){
 								if( path === 'regions'){
 									return voyent.io.location.createRegion({id: id, region: resource}).then((uri) => {
