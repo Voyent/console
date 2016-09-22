@@ -1,0 +1,7 @@
+bower_components
+data
+node_modules
+tests
+tmp
+*.log
+*.iml
