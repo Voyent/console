@@ -24,16 +24,11 @@ COPY config ./config
 COPY public ./public
 COPY .* *.js *.json ./
 
-RUN ls -la
-
 # Install bower dependencies.
 RUN ["bower", "--allow-root", "install"]
 
 # Build the console with ember.
 RUN ["ember", "build", "-prod"]
-
-RUN ls -la ./dist/assets
-RUN grep 'localhost' ./dist/assets/vendor*.js
 
 # Remove the Unix-y tools.
 RUN apt-get remove -q -y curl xz-utils git-all
@@ -45,7 +40,6 @@ COPY default /etc/nginx/conf.d/default.conf
 # Copy the contents of the built version of the console so that nginx can serve it.
 RUN mkdir /usr/share/nginx/html/console
 RUN mv dist/* /usr/share/nginx/html/console
-COPY dist /usr/share/nginx/html/console
 
 # Get rid of our work directory
 WORKDIR /
