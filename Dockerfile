@@ -22,7 +22,7 @@ RUN ["npm", "install"]
 COPY app ./app
 COPY config ./config
 COPY public ./public
-COPY .* *.js *.json ./
+COPY *.js *.json ./
 
 # Install bower dependencies.
 RUN ["bower", "--allow-root", "install"]
