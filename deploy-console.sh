@@ -15,7 +15,6 @@ echo "...Copying Dist to server..."
 scp -i ~/.ssh/ICEsoft_Linux_Test_Key_Pair.pem console.tar.gz ubuntu@web1d:~/. || { exit 1; }
 
 echo "...Unpacking Dist on server to $DESTDIR..."
-rm -rf $DESTDIRCONTENTS
-ssh -i ~/.ssh/ICEsoft_Linux_Test_Key_Pair.pem ubuntu@web1d "sudo tar -zxf /home/ubuntu/console.tar.gz -C $DESTDIR"
+ssh -i ~/.ssh/ICEsoft_Linux_Test_Key_Pair.pem ubuntu@web1d "sudo rm -r $DESTDIRCONTENTS && sudo tar -zxf /home/ubuntu/console.tar.gz -C $DESTDIR && sudo chown -R www-data:www-data $DESTDIR"
 echo "...Cleaning up local compressed file..."
 rm console.tar.gz
