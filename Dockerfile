@@ -4,7 +4,7 @@
 # and builds the app and sets it to be served via Nginx.
 
 # The name:version of the Docker image to use.  Must be the first non-comment.
-FROM voyent/ember:latest
+FROM voyent/base-ember:latest
 
 # The author of the image.
 MAINTAINER ICEsoft Technologies, Inc.
