@@ -9,10 +9,10 @@ FROM voyent/ember:latest
 # The author of the image.
 MAINTAINER ICEsoft Technologies, Inc.
 
-# We'll put everything in a /console directory that we can later remove when everything
+# We'll put everything in a /work directory that we can later remove when everything
 # is built and deployed.
-RUN mkdir /console
-WORKDIR /console
+RUN mkdir /work
+WORKDIR /work
 
 # Copy the package.json and install any dependencies.
 COPY package.json ./
@@ -38,11 +38,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY default /etc/nginx/conf.d/default.conf
 
 # Copy the contents of the built version of the console so that nginx can serve it.
-RUN mkdir /usr/share/nginx/html/console
-RUN mv dist/* /usr/share/nginx/html/console
+RUN mv dist /usr/share/nginx/html/console
 
 # Get rid of our work directory
 WORKDIR /
-RUN ["rm", "-Rf", "/console"]
+RUN ["rm", "-Rf", "/work"]
 
 
