@@ -22,8 +22,16 @@ var AccessManager = Ember.Service.extend({
       }
       else{
         voyent.io.startTransaction();
+        
+        // Check our host for validity
+        var host = config.host;
+        
+        if (!host) {
+            host = window.location.hostname;
+        }
+        
         var voyentParams = {
-          host: config.host,
+          host: host,
           account: account,
           username: username,
           password: password,
